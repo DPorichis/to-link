@@ -33,6 +33,7 @@ function App() {
               <Route index element={<AdminDashboardPGA />} />
               <Route path="view" element={<AccountViewPGA />} />
             </Route>
+            <Route path="signup" element={<SignUpPG />} />
             <Route path="*" element={<NotFoundPG />} />
         </Routes>
       </BrowserRouter>

@@ -1,9 +1,10 @@
 import React from "react";
+import Header from "../Components/Header";
 
 function SignUpPG(props) {
     return (
         <div>
-            I am a Page :D
+            <Header />
         </div>
     );
 }
