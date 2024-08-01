@@ -1,0 +1,27 @@
+
+.sidebar{
+    display: flex;
+    flex-direction: column;
+    width: 25%;
+    padding: 5px;
+    background-color: #cecdcd;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); 
+}
+.Profile,.Links{
+  width: 90%;
+  border: 2px solid rgb(115, 123, 115);
+  padding: 5px 5px;
+  box-sizing: border-box; 
+  display: flex;
+  flex-direction: column; 
+}
+
+.link{
+  width: 100%;
+  border: 2px solid rgb(115, 123, 115);
+  padding: 10px;
+  margin: 2px 0;
+  box-sizing: border-box;
+  display: flex ;
+  align-items: flex-start
+}
