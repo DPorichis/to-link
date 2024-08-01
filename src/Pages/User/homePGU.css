@@ -23,5 +23,9 @@
   margin: 2px 0;
   box-sizing: border-box;
   display: flex ;
-  align-items: flex-start
+  align-items: flex-start;
+  list-style-type: none;
+}
+.link-title{
+    color: #84737a;
 }
