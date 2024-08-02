@@ -1,0 +1,14 @@
+
+.link{
+  width: 100%;
+  border: 2px solid rgb(115, 123, 115);
+  padding: 10px;
+  margin: 2px 0;
+  box-sizing: border-box;
+  display: flex ;
+  align-items: flex-start;
+  list-style-type: none;
+}
+.link-title{
+    color: #84737a;
+}

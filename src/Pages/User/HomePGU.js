@@ -2,6 +2,7 @@ import React from "react";
 
 import Header from "../../Components/Header";
 import './homePGU.css';
+import ProfileSmall from "../../Components/Profile/ProfileSmall";
 
 function HomePGU(props) {
     const links = 
@@ -18,7 +19,7 @@ function HomePGU(props) {
     },
     {
     name: "Lionel Messi",
-    title: "Football player",
+    title: "CEO of Real Madrid",
     imgURL: "/logo192.png",
     },
     {
@@ -54,12 +55,7 @@ function HomePGU(props) {
                 MY Links
                 <div className = "Links">
                         {links.map((link) =>
-                        
-                        <li className = "link" key={link.name}>
-                            <img src="/logo192.png" alt="Avatar" style={{width :"15%"}} className="link-image" />
-                            <span className="link-name">{link.name}</span>
-                            <span className="link-title">{link.title}</span>
-                        </li>
+                        <ProfileSmall name = {link.name} title = {link.title} />
                     )}
                 </div>
             </div>
