@@ -1,6 +1,7 @@
 import React from "react";
 import Header from "../../Components/Header";
 import ProfileDms from "../../Components/Profile/ProfileDms";
+import CommentsCONT from "../../Components/Feed/Comment";
 
 function MessagesPGU(props) {
 
@@ -51,6 +52,7 @@ function MessagesPGU(props) {
                 <ProfileDms name = {link.name} title = {link.title} Message={link.Message} />
             )}
                 </div>
+            <CommentsCONT />
             </div>
         </div>
     );
