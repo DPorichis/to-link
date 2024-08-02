@@ -3,6 +3,7 @@ import Header from "../Components/Header";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+
 import Postbox from "../Components/Feed/Postbox";
 
 
@@ -93,6 +94,8 @@ function LandingPG(props) {
                     </div>
                 </div>
                 <div style={{width: "70%"}}>
+                    <Postbox photolist ={[ "/testing-post1.png", "/testing-post.png"]}/>
+                    <Postbox photolist ={[ "/testing-post1.png"]}/>
                     <Postbox />
                 </div>
             </div>        

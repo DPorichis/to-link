@@ -1,5 +1,8 @@
 .postboxout
 {
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
     margin: 10px 20px;
     padding: 10px 20px;
     border-radius: 10px;
@@ -13,4 +16,87 @@
     justify-content: left;
     flex-direction: column;
     text-align: left;
+    padding-bottom: 8px;
+    border-bottom: #444 solid 1px;
+}
+
+.actions
+{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    width: 70%;
+    margin-top: 8px;
+}
+
+.like-button
+{
+    justify-content: left;
+    border: none;
+    border: solid 1px #fff;
+    background-color: #fff;
+    border-radius: 3px;
+    width: 20%;
+    margin-right: 5px;
+}
+
+
+.like-button:hover
+{
+    border: solid 1px #aaa;
+    background-color: #ddd;
+}
+
+.comment-input
+{
+    padding: 5px 5px;
+    border-radius: 3px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-content: left;
+    border: solid 1px #aaa;
+    width:80%
+}
+
+.comment-input button
+{
+    border: solid 1px #fff;
+    border-radius: 4px;
+}
+
+.comment-input button :hover
+{
+    border: solid 1px #aaa;
+    border-radius: 4px;
+}
+
+.comment-input button :disabled
+{
+    background-color: #ddd;
+    border: none;
+    border-radius: 4px;
+}
+
+.inv-text-box, .inv-text-box:hover, .inv-text-box:focus, .inv-text-box:active, .inv-text-box:disabled, .inv-text-box[readonly]
+{
+    width: 80%;
+    border: none;
+    outline: none;
+    margin-bottom: 2px;
+}
+
+
+.show-comments-button
+{
+    border: none;
+    width: fit-content;
+    background-color: #fff;
+    padding: 0;
+    margin-left: 2px;
+}
+
+.show-comments-button:hover
+{
+    text-decoration: underline;
 }
