@@ -27,13 +27,13 @@ function CommentsCONT(props) {
     name: "Makis Kotsampasis",
     title: "CEO of SYNERGEIO O MAKIS",
     imgURL: "/logo192.png",
-    comments: "FWTIIIIII"
+    comments: "FWTIIIIII PIASE MIA MPYRA"
     },
     {
     name: "Theopoula Tzini",
     title: "CEO of IBIZA",
     imgURL: "/logo192.png",
-    comments : "Ibiza"
+    comments : "KANAME THRAFSI"
     },
     ];
 
