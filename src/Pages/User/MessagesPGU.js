@@ -43,8 +43,10 @@ function MessagesPGU(props) {
         <div>
             <Header log="user" act="messages"/>
             <div className="sidebar">
-            Your DMs
-                <div className = "Links">
+                <div style={{ textAlign: "left" }}>
+                Your DMs
+                </div>
+                <div className = "LinksDms">
                 {links.map((link) =>
                 <ProfileDms name = {link.name} title = {link.title} Message={link.Message} />
             )}

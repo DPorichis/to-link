@@ -10,7 +10,8 @@ function ProfileDms(props){
 
 return(
 
-<li className = "linkdms" key={props.name} style={{display:"flex", textAlign:"start",flexDirection: "row",margin:"5px", cursor:"pointer"}}>
+<li className = "linkdms" key={props.name} style={{display:"flex", textAlign:"start",flexDirection: "row",margin:"5px", cursor:"pointer", border: "1px solid transparent", 
+            borderRadius: "10px"}}>
                             <img src="/logo192.png" alt="Avatar" style={{width :"15%",flexDirection: "column",height: "20%"}} className="link-image" />
                             <div>
                                 <p style={{margin: "0"}}>
