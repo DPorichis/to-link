@@ -5,7 +5,7 @@ function ProfileComments(props){
     
     <li className = "linkcomms" key={props.name} style={{display:"flex", textAlign:"start",flexDirection: "row",margin:"5px", cursor:"pointer", border: "1px solid transparent", 
                 borderRadius: "10px"}}>
-                                <img src="/logo192.png" alt="Avatar" style={{width :"15%",flexDirection: "column",height: "20%"}} className="link-image" />
+                                <img src="/logo192.png" alt="Avatar" style={{width :"5%",flexDirection: "column",height: "5%"}} className="link-image" />
                                 <div>
                                     <p style={{margin: "0"}}>
                                         <span className="linkcomms-name" style={{possition:"top",textAlign: "start", fontWeight: "bold",flexDirection: "column",margin: "3px" }}>{props.name}</span>

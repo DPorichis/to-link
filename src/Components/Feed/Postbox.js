@@ -2,6 +2,7 @@ import React from "react";
 import "./Postbox.css";
 import ProfileTag from "../Profile/ProfileTag";
 import { useState } from "react";
+import CommentsCONT from "./Comment";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
@@ -67,7 +68,7 @@ function Postbox(props) {
             </div>
             <p style={{textAlign: "left", justifyContent: "left", marginLeft: "2px", marginTop: "2px", marginBottom: "0"}}>{props.likecount}1234 liked this · {props.commentcount}5 comments</p>
             <button className="show-comments-button" onClick={togglecomments}> Show Comments v </button>
-            {commentsVisible ? <>Shown</> : <></>}
+            {commentsVisible ? <><CommentsCONT /></> : <></>}
        </div>
     );
 }

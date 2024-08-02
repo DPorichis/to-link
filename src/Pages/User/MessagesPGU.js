@@ -52,7 +52,7 @@ function MessagesPGU(props) {
                 <ProfileDms name = {link.name} title = {link.title} Message={link.Message} />
             )}
                 </div>
-            <CommentsCONT />
+            
             </div>
         </div>
     );
