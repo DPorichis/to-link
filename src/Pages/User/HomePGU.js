@@ -2,7 +2,9 @@ import React from "react";
 
 import Header from "../../Components/Header";
 import './homePGU.css';
+
 import ProfileSmall from "../../Components/Profile/ProfileSmall";
+import Postbox from "../../Components/Feed/Postbox";
 
 function HomePGU(props) {
     const links = 
@@ -37,9 +39,9 @@ function HomePGU(props) {
     return (
         <div>
             <Header log="user" act="home"/>
-            I am a Page :D
+            <div style={{display: "flex", flexDirection: "row", justifyContent:"space-around"}}>
             <div className="sidebar">
-            Profile view
+                Profile view
                 <div className="Profile">
                     <div className="Text" style={{width:"60%"}}>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed convallis, lacus at rutrum dapibus, tortor massa posuere lorem, a pellentesque quam urna vitae dolor. Integer eleifend feugiat augue, consequat mattis nibh dictum vitae.
@@ -59,6 +61,12 @@ function HomePGU(props) {
                     )}
                 </div>
             </div>
+            <div style={{width: "60%"}}>
+                    <Postbox photolist ={[ "/testing-post1.png", "/testing-post.png"]}/>
+                    <Postbox photolist ={[ "/testing-post1.png"]}/>
+                    <Postbox />
+            </div>
+        </div>
         </div>
     );
 }

@@ -93,11 +93,6 @@ function LandingPG(props) {
                         </div>
                     </div>
                 </div>
-                <div style={{width: "70%"}}>
-                    <Postbox photolist ={[ "/testing-post1.png", "/testing-post.png"]}/>
-                    <Postbox photolist ={[ "/testing-post1.png"]}/>
-                    <Postbox />
-                </div>
             </div>        
         </div>
     );
