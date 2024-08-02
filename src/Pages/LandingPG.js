@@ -3,6 +3,7 @@ import Header from "../Components/Header";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import Postbox from "../Components/Feed/Postbox";
 
 
 function LandingPG(props) {
@@ -90,6 +91,9 @@ function LandingPG(props) {
                             </blockquote>
                         </div>
                     </div>
+                </div>
+                <div style={{width: "70%"}}>
+                    <Postbox />
                 </div>
             </div>        
         </div>
