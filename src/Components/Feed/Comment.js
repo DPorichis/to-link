@@ -3,6 +3,7 @@ import ProfileComments from "../Profile/ProfileComments.js";
 
 function CommentsCONT(props) {
 
+
     const comments = 
     [
     {
