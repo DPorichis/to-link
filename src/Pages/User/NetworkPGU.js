@@ -1,6 +1,7 @@
 import React from "react";
 import Header from "../../Components/Header";
 import ProfileCard from "../../Components/Profile/ProfileCard";
+import ProfileBanner from "../../Components/Profile/ProfileBanner";
 
 
  
@@ -37,6 +38,12 @@ function NetworkPGU(props) {
                     <ProfileCard name={link.name} title={link.title} InNetwork={link.InNetwork} />
                 ))}
             </div>
+            <div style={{display:"flex",marginTop:"9px",marginBottom:"9px",gap: "10px",flexDirection:"column"}}>
+                {links.map((link) => (
+                    <ProfileBanner name={link.name} title={link.title} InNetwork={link.InNetwork} />
+                ))}
+            </div>
+            
             
         </div>
     );
