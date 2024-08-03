@@ -1,0 +1,27 @@
+.active-job-tile
+{
+    display: flex;
+    flex-direction: column; 
+    margin-top: 5px; 
+    padding: 5px 10px;
+    border: 1px #6d95e4 solid; 
+    background-color: #b2c8e8;
+    border-radius: 5px;
+}
+
+.standard-job-tile
+{
+    display: flex;
+    flex-direction: column; 
+    margin-top: 5px; 
+    padding: 5px 10px;
+    border: 1px #fff solid; 
+    background-color: #fff;
+    border-radius: 5px;
+}
+
+.standard-job-tile:hover
+{
+    border: 1px #333 solid; 
+    background-color: #ddd;    
+}
