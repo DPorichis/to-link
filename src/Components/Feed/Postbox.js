@@ -67,7 +67,7 @@ function Postbox(props) {
                 </div>          
             </div>
             <p style={{textAlign: "left", justifyContent: "left", marginLeft: "2px", marginTop: "2px", marginBottom: "0"}}>{props.likecount}1234 liked this · {props.commentcount}5 comments</p>
-            <button className="show-comments-button" onClick={togglecomments}> Show Comments v </button>
+            <button className="show-comments-button" onClick={togglecomments}> {commentsVisible ? <>Show Comments v</> : <>Show Comments ></>}</button>
             {commentsVisible ? <><CommentsCONT /></> : <></>}
        </div>
     );
