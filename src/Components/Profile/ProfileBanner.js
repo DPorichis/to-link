@@ -8,7 +8,7 @@ function ProfileBanner(props){
         { props.InNetwork ? 
         <div className="Box" style={{backgroundColor: "#cecdcd",width:"70%",flexDirection:"row",padding:"5px 10px", display:"flex", justifyContent:"space-between", marginTop:"9px",marginBottom:"9px",borderRadius:"10px"}}>
         <div style={{flexDirection:"row",display:"flex",justifyContent:"flex-start"}}>
-        <img src="/logo192.png" alt="Avatar" style={{width :"64px",height:"64px"}} className="link-image" />
+        <img src={props.imgURL} alt="Avatar" style={{width :"64px",height:"64px"}} className="link-image" />
         <div style={{display: 'flex', 
             flexDirection: 'column', 
             justifyContent: 'center',}}>
@@ -35,7 +35,7 @@ function ProfileBanner(props){
         </div> :
         <div className="Box" style={{backgroundColor: "#cecdcd",width:"70%",flexDirection:"row",padding:"5px 10px", display:"flex", justifyContent:"space-between", marginTop:"9px",marginBottom:"9px",borderRadius:"10px",textAlign: "center"}}>
         <div style={{flexDirection:"row",display:"flex",justifyContent:"flex-start",textAlign: "center"}}>
-        <img src="/logo192.png" alt="Avatar" style={{width :"64px",height:"64px"}} className="link-image" />
+        <img src={props.imgURL} alt="Avatar" style={{width :"64px",height:"64px"}} className="link-image" />
         <div style={{display: 'flex', 
             flexDirection: 'column', 
             justifyContent: 'center',}}>

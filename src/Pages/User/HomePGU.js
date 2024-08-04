@@ -57,7 +57,7 @@ function HomePGU(props) {
                 MY Links
                 <div className = "Links">
                         {links.map((link) =>
-                        <ProfileSmall name = {link.name} title = {link.title} />
+                        <ProfileSmall name = {link.name} title = {link.title} imgURL ={link.imgURL}/>
                     )}
                 </div>
             </div>

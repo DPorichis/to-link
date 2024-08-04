@@ -35,12 +35,12 @@ function NetworkPGU(props) {
             <Header log="user" act="network"/>
             <div style={{display:"flex",marginTop:"9px",marginBottom:"9px",gap: "10px",flexDirection:"row", flexWrap:"wrap"}}>
                 {links.map((link) => (
-                    <ProfileCard name={link.name} title={link.title} InNetwork={link.InNetwork} />
+                    <ProfileCard name={link.name} title={link.title} InNetwork={link.InNetwork} imgURL={link.imgURL} />
                 ))}
             </div>
             <div style={{display:"flex",marginTop:"9px",marginBottom:"9px",gap: "10px",flexDirection:"column"}}>
                 {links.map((link) => (
-                    <ProfileBanner name={link.name} title={link.title} InNetwork={link.InNetwork} />
+                    <ProfileBanner name={link.name} title={link.title} InNetwork={link.InNetwork} imgURL={link.imgURL} />
                 ))}
             </div>
             

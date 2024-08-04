@@ -49,7 +49,7 @@ function MessagesPGU(props) {
                 </div>
                 <div className = "LinksDms">
                 {links.map((link) =>
-                <ProfileDms name = {link.name} title = {link.title} Message={link.Message} />
+                <ProfileDms name = {link.name} title = {link.title} Message={link.Message} imgURL={link.imgURL} />
             )}
                 </div>
             

@@ -43,7 +43,7 @@ function CommentsCONT(props) {
             <div className="comments">
                 <div className = "LinksComments">
                 {comments.map((comment) =>
-                <ProfileComments name = {comment.name} title = {comment.title} comments={comment.comments} />
+                <ProfileComments name = {comment.name} title = {comment.title} comments={comment.comments} imgURL={comment.imgURL}/>
                 )}
                 </div>
             </div>

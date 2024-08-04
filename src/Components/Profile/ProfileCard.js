@@ -8,7 +8,7 @@ function ProfileCard(props){
         { props.InNetwork ? 
         <div className="Box" style={{backgroundColor: "#cecdcd",width:"20%",height:"40%",flexDirection:"column",padding:"5px 10px", display:"flex", justifyContent:"flex-start",flexWrap: "wrap",marginTop:"9px",marginBottom:"9px"}}>
         <div style={{flexDirection:"row",display:"flex",justifyContent:"flex-start"}}>
-        <img src="/logo192.png" alt="Avatar" style={{width :"25%",height:"25%"}} className="link-image" />
+        <img src={props.imgURL} alt="Avatar" style={{width :"25%",height:"25%"}} className="link-image" />
         <div className="Name" style={{position:"top", textAlign: "center",justifyContent: "center",marginLeft: "20px"}}>
             {props.name}
             <br/>
@@ -27,7 +27,7 @@ function ProfileCard(props){
         </div> :
         <div className="Box" style={{backgroundColor: "#cecdcd",width:"20%",height:"40%",flexDirection:"column",padding:"5px 10px", display:"flex", justifyContent:"flex-start", marginTop:"9px",flexWrap: "wrap",marginBottom:"9px"}}>
         <div style={{flexDirection:"row",display:"flex",justifyContent:"flex-start"}}>
-        <img src="/logo192.png" alt="Avatar" style={{width :"25%",height:"25%"}} className="link-image" />
+        <img src={props.imgURL} alt="Avatar" style={{width :"25%",height:"25%"}} className="link-image" />
         <div className="Name" style={{position:"top", textAlign: "center",justifyContent: "center",marginLeft: "20px"}}>
             {props.name}
             <br/>
