@@ -16,7 +16,9 @@ function JobPreview(props) {
                         <span style={{color: "#888", fontSize:"10px"}}>{props.listing.relation}</span>
                     </p>
                 </div>
-                <button type="button" class="btn btn-primary">Apply for this job</button>
+                <div>
+                    <button type="button" class="btn btn-primary">Apply for this job</button>
+                </div>
             </div>
             
             <div style={{display: "flex", flexDirection: "row", justifyContent: "left"}}>
