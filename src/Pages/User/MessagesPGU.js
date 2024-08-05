@@ -4,74 +4,92 @@ import ProfileDms from "../../Components/Profile/ProfileDms";
 import CommentsCONT from "../../Components/Feed/Comment";
 import Message from "../../Components/Messaging/Message";
 import MessageCont from "../../Components/Messaging/MessageCONT";
+import { useState } from "react";
 
 function MessagesPGU(props) {
+    const [selected_dm, setSelected_dm] = useState(0);
 
+    const convo= [
+        {
+            user:"1",
+            message: "Fwtiiiii ",
+            time: "10:05",
+        },
+        {
+            user:"1",
+            message: "eisai edw ",
+            time: "10:05",
+        },
+        {
+            user:"0",
+            message: "Parakalw",
+            time: "10:08",
+        },
+        {
+            user:"1",
+            message: "Piase mia mpyraa",
+            time: "10:10",
+        },
+        {
+            user:"0",
+            message:"EFTASEE",
+            time: "10:10"
+        },
+        {
+            user:"0",
+            message:"STIN YGEIA SOY",
+            time: "10:10"
+        },
 
+    ];
+    
     const links = 
     [
     {
-    name: "YOU",
-    title:"CEO of DIT",
+    name: "Makis Kotsampasis",
+    title:"CEO of synergio o makis",
     imgURL: "/logo192.png",
-    Message: "SUPER RARE",
-    User: "Lakis",
-    same: "",
+    messages: convo
     },
     {
     name: "Lakis Lalakis",
     title:"CEO of DIT",
     imgURL: "/logo192.png",
-    Message: "Bathmoi mystudies",
-    User: "Lakis",
-    same: "",
+    messages: convo,
     },
-    {
-        name: "Lakis Lalakis",
-        title:"CEO of DIT",
-        imgURL: "/logo192.png",
-        Message: "EPITELOUS",
-        User: "Lakis",
-        same: "",
-        },
-        {
-            name: "YOU",
-            title:"CEO of DIT",
-            imgURL: "/logo192.png",
-            Message: "KAIROS HTAN",
-            User: "Lakis",
-            same: "",
-            },
     {
     name: "Ioannic",
     title: "CEO of TSILI" ,
     imgURL: "/logo192.png",
-    Message: "To post egkrithike",
-    User: "you"
+    messages: convo,
+    
     },
     {
     name: "Lionel Messi",
     title: "CEO of Real Madrid",
     imgURL: "/logo192.png",
-    Message: "Tha valw over 2.5 goal",
-    User: "you"
+    messages: convo,
+   
     },
     {
     name: "Makis Kotsampasis",
     title: "CEO of SYNERGEIO O MAKIS",
     imgURL: "/logo192.png",
-    Message : "Fwti piase mia mpyra",
-    User: "you"
+    messages : convo,
+   
     },
     {
     name: "Theopoula Tzini",
     title: "CEO of IBIZA",
     imgURL: "/logo192.png",
-    Message : "Kaname Thraysi",
-    User: "you"
+    messages : []
     },
     ];
-    let previousUser = null;
+
+    const handleDmClick = (index) => {
+        setSelected_dm(index); 
+    };
+    
     return (
         <div >
             <Header log="user" act="messages"/>
@@ -81,20 +99,20 @@ function MessagesPGU(props) {
                     Your DMs
                     </div>
                     <div className = "LinksDms">
-                        {links.map((link) =>
-                        <ProfileDms name = {link.name} title = {link.title} Message={link.Message} imgURL={link.imgURL} user={link.User} Prev={link.Prev}/>
+                        {links.map((link, index) =>
+                        <ProfileDms name = {link.name} title = {link.title} messages={link.messages} imgURL={link.imgURL} changesel={handleDmClick} id={index}/>
                         )}
                     </div>
                 </div>
                 <div className="Textbox" style={{display:"flex", flexDirection:"column",textAlign:"left",marginLeft:"60px",justifyContent:"space-between",width:"50%"}}>
                     <p>
                         <div style={{display:"flex", flexDirection:"row",textAlign:"left"}}>
-                            <h3 style={{fontSize:"32px",marginRight:"8px",marginBottom:"0px"}}>{links[1].name}</h3>
-                            <p style={{color:"#D3D3D3",fontSize:"20px",marginTop:"7px",marginBottom:"0px"}}>{links[1].title}</p>
+                            <h3 style={{fontSize:"32px",marginRight:"8px",marginBottom:"0px"}}>{links[selected_dm].name}</h3>
+                            <p style={{color:"#D3D3D3",fontSize:"20px",marginTop:"7px",marginBottom:"0px"}}>{links[selected_dm].title}</p>
                         </div>
                         <p style={{marginTop:"0px"}}>online</p>
                         <div style={{display:"flex", flexDirection:"column",}}>
-                        <MessageCont messages = {links} />
+                        <MessageCont dm = {links[selected_dm]} />
                         </div>
                     </p>
                     <p>
