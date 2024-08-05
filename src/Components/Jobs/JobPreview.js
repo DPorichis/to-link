@@ -17,7 +17,11 @@ function JobPreview(props) {
                     </p>
                 </div>
                 <div>
-                    <button type="button" class="btn btn-primary">Apply for this job</button>
+                    {props.applied ?
+                        <button type="button" class="btn btn-outline-primary" onClick={props.handleApply}>You applied for this job</button>
+                    :
+                        <button type="button" class="btn btn-primary" onClick={props.handleApply}>Apply for this job</button>
+                    }
                 </div>
             </div>
             

@@ -99,7 +99,7 @@ function JobDashboard(props) {
                                 <input type="text" id="disabledTextInput" class="form-control" name="id" value={editedListing.id} readonly disabled/>
                             </div>
                             <div class="col-md-6">
-                            <label for="state" class="form-label">Visibility</label>
+                                <label for="state" class="form-label">Visibility</label>
                                 <select class="form-select" name="state" value={editedListing.state} onChange={handleInputChange}>
                                     <option value="Public">Public</option>
                                     <option value="Network Only">Network Only</option>

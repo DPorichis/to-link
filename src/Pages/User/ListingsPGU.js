@@ -78,6 +78,12 @@ function ListingsPGU(props) {
     const [yourListingsView, setYourListingsView] = useState(false);
     const [listings, setListings] = useState(dammylistings);
     const [yourlistings, setYourListings] = useState([]);
+    const [youApplied, setYouApplied] = useState(false);
+
+    const toggleApply = () => {
+        setYouApplied(!youApplied);
+    };
+
 
     const changeSelection = (listing) => {
         setSelectedListing(listing);
@@ -197,7 +203,7 @@ function ListingsPGU(props) {
                     {selectedListing.id === "empty" ?
                         <>Select a job from the left side bar</>    
                     :
-                        <JobPreview listing={selectedListing}/>
+                        <JobPreview listing={selectedListing} applied={youApplied} handleApply={toggleApply}/>
                     }
                 </div>
             </div>
