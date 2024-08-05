@@ -20,7 +20,7 @@ function Message(props){
                <>
                <img src={props.imgURL} alt="Avatar" style={{width :"50px",height:"50px"}} className="link-image" />
                <div style={{display:"flex", flexDirection:"column",textAlign:"left",marginBottom:"0px"}}>
-               <p style={{marginBottom:"3px"}}>YOU</p>
+               <p style={{marginBottom:"3px",marginTop:"3px"}}>YOU</p>
                <p style={{marginTop:"0px",marginBottom:"3px"}}>{props.message.message}</p>
                </div>                    
                </>
@@ -38,7 +38,7 @@ function Message(props){
                     <>
                     <img src={props.imgURL} alt="Avatar" style={{width :"50px",height:"50px"}} className="link-image" />
                     <div style={{display:"flex", flexDirection:"column",textAlign:"left",marginBottom:"0px"}}>
-                    <p style={{marginBottom:"3px"}}>{props.name}</p>
+                    <p style={{marginBottom:"3px",marginTop:"3px"}}>{props.name}</p>
                     <p style={{marginTop:"0px",marginBottom:"3px"}}>{props.message.message}</p>
                     </div>                    
                     </>
