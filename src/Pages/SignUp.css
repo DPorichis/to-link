@@ -1,0 +1,45 @@
+.progressdot-active
+{
+    margin-left: 3px;
+    margin-right: 3px;
+    height: 25px;
+    width: 25px;
+    background-color: #52cd46;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.progressdot
+{
+    margin-left: 3px;
+    margin-right: 3px;
+    height: 25px;
+    width: 25px;
+    background-color: #bababa;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+
+
+.progressbar
+{
+    margin-top: 9px;
+    height: 5px;
+    width: 45%;
+    background-color: #bababa;
+    border-radius: 2px;
+    display: inline-block;
+}
+
+
+.progressbar-active
+{
+    
+    margin-top: 9px;
+    height: 5px;
+    width: 45%;    
+    background-color: #52cd46;
+    border-radius: 2px;
+    display: inline-block;
+}
