@@ -45,7 +45,7 @@ const convo= [
         media: "/logo192.png"
     },
     {
-        user:"0",
+        user:"1",
         message:"STIN YGEIA SOY",
         time: "10:10",
         media: null
