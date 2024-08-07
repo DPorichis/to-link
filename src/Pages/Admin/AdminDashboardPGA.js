@@ -145,6 +145,16 @@ function AdminDashboardPGA(props) {
         }
     }
 
+    const handleCancel = () => {
+        setExportSelection({
+            selectedUsers: [],
+            format: "JSON",
+            selectedArtifacts: []
+        });
+        setExportMode(false);
+        
+    };
+
 
     return (
         <div>
@@ -176,36 +186,29 @@ function AdminDashboardPGA(props) {
                 <div style={{display:"flex", flexDirection:"row", justifyContent:"space-between", marginBottom: "3px"}}>
                     {exportMode?
                     <>
-                        <p style={{marginBottom: "0"}}>You have selected {exportSelection.selectedUsers.length} users for export</p>
+                        <p style={{marginBottom: "0"}}>You have selected {exportSelection.selectedUsers.length} users for export.</p>
                         <div style={{display:"flex", flexDirection:"row"}}>
-                            <button type="button" class="btn btn-outline-danger btn-sm" onClick={() => {setExportMode(false);}}
+                            <button type="button" class="btn btn-outline-danger btn-sm" onClick={handleCancel}
                                 style={{marginRight:"5px"}}>Cancel</button>
-                            <div style={{border: "#ccc solid 1px", alignItems:"center", padding:"3px 5px", borderRadius:"2px", marginRight:"2px"}}>
-                                <label style={{marginBottom: "0px"}}>Export format: </label>
-                                <select name="format" style={{padding:"0", border: "none", outline: "none"}} 
-                                value={exportSelection.format}
-                                onChange={(e) => {setExportSelection({...exportSelection, format: e.value});}}>
-                                    <option value="JSON">HAHA</option>
-                                    <option value="XML">XML</option>
-                                </select>
-                            </div>
-                            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exportmodal">
+                            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exportmodal"
+                            disabled={exportSelection.selectedUsers.length === 0}>
                                 Export Selected
                             </button>
                             <div class="modal fade" id="exportmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                 <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="exampleModalLabel">What do you want to export?</h1>
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Export Options</h1>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <div class="row">
+                                <p style={{marginBottom:"3px"}}>What do you want to export?</p>
+                                    <div class="row" style={{marginBottom:"5px"}}>
                                         <div class="col-md-6">
                                             <form>
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" id="Personal Information"
-                                                    value={exportSelection.selectedArtifacts.includes("Personal Information")}
+                                                    checked={exportSelection.selectedArtifacts.includes("Personal Information")}
                                                     onChange={handleArtifactsChange}
                                                     />
                                                     <label class="form-check-label" for="persinfo">
@@ -214,7 +217,7 @@ function AdminDashboardPGA(props) {
                                                 </div>
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" id="Profile Information"
-                                                    value={exportSelection.selectedArtifacts.includes("Profile Information")}
+                                                    checked={exportSelection.selectedArtifacts.includes("Profile Information")}
                                                     onChange={handleArtifactsChange}/>
                                                     <label class="form-check-label" for="profinfo">
                                                         Profile Information
@@ -222,7 +225,7 @@ function AdminDashboardPGA(props) {
                                                 </div>
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" id="Posts"
-                                                    value={exportSelection.selectedArtifacts.includes("Posts")}
+                                                    checked={exportSelection.selectedArtifacts.includes("Posts")}
                                                     onChange={handleArtifactsChange}/>
                                                     <label class="form-check-label" for="Posts">
                                                         Posts
@@ -230,7 +233,7 @@ function AdminDashboardPGA(props) {
                                                 </div>
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" id="Listings"
-                                                    value={exportSelection.selectedArtifacts.includes("Listings")}
+                                                    checked={exportSelection.selectedArtifacts.includes("Listings")}
                                                     onChange={handleArtifactsChange}/>
                                                     <label class="form-check-label" for="Listings">
                                                         Listings
@@ -242,7 +245,7 @@ function AdminDashboardPGA(props) {
                                             <form>
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" id="Comments"
-                                                    value={exportSelection.selectedArtifacts.includes("Comments")}
+                                                    checked={exportSelection.selectedArtifacts.includes("Comments")}
                                                     onChange={handleArtifactsChange}/>
                                                     <label class="form-check-label"for="Comments">
                                                         Comments
@@ -250,7 +253,7 @@ function AdminDashboardPGA(props) {
                                                 </div>
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" id="Likes"
-                                                    value={exportSelection.selectedArtifacts.includes("Likes")}
+                                                    checked={exportSelection.selectedArtifacts.includes("Likes")}
                                                     onChange={handleArtifactsChange}/>
                                                     <label class="form-check-label" for="Likes">
                                                         Likes
@@ -258,7 +261,7 @@ function AdminDashboardPGA(props) {
                                                 </div>
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" id="Applications"
-                                                    value={exportSelection.selectedArtifacts.includes("Applications")}
+                                                    checked={exportSelection.selectedArtifacts.includes("Applications")}
                                                     onChange={handleArtifactsChange}/>
                                                     <label class="form-check-label" for="Applications">
                                                         Applications
@@ -267,21 +270,36 @@ function AdminDashboardPGA(props) {
                                             </form>
                                         </div>
                                     </div>
+                                    <div class="col-md-4" style={{marginBottom:"10px"}}>
+                                        <label for="level" class="form-label" style={{marginBottom:"5px"}}>Export format</label>
+                                        <select class="form-select" name="level" value={exportSelection.format}
+                                        onChange={(e) => {setExportSelection({...exportSelection, format: e.value});}}>
+                                            <option value="JSON">JSON</option>
+                                            <option value="XML">XML</option>
+                                        </select>
+                                    </div>
+                                    
+                                    
+                                    <div style={{borderTop:"#ccc solid 1px", paddingTop:"4px"}}>
                                     {exportSelection.selectedArtifacts.length !== 0
                                     ?
-                                    <div style={{borderTop:"#ccc solid 1px"}}>
-                                    <p>You are about to export 
+                                    <p style={{marginBottom:"0px"}}>You are about to export 
                                         {exportSelection.selectedArtifacts.map((art) => <>{" "+ art + ","}</>)}
                                         {" "} 
-                                        from {exportSelection.selectedUsers.length} users</p>
-                                    </div>
+                                        from {exportSelection.selectedUsers.length} users.
+                                    </p>
                                     :
-                                    <></>
+                                    <p style={{marginBottom:"0px"}}>
+                                        You must select something to export.
+                                    </p>
                                     }
+                                    </div>
+                                    
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancel</button>
-                                    <button type="button" class="btn btn-primary">Export</button>
+                                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Back</button>
+                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                                    disabled={exportSelection.selectedArtifacts.length === 0}>Export</button>
                                 </div>
                                 </div>
                             </div>
@@ -290,7 +308,7 @@ function AdminDashboardPGA(props) {
                     </>
                     :
                     <>
-                        <p style={{marginBottom: "0"}}>Select a user for inspection, or export</p>
+                        <p style={{marginBottom: "0"}}>Select a user for inspection, or export.</p>
                         <div>
                             <button type="button" class="btn btn-primary btn-sm" onClick={() => {setExportMode(true);}}>Export</button>
                         </div>
@@ -319,7 +337,7 @@ function AdminDashboardPGA(props) {
                             <td>{usr.postCount}</td>
                             <td>{usr.listingsCount}</td>
                             <td><input type="checkbox" id={usr.uid} onChange={handleSelectionChange} 
-                            value={exportSelection.selectedUsers.includes(usr.uid)}/></td>
+                            checked={exportSelection.selectedUsers.includes(usr.uid)}/></td>
                         </tr>
                         )}
                     </tbody>
@@ -348,9 +366,7 @@ function AdminDashboardPGA(props) {
                         )}
                     </tbody>
                 </table>
-
                 }
-
             </div>
 
 
