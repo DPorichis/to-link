@@ -62,6 +62,9 @@ function Header(props) {
                         <li class="nav-item mx-5">
                             <a class={props.act !== 'messages' ? "nav-link" : "nav-link active"} href="/user/messages">Messages</a>
                         </li>
+                        <li class="nav-item mx-5">
+                            <a class={props.act !== 'notif' ? "nav-link" : "nav-link active"} href="/user/notifications">Notifications</a>
+                        </li>
                         </ul>
                         </div>
                     </div>
