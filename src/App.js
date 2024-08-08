@@ -16,6 +16,7 @@ import NetworkPGU from './Pages/User/NetworkPGU';
 import AccountViewPGA from './Pages/Admin/AccountViewPGA';
 import AdminDashboardPGA from './Pages/Admin/AdminDashboardPGA';
 import NotificationsPGU from './Pages/User/NotificationsPGU';
+import SettingsPGU from './Pages/User/SettingsPGU';
 
 function App() {  
   return (
@@ -30,6 +31,8 @@ function App() {
               <Route path="profile" element={<MyProfilePGU />} />
               <Route path="network" element={<NetworkPGU />} />
               <Route path="notifications" element={<NotificationsPGU />} />
+              <Route path="settings" element={<SettingsPGU />} />
+              
             </Route>
             <Route path="admin" >
               <Route index element={<AdminDashboardPGA />} />
