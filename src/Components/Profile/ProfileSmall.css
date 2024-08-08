@@ -13,3 +13,8 @@
     color: #84737a;
 }
 
+.link:hover{
+  background-color: rgb(182, 181, 181);
+  border-radius: 10px;
+}
+
