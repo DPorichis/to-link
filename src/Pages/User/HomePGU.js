@@ -80,10 +80,15 @@ function HomePGU(props) {
                             Insert TOLINK
                         </button>
                     </div>
-
                 </div>
-                <h5 style={{textAlign:"left"}}>Your Feed</h5>
-                <hr style={{ border: "1px solid black", margin: "10px 0" }} />
+                <div style={{display:"flex", flexDirection:"row",justifyContent:"space-between",marginTop:"10px"}}>
+                    <h5 style={{textAlign:"left",marginBottom:"0px"}}>Your Feed</h5>
+                    <select name="Short by" style={{ backgroundColor: "#cecdcd", border: "none", outline: "none" }}>
+                        <option value="Date">Short by: Date</option>
+                        <option value="Recomended">Short by: Recommended</option>
+                    </select>
+                </div>
+                <hr style={{ border: "1px solid black", margin: "10px 0",marginTop:"5px" }} />
                 <div>
                     <Postbox photolist ={[ "/testing-post1.png", "/testing-post.png"]}/>
                     <Postbox photolist ={[ "/testing-post1.png"]}/>
