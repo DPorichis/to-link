@@ -13,15 +13,12 @@ const dummyprofile = {
     password: "...",
 };
 
-function SettingsPGU(props) {
+function SettingsPGA(props) {
     const [savedProfile, setSavedProfile] = useState(dummyprofile);
     const [editedProfile, setEditedProfile] = useState(savedProfile);
 
     const [personalEdit, setPersonalEdit] = useState(false);
     const [loginEdit, setLoginEdit] = useState(false);
-
-
-
 
     const validateForm = () =>
         {
@@ -306,7 +303,7 @@ function SettingsPGU(props) {
     );
 }
 
-export default SettingsPGU;
+export default SettingsPGA;
 
 
 

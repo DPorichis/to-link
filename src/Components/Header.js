@@ -27,7 +27,7 @@ function Header(props) {
                         <img src="/user.png" width="40" height="40" class="d-inline-block align-top" alt="" />
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="/admin">Settings</a></li>
+                        <li><a class="dropdown-item" href="/admin/settings">Settings</a></li>
                         <li><a class="dropdown-item" href="/">Log Out</a></li>
                     </ul>
             </div>

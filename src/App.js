@@ -17,6 +17,7 @@ import AccountViewPGA from './Pages/Admin/AccountViewPGA';
 import AdminDashboardPGA from './Pages/Admin/AdminDashboardPGA';
 import NotificationsPGU from './Pages/User/NotificationsPGU';
 import SettingsPGU from './Pages/User/SettingsPGU';
+import SettingsPGA from './Pages/Admin/SettingsPGA';
 
 function App() {  
   return (
@@ -37,6 +38,7 @@ function App() {
             <Route path="admin" >
               <Route index element={<AdminDashboardPGA />} />
               <Route path="view" element={<AccountViewPGA />} />
+              <Route path="settings" element={<SettingsPGA />} />
             </Route>
             <Route path="signup" element={<SignUpPG />} />
             <Route path="*" element={<NotFoundPG />} />
