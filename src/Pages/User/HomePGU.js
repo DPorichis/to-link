@@ -34,6 +34,26 @@ function HomePGU(props) {
     title: "CEO of IBIZA",
     imgURL: "/logo192.png",
     },
+    {
+        name: "Theopoula Tzini",
+        title: "CEO of IBIZA",
+        imgURL: "/logo192.png",
+        },
+        {
+            name: "Theopoula Tzini",
+            title: "CEO of IBIZA",
+            imgURL: "/logo192.png",
+            },
+            {
+                name: "Theopoula Tzini",
+                title: "CEO of IBIZA",
+                imgURL: "/logo192.png",
+                },
+                {
+                    name: "Theopoula Tzini",
+                    title: "CEO of IBIZA",
+                    imgURL: "/logo192.png",
+                    },
     ];
     
     return (
@@ -41,24 +61,26 @@ function HomePGU(props) {
             <Header log="user" act="home"/>
             <div style={{display: "flex", flexDirection: "row", justifyContent:"space-around"}}>
             <div className="sidebar">
+                <div style={{maxHeight:"100vh", overflow:"auto"}}>   
                 Profile view
-                <div className="Profile">
-                    <div className="Text" style={{width:"60%"}}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed convallis, lacus at rutrum dapibus, tortor massa posuere lorem, a pellentesque quam urna vitae dolor. Integer eleifend feugiat augue, consequat mattis nibh dictum vitae.
-                    
+                    <div className="Profile">
+                        <div className="Text" style={{width:"60%"}}>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed convallis, lacus at rutrum dapibus, tortor massa posuere lorem, a pellentesque quam urna vitae dolor. Integer eleifend feugiat augue, consequat mattis nibh dictum vitae.
+                        
+                        </div>
+                        <div className="Image">
+                            <img src="/logo192.png" alt="Avatar" style={{width :"45%"}} className="link-image" />
+                            <span style={{display: "block", textAlign: "center"}}>
+                                777 links
+                            </span>
+                        </div>
                     </div>
-                    <div className="Image">
-                        <img src="/logo192.png" alt="Avatar" style={{width :"45%"}} className="link-image" />
-                        <span style={{display: "block", textAlign: "center"}}>
-                            777 links
-                        </span>
+                    MY Links
+                    <div className = "Links">
+                            {links.map((link) =>
+                            <ProfileSmall name = {link.name} title = {link.title} imgURL ={link.imgURL}/>
+                        )}
                     </div>
-                </div>
-                MY Links
-                <div className = "Links">
-                        {links.map((link) =>
-                        <ProfileSmall name = {link.name} title = {link.title} imgURL ={link.imgURL}/>
-                    )}
                 </div>
             </div>
             
