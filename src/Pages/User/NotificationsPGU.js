@@ -30,6 +30,24 @@ title:"CEO of Bikiniiiiiiiiiiiiiiiii",
 imgURL: "/logo192.png",
 InNetwork: false,
 },
+{
+    name: "SpongeBobbbbbbbbbbbbbbbbbbb",
+    title:"CEO of Bikiniiiiiiiiiiiiiiiii",
+    imgURL: "/logo192.png",
+    InNetwork: false,
+    },
+    {
+        name: "SpongeBobbbbbbbbbbbbbbbbbbb",
+        title:"CEO of Bikiniiiiiiiiiiiiiiiii",
+        imgURL: "/logo192.png",
+        InNetwork: false,
+        },
+        {
+            name: "SpongeBobbbbbbbbbbbbbbbbbbb",
+            title:"CEO of Bikiniiiiiiiiiiiiiiiii",
+            imgURL: "/logo192.png",
+            InNetwork: false,
+            },
 ];
 
 function NotificationsPGU(props) {
@@ -39,13 +57,17 @@ function NotificationsPGU(props) {
             <div style={{display:"flex",flexDirection:"column",textAlign:"left",marginLeft:"15%"}}>
                     <h4 style={{marginTop:"15px"}}>Your Notifications</h4>
                     <h5 style={{marginTop:"20px"}}>Link Requests</h5>
-                    <div style={{width:"80%"}}>
+                    <div style={{width:"80%", maxHeight:"50vh", overflow:"auto"}}>
                         {links.map((link) =>
                             <ProfileBannerNotificationsReq name = {link.name} title = {link.title} imgURL ={link.imgURL}/>
                         )}
                     </div>
                     <h5>Clout Check</h5>
-                    <div style={{width:"80%"}}>
+                    <div style={{width:"80%", maxHeight:"20vh", overflow:"auto"}}>
+                        <ProfileBannerClout imgURL ={links[0].imgURL}/>
+                        <ProfileBannerClout imgURL ={links[0].imgURL}/>
+                        <ProfileBannerClout imgURL ={links[0].imgURL}/>
+                        <ProfileBannerClout imgURL ={links[0].imgURL}/>
                         <ProfileBannerClout imgURL ={links[0].imgURL}/>
                         <ProfileBannerClout imgURL ={links[0].imgURL}/>
                     </div>      
