@@ -217,24 +217,27 @@ function NetworkPGU(props) {
     <div>
       <Header log="user" act="network" />
       <div style={{ display: "flex", flexDirection: "column", width: "70%", marginLeft: "15%" }}>
-        <div className="Searchbar" style={{ display: "flex", flexDirection: "row", width: "100%", height: "5vh", borderRadius: "18px", backgroundColor: "#cecdcd", marginTop: "50px" }}>
-          <div style={{ borderRadius: "18px", height: "100%", width: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <select name="where" style={{ backgroundColor: "#cecdcd", border: "none", borderRadius: "18px", outline: "none" }} onChange={handleFilterChange}>
+        <div style={{border:"#ccc solid 1px", borderRadius: "10px",
+        display:"flex", flexDirection:"row", marginBottom:"10px"
+        }}>
+          <div style={{display:"flex", flexDirection:"column", justifyContent:"left", textAlign:"left", width:"15%", borderRight:"#333 solid 1px",
+              borderEndStartRadius: "10px", borderStartStartRadius: "10px", padding:"3px 3px"
+          }}>
+          <label style={{fontSize:"12px", marginLeft:"2px"}}>Searching by</label>
+            <select name="where" style={{border:"none", outline:"none", padding:"0"}} onChange={handleFilterChange}>
               <option value="all">Everyone</option>
               <option value="net">Network Only</option>
               <option value="outnet">Outside Network</option>
             </select>
-            <input
-              style={{ width: "80%", backgroundColor: "transparent", height: "100%", border: "none", borderLeft: "solid" }}
-              placeholder="Search"
+            </div>
+            <input placeholder="Search"
               type="text"
               value={searchTerm}
-              onChange={handleSearchChange}
+              onChange={handleSearchChange} style={{width:"79%", border:"none", outline:"none"}}
             />
-            <button style={{ width: "10%", backgroundColor: "transparent", border: "none" }}>
-              <img src="/search.svg" alt="Search" />
+            <button style={{width:"6%", border:"none", outline:"none", borderEndEndRadius: "10px", borderStartEndRadius: "10px"}}>
+                <img src="/search.svg" style={{}} />
             </button>
-          </div>
         </div>
         <div style={{ textAlign: "left", marginTop: "10px" }}>
           {searching ? (
