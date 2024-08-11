@@ -6,7 +6,8 @@
     margin: 10px 20px;
     padding: 10px 20px;
     border-radius: 10px;
-    border: solid #000 1px;
+    border: solid #A1AECE 1px;
+    background-color: #96b9e42c;
 }
 
 
@@ -17,7 +18,7 @@
     flex-direction: column;
     text-align: left;
     padding-bottom: 8px;
-    border-bottom: #444 solid 1px;
+    border-bottom: #A1AECE solid 1px;
 }
 
 .actions
@@ -33,18 +34,17 @@
 {
     justify-content: left;
     border: none;
-    border: solid 1px #fff;
-    background-color: #fff;
+    border: solid 1px #ffffff00;
+    background-color: #ffffff00;
     border-radius: 3px;
-    width: 20%;
     margin-right: 5px;
 }
 
 
 .like-button:hover
 {
-    border: solid 1px #aaa;
-    background-color: #ddd;
+    border: solid 1px #96B9E4;
+    background-color: #96b9e459;
 }
 
 .comment-input
@@ -53,10 +53,11 @@
     border-radius: 3px;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-content: left;
-    border: solid 1px #aaa;
-    width:80%
+    border: solid 1px #fff;
+    background-color: #fff;
+    width: fit-content;
 }
 
 .comment-input button
@@ -91,7 +92,7 @@
 {
     border: none;
     width: fit-content;
-    background-color: #fff;
+    background-color: #fff00;
     padding: 0;
     margin-left: 2px;
 }

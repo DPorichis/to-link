@@ -158,7 +158,9 @@ function ListingsPGU(props) {
             ? 
             <div style={{display:"flex", flexDirection: "row", width: "90%", marginLeft: "5%", justifyContent:"space-between"}}>
                 <div style={{display: "flex", flexDirection:"column", width: "25%", justifyContent: "left", textAlign: "left"}}>
-                    <div style={{padding: "5px 10px", borderRadius: "10px", border: "#ccc solid 1px", backgroundColor: "#ddd"}}>
+                    <div style={{padding: "5px 10px", borderRadius: "10px", border: "#ccc solid 1px", backgroundColor: "#ddd",
+                        maxHeight:"80vh", overflow: "auto"
+                    }}>
                         <h5>Your Listings</h5>
                         <button type="button" class="btn btn-success" style={{width: "100%"}} onClick={createNewListing}>Create new Listing</button>
                         {yourlistings.map((listi) =>
@@ -175,7 +177,10 @@ function ListingsPGU(props) {
                 </div>
                 <div style={{width: "70%"}}>
                     {selectedListing.id === "empty" ?
-                        <>Select a job from the left side bar</>    
+                        <div style={{width:"100%", height:"80vh", border: "1px #aaa solid",
+                            padding: "10px 20px", borderRadius: "10px", textAlign:"left", textAlign:"center"}}>
+                            <p>Select a job from the left side bar</p>
+                        </div>   
                     :
                         <JobDashboard listing={selectedListing} update={updateListing}/>
                     }
@@ -185,7 +190,7 @@ function ListingsPGU(props) {
             :
             <div style={{display:"flex", flexDirection: "row", width: "90%", marginLeft: "5%", justifyContent:"space-between"}}>
                 <div style={{display: "flex", flexDirection:"column", width: "25%", justifyContent: "left", textAlign: "left"}}>
-                    <div style={{padding: "5px 10px", borderRadius: "10px", border: "#ccc solid 1px", backgroundColor: "#ddd"}}>
+                    <div style={{padding: "5px 10px", borderRadius: "10px", border: "#ccc solid 1px", backgroundColor: "#ddd", maxHeight:"80vh", overflow: "auto"}}>
                         <h5>Browse Listings</h5>
                         {listings.map((listi) =>
                             <JobTile listing={listi} handleSelect={changeSelection} active={selectedListing.id === listi.id} />
@@ -201,7 +206,11 @@ function ListingsPGU(props) {
                 </div>
                 <div style={{width: "70%"}}>
                     {selectedListing.id === "empty" ?
-                        <>Select a job from the left side bar</>    
+                        <div style={{width:"100%", height:"20vh", border: "1px #aaa solid",
+                        padding: "10px 20px", borderRadius: "10px", textAlign:"left", textAlign:"center"}}>
+                            <h4>Select a job from the left side bar</h4>
+                            <p>Found an intresting listing? Select it to preview it and apply.</p>
+                        </div>    
                     :
                         <JobPreview listing={selectedListing} applied={youApplied} handleApply={toggleApply}/>
                     }

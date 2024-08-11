@@ -57,7 +57,7 @@ function JobDashboard(props) {
                     <a class={mode === "edit" ? "nav-link active": "nav-link"} onClick={handleEdit}>Edit</a>
                 </li>
                 <li class="nav-item">
-                    <a class={mode === "responses" ? "nav-link active": "nav-link"} onClick={handleResponse}>Responses</a>
+                    <a class={mode === "responses" ? "nav-link active": "nav-link"} onClick={handleResponse}>Responses <span class="badge text-bg-success">{props.listing.responses.length}</span></a>
                 </li>
             </ul>
             <div style={{display:"flex", flexDirection:"column", justifyContent:"left", border: "1px #aaa solid",

@@ -6,7 +6,7 @@ function JobPreview(props) {
 
     return (
         <div style={{display:"flex", flexDirection:"column", justifyContent:"left", border: "1px #aaa solid",
-            padding: "10px 20px", borderRadius: "10px", textAlign:"left"
+            padding: "10px 20px", borderRadius: "10px", textAlign:"left", maxHeight:"80vh", overflow: "auto"
         }}>
             <div style={{display:"flex", flexDirection:"row", justifyContent:"space-between"}}>
                 <div>

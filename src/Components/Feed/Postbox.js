@@ -17,6 +17,14 @@ function Postbox(props) {
         setCommentsVisible(!commentsVisible);
     }
 
+
+    const [liked, setLiked] = useState(false);
+
+    function toggleLiked()
+    {
+        setLiked(!liked);
+    }
+
     return (
         <div className="postboxout">
             <div className="postboxin">
@@ -57,17 +65,17 @@ function Postbox(props) {
             </div>
             <div></div>
             <div className="actions">
-                <button onClick={props.Like} className="like-button">
-                    {props.liked ? <> <img src="/liked.svg" alt="you liked this"/> <span>Liked</span> </> : <><img src="/like.svg" alt="like"/> <span>Like</span> </>}
+                <button onClick={toggleLiked} className="like-button">
+                    {liked ? <> <img src="/liked.svg" alt="you liked this"/> <span >Liked</span> </> : <><img src="/like.svg" alt="like"/> <span>Like</span> </>}
                 </button>
                 <div className="comment-input">
-                    <img src="/comment.svg" alt="you liked this"/>
-                    <input type="text" placeholder={"Type a comment"} className="inv-text-box"/>
+                    <img src="/comment.svg"/>
+                    <input type="text" placeholder={"Type a comment"} className="inv-text-box" style={{width:"300px"}}/>
                     <button>Post</button>
                 </div>          
             </div>
             <p style={{textAlign: "left", justifyContent: "left", marginLeft: "2px", marginTop: "2px", marginBottom: "0"}}>{props.likecount}1234 liked this · {props.commentcount}5 comments</p>
-            <button className="show-comments-button" onClick={togglecomments}> {commentsVisible ? <>Show Comments v</> : <>Show Comments ></>}</button>
+            <button className="show-comments-button" onClick={togglecomments}> {commentsVisible ? <>Show Comments v</> : <>Show Comments {">"}</>}</button>
             {commentsVisible ? <><CommentsCONT /></> : <></>}
        </div>
     );
