@@ -3,13 +3,10 @@
     display: flex;
     flex-direction: column;
     padding: 5px;
-    background-color: #cecdcd;
+    background-color: #96b9e459;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); 
 }
 .Profile{
-  width: 90%;
-  border: 2px solid rgb(115, 123, 115);
-  padding: 5px 5px;
   box-sizing: border-box; 
   display: flex;
   flex-direction: row; 
@@ -20,9 +17,6 @@
 
 .Links
 {
-    width: 90%;
-    border: 2px solid rgb(115, 123, 115);
-    padding: 5px 5px;
     box-sizing: border-box; 
     display: flex;
     flex-direction: column; 
