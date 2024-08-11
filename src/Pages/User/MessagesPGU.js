@@ -140,8 +140,8 @@ function MessagesPGU(props) {
                 <div className="Textbox" style={{display:"flex", flexDirection:"column",textAlign:"left",marginLeft:"60px",justifyContent:"space-between",width:"50%"}}>
                     <p>
                         <div style={{display:"flex", flexDirection:"row",textAlign:"left"}}>
-                            <h3 style={{fontSize:"32px",marginRight:"8px",marginBottom:"0px"}}>{storedLinks[selected_dm].name}</h3>
-                            <p style={{color:"#D3D3D3",fontSize:"20px",marginTop:"7px",marginBottom:"0px"}}>{storedLinks[selected_dm].title}</p>
+                            <h3 style={{fontSize:"4vh",marginRight:"8px",marginBottom:"0px"}}>{storedLinks[selected_dm].name}</h3>
+                            <p style={{color:"#D3D3D3",fontSize:"3vh",marginTop:"0.5vh",marginBottom:"0px"}}>{storedLinks[selected_dm].title}</p>
                         </div>
                         <p style={{marginTop:"0px"}}>online</p>
                         <div style={{display:"flex", flexDirection:"column",}}>
@@ -149,7 +149,7 @@ function MessagesPGU(props) {
                         </div>
                     </p>
                     <p>
-                        <div className="ChatBox" style={{display:"flex",flexDirection:"row",width:"100%",height:"40px",borderRadius:"18px",backgroundColor: "#cecdcd"}}>
+                        <div className="ChatBox" style={{display:"flex",flexDirection:"row",width:"100%",height:"6vh",borderRadius:"18px",backgroundColor: "#cecdcd"}}>
                             <div style={{borderRadius:"18px",height:"100%",width:"100%"}}>
                             <button style={{width:"10%",backgroundColor: "transparent",height:"90%",border:"none"}}>
                             <img src="/plus-circle.svg" />
