@@ -60,8 +60,8 @@ function HomePGU(props) {
         <div>
             <Header log="user" act="home"/>
             <div style={{display: "flex", flexDirection: "row", justifyContent:"space-around"}}>
-            <div className="sidebar">
-                <div style={{maxHeight:"100vh", overflow:"auto"}}>   
+            <div className="sidebar" style={{maxHeight:"90vh", overflow:"auto",width: "20%",alignItems:"left"}}>
+                <div>   
                 Profile view
                     <div className="Profile">
                         <div className="Text" style={{width:"60%"}}>
@@ -83,11 +83,10 @@ function HomePGU(props) {
                     </div>
                 </div>
             </div>
-            
-            <div style={{width: "60%"}}>
+            <div style={{width: "60%",maxHeight:"90vh", overflow:"auto"}}>
                 <h5 style={{textAlign:"left"}}>Upload</h5>
                 <hr style={{ border: "1px solid black", margin: "10px 0" }} />
-                <div className="UploadBox" style={{display:"flex",flexDirection:"column",backgroundColor: "#cecdcd",justifyContent:"flex-start",borderRadius:"9px",height:"6%"}}>
+                <div className="UploadBox" style={{display:"flex",flexDirection:"column",backgroundColor: "#cecdcd",justifyContent:"flex-start",borderRadius:"9px"}}>
                     <div style={{display:"flex",flexDirection:"row",padding:"10px 10px"}}>
                     <img src="/logo192.png" alt="Avatar" style={{width :"50px",height:"50px"}} className="link-image" />
                     <input style={{width:"90%",height:"100%",border:"none",marginTop:"4px",borderRadius:"9px",height:"40px"}} placeholder="Brag to your Colleges about something..." type="text" /> 
