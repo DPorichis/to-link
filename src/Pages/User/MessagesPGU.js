@@ -180,42 +180,44 @@ function MessagesPGU(props) {
     return (
         <div >
             <Header log="user" act="messages"/>
-            <div style={{display:"flex",flexDirection:"row",justifyContent:"space-around"}}>
-                <div className="sidebar" style={{maxHeight:"90vh",overflow:"auto",width:"25%"}}>
-                    <div style={{ textAlign: "left" }}>
-                    Your DMs
-                    </div>
-                    <div className = "LinksDms">
+            <div style={{display:"flex",flexDirection:"row",justifyContent:"space-between", marginLeft:"5%", width:"90%"}}>
+                <div className="sidebar" style={{maxHeight:"90vh",overflow:"auto",width:"25%", padding:"5px 10px", borderRadius:"10px",
+                    border:"1px solid #A1AECE"
+                }}>
+                    <h5 style={{ textAlign: "left" }}>
+                        Your DMs
+                    </h5>
+                    <div style={{padding: "5px 5px", display: "flex", flexDirection: "column", borderRadius: "10px"}}>
                         {storedLinks.map((link, index) =>
                         <ProfileDms name = {link.name} title = {link.title} messages={link.messages} imgURL={link.imgURL} changesel={handleDmClick} id={index} isSelected={selected_dm === index}/>
                         )}
                     </div>
                 </div>
-                <div className="Textbox" style={{display:"flex", flexDirection:"column",textAlign:"left",justifyContent:"space-between",width:"70%"}}>
-                    <p>
+                <div className="Textbox" style={{display:"flex", flexDirection:"column",textAlign:"left",justifyContent:"space-between",width:"70%", padding:"5px 10px",
+                    border: "#ccc 1px solid", borderRadius:"10px"
+                }}>
+                    <div >
                         <div style={{display:"flex", flexDirection:"row",textAlign:"left"}}>
                             <h3 style={{fontSize:"4vh",marginRight:"1%",marginBottom:"0px"}}>{storedLinks[selected_dm].name}</h3>
                             <p style={{color:"#D3D3D3",fontSize:"3vh",marginTop:"0.5vh",marginBottom:"0px"}}>{storedLinks[selected_dm].title}</p>
                         </div>
                         <p style={{marginTop:"0px"}}>online</p>
-                        <div style={{display:"flex", flexDirection:"column",}}>
-                        <MessageCont dm = {storedLinks[selected_dm]} />
-                        </div>
-                    </p>
-                    <p>
-                        <div className="ChatBox" style={{display:"flex",flexDirection:"row",width:"100%",height:"6vh",borderRadius:"18px",backgroundColor: "#cecdcd"}}>
-                            <div style={{borderRadius:"18px",height:"100%",width:"100%"}}>
-                            <button style={{width:"10%",backgroundColor: "transparent",height:"90%",border:"none"}}>
-                            <img src="/plus-circle.svg" />
+                    </div>
+                    <MessageCont dm = {storedLinks[selected_dm]} />
+                    <div>
+                        <div className="ChatBox" style={{display:"flex",flexDirection:"row",width:"100%",height:"45px",borderRadius:"18px",backgroundColor: "#fff", 
+                            borderRadius:"10px", border: "#ccc 1px solid", marginTop:"15px"
+                        }}>
+                            <button style={{width:"40px",backgroundColor: "transparent", border:"none"}}>
+                                <img src="/plus-circle.svg" width={"25px"} height={"25px"}/>
                             </button>
-                            <input style={{width:"80%",backgroundColor: "transparent",height:"100%",border:"none",
-                                borderLeft:"solid"}} placeholder="Type a message..." type="text" onChange={handleTextChange} value={textboxContent}/> 
-                            <button style={{width:"10%",backgroundColor: "transparent",border:"none"}} onClick={handleUploadClick}>
-                            <img src="/upload.svg" style={{}} />
+                            <input style={{flex:"1",backgroundColor: "transparent",height:"100%",border:"none",
+                            borderLeft:"1px solid", borderRight:"1px solid"}} placeholder="Type a message..." type="text" onChange={handleTextChange} value={textboxContent}/> 
+                            <button style={{width:"40px",backgroundColor: "transparent",border:"none"}} onClick={handleUploadClick}>
+                                <img src="/upload.svg" width={"25px"} height={"25px"} />
                             </button>
-                            </div>
                         </div>
-                    </p>
+                    </div>
                 </div>
             </div>
         </div>

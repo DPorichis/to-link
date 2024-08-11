@@ -11,7 +11,7 @@ function MessageCont(props) {
     }, [props.dm.messages]); 
 
     return (
-        <div style={{ overflowY: "scroll", height: "550px", paddingRight: "10px" }}>
+        <div style={{ overflowY: "scroll", paddingRight: "10px", flex:"1" }}>
             <div>
                 {props.dm.messages.map((message, index) => (
                     <Message
