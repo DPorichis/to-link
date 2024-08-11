@@ -217,7 +217,7 @@ function NetworkPGU(props) {
     <div>
       <Header log="user" act="network" />
       <div style={{ display: "flex", flexDirection: "column", width: "70%", marginLeft: "200px" }}>
-        <div className="Searchbar" style={{ display: "flex", flexDirection: "row", width: "100%", height: "40px", borderRadius: "18px", backgroundColor: "#cecdcd", marginTop: "50px" }}>
+        <div className="Searchbar" style={{ display: "flex", flexDirection: "row", width: "100%", height: "5vh", borderRadius: "18px", backgroundColor: "#cecdcd", marginTop: "50px" }}>
           <div style={{ borderRadius: "18px", height: "100%", width: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <select name="where" style={{ backgroundColor: "#cecdcd", border: "none", borderRadius: "18px", outline: "none" }} onChange={handleFilterChange}>
               <option value="all">Everyone</option>
@@ -242,7 +242,7 @@ function NetworkPGU(props) {
               {filter === "all" && (
                 <>
                   <h5>Your Network</h5>
-                  <div style={{ maxHeight: "450px", overflowY: "auto", marginBottom: "10px" }}>
+                  <div style={{ maxHeight: "57vh", overflowY: "auto", marginBottom: "10px" }}>
                     <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
                       {filteredInNetworkCards.map((link, index) => (
                         <ProfileBanner key={index} name={link.name} title={link.title} InNetwork={link.InNetwork} imgURL={link.imgURL} />
@@ -260,7 +260,7 @@ function NetworkPGU(props) {
               {filter === "net" && (
                 <>
                   <h5>Your Network</h5>
-                  <div style={{ maxHeight: "500px", overflowY: "auto", marginBottom: "10px" }}>
+                  <div style={{ maxHeight: "65vh", overflowY: "auto", marginBottom: "10px" }}>
                     <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
                       {filteredInNetworkCards.map((link, index) => (
                         <ProfileBanner key={index} name={link.name} title={link.title} InNetwork={link.InNetwork} imgURL={link.imgURL} />
@@ -272,7 +272,7 @@ function NetworkPGU(props) {
               {filter === "outnet" && (
                 <>
                   <h5>People you may know</h5>
-                  <div style={{ maxHeight: "500px", overflowY: "auto", marginBottom: "10px" }}>
+                  <div style={{ maxHeight: "65vh", overflowY: "auto", marginBottom: "10px" }}>
                     <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
                       {filteredOutOfNetworkCards.map((link, index) => (
                         <ProfileBanner key={index} name={link.name} title={link.title} InNetwork={link.InNetwork} imgURL={link.imgURL} />
@@ -287,7 +287,7 @@ function NetworkPGU(props) {
               {filter === "all" && (
                 <>
                   <h5>Your Network</h5>
-                  <div style={{ maxHeight: "450px", overflowY: "auto", marginBottom: "10px" }}>
+                  <div style={{ maxHeight: "57vh", overflowY: "auto", marginBottom: "10px" }}>
                     <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
                       {filteredInNetworkCards.map((link, index) => (
                         <ProfileCard key={index} name={link.name} title={link.title} InNetwork={link.InNetwork} imgURL={link.imgURL} />
@@ -305,7 +305,7 @@ function NetworkPGU(props) {
               {filter === "net" && (
                 <>
                   <h5>Your Network</h5>
-                  <div style={{ maxHeight: "500px", overflowY: "auto", marginBottom: "10px" }}>
+                  <div style={{ maxHeight: "65vh", overflowY: "auto", marginBottom: "10px" }}>
                     <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
                       {filteredInNetworkCards.map((link, index) => (
                         <ProfileCard key={index} name={link.name} title={link.title} InNetwork={link.InNetwork} imgURL={link.imgURL} />
@@ -317,7 +317,7 @@ function NetworkPGU(props) {
               {filter === "outnet" && (
                 <>
                   <h5>People you may know</h5>
-                  <div style={{ maxHeight: "500px", overflowY: "auto", marginBottom: "10px" }}>
+                  <div style={{ maxHeight: "65vh", overflowY: "auto", marginBottom: "10px" }}>
                     <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
                       {filteredOutOfNetworkCards.map((link, index) => (
                         <ProfileCard key={index} name={link.name} title={link.title} InNetwork={link.InNetwork} imgURL={link.imgURL} />
