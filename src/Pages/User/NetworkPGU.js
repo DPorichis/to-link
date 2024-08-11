@@ -216,7 +216,7 @@ function NetworkPGU(props) {
   return (
     <div>
       <Header log="user" act="network" />
-      <div style={{ display: "flex", flexDirection: "column", width: "70%", marginLeft: "200px" }}>
+      <div style={{ display: "flex", flexDirection: "column", width: "70%", marginLeft: "15%" }}>
         <div className="Searchbar" style={{ display: "flex", flexDirection: "row", width: "100%", height: "5vh", borderRadius: "18px", backgroundColor: "#cecdcd", marginTop: "50px" }}>
           <div style={{ borderRadius: "18px", height: "100%", width: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <select name="where" style={{ backgroundColor: "#cecdcd", border: "none", borderRadius: "18px", outline: "none" }} onChange={handleFilterChange}>
