@@ -88,6 +88,60 @@ title: "CEO of SYNERGEIO O MAKIS",
 imgURL: "/logo192.png",
 messages : convo,
 },
+{
+    name: "Lakis Lalakis",
+    title:"CEO of DIT",
+    imgURL: "/logo192.png",
+    messages: convo,
+    },
+    {
+        name: "Lakis Lalakis",
+        title:"CEO of DIT",
+        imgURL: "/logo192.png",
+        messages: convo,
+        },
+        {
+            name: "Lakis Lalakis",
+            title:"CEO of DIT",
+            imgURL: "/logo192.png",
+            messages: convo,
+            },
+            {
+                name: "Lakis Lalakis",
+                title:"CEO of DIT",
+                imgURL: "/logo192.png",
+                messages: convo,
+                },
+{
+name: "Makis Kotsampasis",
+title: "CEO of SYNERGEIO O MAKIS",
+imgURL: "/logo192.png",
+messages : convo,
+},
+{
+    name: "Makis Kotsampasis",
+    title: "CEO of SYNERGEIO O MAKIS",
+    imgURL: "/logo192.png",
+    messages : convo,
+    },
+    {
+        name: "Makis Kotsampasis",
+        title: "CEO of SYNERGEIO O MAKIS",
+        imgURL: "/logo192.png",
+        messages : convo,
+        },
+        {
+            name: "Makis Kotsampasis",
+            title: "CEO of SYNERGEIO O MAKIS",
+            imgURL: "/logo192.png",
+            messages : convo,
+            },
+            {
+                name: "Makis Kotsampasis",
+                title: "CEO of SYNERGEIO O MAKIS",
+                imgURL: "/logo192.png",
+                messages : convo,
+                },
 
 ];
 
@@ -127,7 +181,7 @@ function MessagesPGU(props) {
         <div >
             <Header log="user" act="messages"/>
             <div style={{display:"flex",flexDirection:"row"}}>
-                <div className="sidebar">
+                <div className="sidebar" style={{maxHeight:"90vh",overflow:"auto"}}>
                     <div style={{ textAlign: "left" }}>
                     Your DMs
                     </div>

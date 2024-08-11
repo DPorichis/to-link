@@ -8,7 +8,6 @@ import './ProfileDms.css';
 
 function ProfileDms(props){
     const lastMessage = props.messages.length > 0 ? props.messages[props.messages.length - 1].message : '';
-    console.log(props.messages[props.messages.length - 1])
 return(
 
 <li className = "linkdms" key={props.name} style={{display:"flex", textAlign:"start",flexDirection: "row",margin:"5px", cursor:"pointer", border: "1px solid transparent", 
