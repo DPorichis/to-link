@@ -60,23 +60,34 @@ function HomePGU(props) {
         <div>
             <Header log="user" act="home"/>
             <div style={{display: "flex", flexDirection: "row", justifyContent:"space-around"}}>
-            <div className="sidebar" style={{maxHeight:"90vh", overflow:"auto",width: "20%",alignItems:"left"}}>
+            <div className="sidebar" style={{maxHeight:"90vh", overflow:"auto",width: "20%",alignItems:"left",textAlign:"left",padding:"5px 10px",borderRadius:"10px"}}>
                 <div>   
-                Profile view
-                    <div className="Profile">
-                        <div className="Text" style={{width:"60%"}}>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed convallis, lacus at rutrum dapibus, tortor massa posuere lorem, a pellentesque quam urna vitae dolor. Integer eleifend feugiat augue, consequat mattis nibh dictum vitae.
-                        
+                <h5>Profile view</h5>
+                    <div className="Profile" style={{backgroundColor:"white",borderRadius:"10px",display:"flex",flexDirection:"column",padding:"5px 10px",marginBottom:"10px"}}>
+                        <div style={{display:"flex",flexDirection:"row"}}>
+                                <img src="/logo192.png" alt="Avatar" style={{width :"50px",height:"50px"}} className="link-image" />
+                                <div style={{display:"flex",flexDirection:"column",marginBottom:"0px",marginTop:"0px",marginLeft:"5px"}}>
+                                    <p style={{marginBottom:"0px",marginTop:"0px"}}>NAME NAME</p>
+                                    <p>TITLE</p>
+                                </div>
                         </div>
-                        <div className="Image">
-                            <img src="/logo192.png" alt="Avatar" style={{width :"45%"}} className="link-image" />
-                            <span style={{display: "block", textAlign: "center"}}>
-                                777 links
-                            </span>
+                        <div style={{display:"flex",flexDirection:"row",justifyContent:"space-between",textAlign:"center"}}>
+                            <div style={{display:"flex",flexDirection:"column"}}>
+                            <h5 style={{marginBottom:"0px"}}>YYY</h5>
+                            <p style={{marginBottom:"0px"}}>posts</p>
+                            </div>
+                            <div style={{display:"flex",flexDirection:"column"}}>
+                            <h5 style={{marginBottom:"0px"}}>YYY</h5>
+                            <p style={{marginBottom:"0px"}}>Links</p>
+                            </div>
+                            <div style={{display:"flex",flexDirection:"column"}}>
+                            <h5 style={{marginBottom:"0px"}}>YYY</h5>
+                            <p style={{marginBottom:"0px"}}>listings</p>
+                            </div>
                         </div>
                     </div>
-                    MY Links
-                    <div className = "Links">
+                    <h5>MY Links</h5>
+                    <div className = "Links" style={{}}>
                             {links.map((link) =>
                             <ProfileSmall name = {link.name} title = {link.title} imgURL ={link.imgURL}/>
                         )}
