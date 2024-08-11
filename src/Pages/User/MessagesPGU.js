@@ -180,8 +180,8 @@ function MessagesPGU(props) {
     return (
         <div >
             <Header log="user" act="messages"/>
-            <div style={{display:"flex",flexDirection:"row"}}>
-                <div className="sidebar" style={{maxHeight:"90vh",overflow:"auto"}}>
+            <div style={{display:"flex",flexDirection:"row",justifyContent:"space-around"}}>
+                <div className="sidebar" style={{maxHeight:"90vh",overflow:"auto",width:"25%"}}>
                     <div style={{ textAlign: "left" }}>
                     Your DMs
                     </div>
@@ -191,10 +191,10 @@ function MessagesPGU(props) {
                         )}
                     </div>
                 </div>
-                <div className="Textbox" style={{display:"flex", flexDirection:"column",textAlign:"left",marginLeft:"60px",justifyContent:"space-between",width:"50%"}}>
+                <div className="Textbox" style={{display:"flex", flexDirection:"column",textAlign:"left",justifyContent:"space-between",width:"70%"}}>
                     <p>
                         <div style={{display:"flex", flexDirection:"row",textAlign:"left"}}>
-                            <h3 style={{fontSize:"4vh",marginRight:"8px",marginBottom:"0px"}}>{storedLinks[selected_dm].name}</h3>
+                            <h3 style={{fontSize:"4vh",marginRight:"1%",marginBottom:"0px"}}>{storedLinks[selected_dm].name}</h3>
                             <p style={{color:"#D3D3D3",fontSize:"3vh",marginTop:"0.5vh",marginBottom:"0px"}}>{storedLinks[selected_dm].title}</p>
                         </div>
                         <p style={{marginTop:"0px"}}>online</p>
