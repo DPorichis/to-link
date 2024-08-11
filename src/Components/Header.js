@@ -9,7 +9,7 @@ function Header(props) {
         return (
             <nav class="navbar navbar-expand-lg bg-body-tertiary">
             <div class="container-fluid">
-                <img src="/logo192.png" width="30" height="30" class="d-inline-block align-top" alt="" />
+            <img src="/logoshadow.png" width="64" height="64" class="d-inline-block align-top" alt="" />
                 <a class="navbar-brand" href="#">To Link</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -37,10 +37,10 @@ function Header(props) {
     else if(props.log === 'user')
     {
         return (
-            <nav class="navbar navbar-expand-lg bg-body-tertiary">
-            <div class="container-fluid">
-                <img src="/logo192.png" width="30" height="30" class="d-inline-block align-top" alt="" />
-                <a class="navbar-brand" href="#">To Link</a>
+            <nav class="navbar navbar-expand-lg bg-body-tertiary" style={{backgroundColor:"#A1AECE"}}>
+            <div class="container-fluid" style={{backgroundColor:"#A1AECE", color:"#050B10"}}>
+                <img src="/logoshadow.png" width="64" height="64" class="d-inline-block align-top" alt="" />
+                <a class="navbar-brand" href="/" style={{font:"Raleway Semi bold italic"}}>To Link</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
