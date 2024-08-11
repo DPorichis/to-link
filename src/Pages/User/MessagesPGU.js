@@ -194,7 +194,7 @@ function MessagesPGU(props) {
                     </div>
                 </div>
                 <div className="Textbox" style={{display:"flex", flexDirection:"column",textAlign:"left",justifyContent:"space-between",width:"70%", padding:"5px 10px",
-                    border: "#ccc 1px solid", borderRadius:"10px"
+                    border: "#ccc 1px solid", borderRadius:"10px",  height:"90vh"
                 }}>
                     <div >
                         <div style={{display:"flex", flexDirection:"row",textAlign:"left"}}>

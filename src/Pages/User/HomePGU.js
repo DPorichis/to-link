@@ -97,17 +97,17 @@ function HomePGU(props) {
             <div style={{width: "60%",maxHeight:"90vh", overflow:"auto"}}>
                 <h5 style={{textAlign:"left"}}>Upload</h5>
                 <hr style={{ border: "1px solid black", margin: "10px 0" }} />
-                <div className="UploadBox" style={{display:"flex",flexDirection:"column",backgroundColor: "#cecdcd",justifyContent:"flex-start",borderRadius:"9px"}}>
+                <div className="UploadBox" style={{display:"flex",flexDirection:"column",backgroundColor: "#96b9e42c",justifyContent:"flex-start",borderRadius:"9px"}}>
                     <div style={{display:"flex",flexDirection:"row",padding:"10px 10px"}}>
                     <img src="/logo192.png" alt="Avatar" style={{width :"50px",height:"50px"}} className="link-image" />
                     <input style={{width:"90%",height:"100%",border:"none",marginTop:"4px",borderRadius:"9px",height:"40px"}} placeholder="Brag to your Colleges about something..." type="text" /> 
                     </div>
                     <div style={{textAlign:"left",marginLeft:"10%"}}>
-                        <button style={{width:"30%",backgroundColor: "#cecdcd",border:"none"}}>
+                        <button style={{width:"30%",backgroundColor: "#96b9e42c",border:"none"}}>
                             <img src="/upload.svg" style={{}} />
                             Upload Media
                         </button>
-                        <button style={{width:"30%",backgroundColor: "#cecdcd",border:"none"}}>
+                        <button style={{width:"30%",backgroundColor: "#96b9e42c",border:"none"}}>
                             <img src="/link.svg" style={{}} />
                             Insert TOLINK
                         </button>
