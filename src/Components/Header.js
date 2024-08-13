@@ -37,7 +37,7 @@ function Header(props) {
     else if(props.log === 'user')
     {
         return (
-            <nav class="navbar navbar-expand-lg bg-body-tertiary" style={{backgroundColor:"#A1AECE"}}>
+            <nav class="navbar navbar-expand-lg" style={{backgroundColor:"#A1AECE"}}>
             <div class="container-fluid" style={{backgroundColor:"#A1AECE", color:"#050B10"}}>
                 <img src="/logoshadow.png" width="64" height="64" class="d-inline-block align-top" alt="" />
                 <a class="navbar-brand" href="/" style={{font:"Raleway Semi bold italic"}}>To Link</a>
@@ -83,7 +83,7 @@ function Header(props) {
     else 
     {
         return (
-            <nav class="navbar navbar-expand-lg bg-body-tertiary">
+            <nav class="navbar navbar-expand-lg" style={{backgroundColor:"#A1AECE"}}>
                 <div class="container-fluid">
                     <div>
                         <img src="/logo192.png" width="30" height="30" class="d-inline-block align-top" alt="" />

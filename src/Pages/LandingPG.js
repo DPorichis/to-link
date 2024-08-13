@@ -14,18 +14,15 @@ function LandingPG(props) {
             <div style={{display:"flex", width:"90%", marginLeft:"5%", flexDirection:"column"}}>
                 <div style={{display:"flex", justifyContent:"space-around", marginTop:"2%"}}>
                     <div style={{width:"50%", textAlign: "left"}}>
-                        <h3>Welcome to whatever this is</h3>
-                        <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. In sapien nisl, imperdiet vitae congue ac, consectetur sit amet erat. 
-                        Integer leo est, tempus ut ligula in, ornare scelerisque dolor. Suspendisse lectus dolor, scelerisque vel lectus at, lacinia euismod 
-                        ex. Ut a leo vitae nisi consectetur semper at vitae nisi. Mauris posuere ante augue, in commodo ipsum dapibus sit amet. Pellentesque mattis, 
-                        neque nec semper cursus, urna tortor vulputate dolor, ac mattis massa ligula ut diam. Ut ultricies id elit eu facilisis. Quisque tincidunt eros 
-                        quis eros volutpat, vitae rutrum neque varius. Nulla quis neque pharetra, elementum odio et, ornare diam. Proin cursus sollicitudin magna, dapibus 
-                        dapibus nunc pulvinar quis.
-                        </p>
+                        <img src="/Accent.png"/>
                     </div>
-                    <div style={{width:"40%", textAlign:"left", background: "#dddd", padding: "20px 10px", borderRadius: "5px",
-                        border: "solid 1px", borderColor:"#ccc"}}>
+
+                    <div style={{display:"flex", flexDirection:"column", width:"40%", textAlign:"left", justifyContent:"center"}}>
+                    <h3>Welcome to whatever this is</h3>
+                    <p>All your favorite high ego friends are waiting inside!</p>
+
+                    <div style={{textAlign:"left", background: "#e2d9d0", padding: "20px 10px", borderRadius: "5px",
+                        border: "solid 1px", borderColor:"#ccc", height:"fit-content"}}>
                         <form>
                             <div class="mb-3">
                                 <label for="exampleInputEmail1" class="form-label">Email address</label>
@@ -45,31 +42,43 @@ function LandingPG(props) {
                             </div>
                         </form>
                     </div>
+                    <div style={{borderTop: "solid 1px #aaa", display:"flex", width:"100%", marginTop:"10px", paddingTop:"10px"}}>
+                    <button class="btn btn-primary" style={{width:"100%"}}>Sign up</button>
+                    </div>
+                    </div>
+ 
                 </div>
-                <div style={{display:"flex", justifyContent:"space-around", marginTop:"4%"}}>
-                    <div class="card border-secondary mb-3" style={{maxWidth: "18rem", marginTop: "10px"}}>
-                        <div class="card-header">Header</div>
+                <div style={{marginTop:"2%", marginBottom: "2%"}}>
+                <h3>Redefining social-networking from the ground up</h3>
+                <p>Built by professionals, for professionals</p>
+                <div style={{display:"flex", justifyContent:"space-around"}}>
+                    <div class="card border-secondary mb-3" style={{maxWidth: "18rem", marginTop: "10px", height:"fit-content"}}>
+                        <div class="card-header">Personal Messages</div>
                         <div class="card-body text-secondary">
-                            <h5 class="card-title">Secondary card title</h5>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <h5 class="card-title">Emails are dead</h5>
+                            <p class="card-text">Text all your colleagues securely. (Until our whole database gets leaked and we end up in legal trouble)</p>
                         </div>
                     </div>
-                    <div class="card border-secondary mb-3" style={{maxWidth: "18rem", marginTop: "70px"}}>
-                        <div class="card-header">Header</div>
+                    <div class="card border-secondary mb-3" style={{maxWidth: "18rem", marginTop: "70px", height:"fit-content"}}>
+                        <div class="card-header">Job Listings</div>
                         <div class="card-body text-secondary">
-                            <h5 class="card-title">Secondary card title</h5>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <h5 class="card-title">Job-hopping made easy</h5>
+                            <p class="card-text">Browse available jobs, and apply in seconds using your profile as a CV. <br/><b>Feeling like a boss?</b> Post your job listings for millions to see</p>
                         </div>
                     </div>
-                    <div class="card border-secondary mb-3" style={{maxWidth: "18rem", marginTop: "50px"}}>
-                        <div class="card-header">Header</div>
+                    <div class="card border-secondary mb-3" style={{maxWidth: "18rem", marginTop: "50px", height:"fit-content"}}>
+                        <div class="card-header">Feed</div>
                         <div class="card-body text-secondary">
-                            <h5 class="card-title">Secondary card title</h5>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <h5 class="card-title">Did Tiffany land a minimum wage job?</h5>
+                            <p class="card-text">I don't know. Find out in your feed!</p>
                         </div>
                     </div>
                 </div>
-                <div style={{display:"flex", justifyContent:"space-around", marginTop:"4%", marginBottom: "4%"}}>
+                </div>
+                <div style={{marginTop:"2%", marginBottom: "2%"}}>
+                <h3>Industry leaders and flourishing professionals use TO Link. Every. Single. Day.</h3>
+                <p>Some honorable mentions</p>
+                <div style={{display:"flex", justifyContent:"space-around", marginTop:"2%"}}>
                     <div class="card">
                         <div class="card-header">
                             Quote
@@ -92,6 +101,7 @@ function LandingPG(props) {
                             </blockquote>
                         </div>
                     </div>
+                </div>
                 </div>
             </div>        
         </div>
