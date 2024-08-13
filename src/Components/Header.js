@@ -9,7 +9,7 @@ function Header(props) {
         return (
             <nav class="navbar navbar-expand-lg bg-body-tertiary">
             <div class="container-fluid">
-            <img src="/logoshadow.png" width="64" height="64" class="d-inline-block align-top" alt="" />
+                <img src="/logoshadow.png" width="64" height="64" class="d-inline-block align-top" alt="" />
                 <a class="navbar-brand" href="#">To Link</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -37,9 +37,11 @@ function Header(props) {
     else if(props.log === 'user')
     {
         return (
-            <nav class="navbar navbar-expand-lg" style={{backgroundColor:"#A1AECE"}}>
-            <div class="container-fluid" style={{backgroundColor:"#A1AECE", color:"#050B10"}}>
-                <img src="/logoshadow.png" width="64" height="64" class="d-inline-block align-top" alt="" />
+            <nav class="navbar navbar-expand-lg" style={{background:"rgb(161,174,206)", background: "linear-gradient(160deg, rgba(161,174,206,1) 0%, rgba(251,252,254,1) 100%)",
+                boxShadow: "0px 5px 15px -3px rgba(0,0,0,0.75)", marginBottom:"20px"
+            }}>
+            <div class="container-fluid" >
+                <img src="/cropedlogo.png" width="50px" height="50px" class="d-inline-block align-top" alt="" />
                 <a class="navbar-brand" href="/" style={{font:"Raleway Semi bold italic"}}>To Link</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -83,18 +85,20 @@ function Header(props) {
     else 
     {
         return (
-            <nav class="navbar navbar-expand-lg" style={{backgroundColor:"#A1AECE"}}>
-                <div class="container-fluid">
-                    <div>
-                        <img src="/logo192.png" width="30" height="30" class="d-inline-block align-top" alt="" />
-                        <a class="navbar-brand" href="/">To Link</a>
-                    </div>
-                    <div>
-                        <a type="button" class="btn btn-primary" style={{marginRight: 7}} href="/user">Sign In</a>
-                        <a type="button" class="btn btn-outline-primary" href="/signup" >Sign Up</a>
-                    </div>
+            <nav class="navbar navbar-expand-lg" style={{background:"rgb(161,174,206)", background: "linear-gradient(160deg, rgba(161,174,206,1) 0%, rgba(251,252,254,1) 100%)",
+                boxShadow: "0px 5px 15px -3px rgba(0,0,0,0.75)", marginBottom:"20px"
+            }}>
+            <div class="container-fluid" >
+                <img src="/cropedlogo.png" width="50px" height="50px" class="d-inline-block align-top" alt="" />
+                <a class="navbar-brand" href="/" style={{font:"Raleway Semi bold italic", margin: "0px 0px"}}>To Link</a>
+                
+                <div>
+                    <a type="button" class="btn btn-primary" style={{marginRight: 7}} href="/user">Sign In</a>
+                    <a type="button" class="btn btn-outline-primary" href="/signup" >Sign Up</a>
                 </div>
+            </div>
             </nav>
+
         );
     }
 }
