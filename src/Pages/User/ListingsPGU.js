@@ -177,10 +177,11 @@ function ListingsPGU(props) {
                 </div>
                 <div style={{width: "70%"}}>
                     {selectedListing.id === "empty" ?
-                        <div style={{width:"100%", height:"80vh", border: "1px #aaa solid",
+                        <div style={{width:"100%", height:"20vh", border: "1px #aaa solid",
                             padding: "10px 20px", borderRadius: "10px", textAlign:"left", textAlign:"center"}}>
-                            <p>Select a job from the left side bar</p>
-                        </div>   
+                                <h4>Select a job from the left side bar</h4>
+                                <p>Found an intresting listing? Select it to preview it and apply.</p>
+                            </div>      
                     :
                         <JobDashboard listing={selectedListing} update={updateListing}/>
                     }

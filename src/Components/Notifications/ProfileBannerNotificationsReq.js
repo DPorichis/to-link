@@ -18,7 +18,7 @@ function ProfileBannerNotificationsReq(props){
     
     return(
         
-        <div className="Box" style={{backgroundColor: "#cecdcd",width:"100%",flexDirection:"row",padding:"5px 10px", display:"flex", justifyContent:"space-between", marginTop:"9px",marginBottom:"9px",borderRadius:"10px",textAlign: "center"}}>
+        <div className="Box" style={{border:"1px solid #ccc", backgroundColor: "#96b9e459", width:"100%",flexDirection:"row",padding:"5px 10px", display:"flex", justifyContent:"space-between", marginTop:"9px",marginBottom:"9px",borderRadius:"10px",textAlign: "center"}}>
             <div style={{flexDirection:"row",display:"flex",justifyContent:"flex-start",textAlign: "center"}}>
                 <img src={props.imgURL} alt="Avatar" style={{width :"64px",height:"64px"}} className="link-image" />
                 <div style={{display: 'flex',flexDirection: 'column',justifyContent: 'center',}}>
@@ -33,13 +33,13 @@ function ProfileBannerNotificationsReq(props){
                 </div>
             </div>
             <div style={{display: "flex",flexDirection: "row",alignItems: "center",justifyContent: "center"}}>
-                <button type="button" onClick={handleDismiss} style={{padding: "5px 10px", cursor: "pointer", backgroundColor: "#cecdcd", color: "black", borderRadius: "5px",marginRight:"3px"}}>
+            <button type="button" class="btn btn-outline-danger" style={{marginLeft:"4px"}}>
                             Decline
                 </button>
-                <button type="button" style={{padding: "5px 10px", cursor: "pointer", backgroundColor: "#999", color: "black", borderRadius: "5px",marginRight:"3px"}}>
+                <button type="button" class="btn btn-success" style={{marginLeft:"4px"}}>
                             Accept
                 </button>
-                <button type="button" style={{padding: "5px 10px", cursor: "pointer", backgroundColor: "#999", color: "black", borderRadius: "5px" }}>
+                <button type="button" class="btn btn-primary" style={{marginLeft:"4px"}}>
                             View Profile
                 </button>
             </div>
