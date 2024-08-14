@@ -20,6 +20,19 @@ function SettingsPGA(props) {
     const [personalEdit, setPersonalEdit] = useState(false);
     const [loginEdit, setLoginEdit] = useState(false);
 
+    const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
+    const appendAlert = (message, type) => {
+      const wrapper = document.createElement('div')
+      wrapper.innerHTML = [
+        `<div class="alert alert-${type} alert-dismissible" role="alert">`,
+        `   <div>${message}</div>`,
+        '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+        '</div>'
+      ].join('')
+    
+      alertPlaceholder.append(wrapper)
+    }
+
     const validateForm = () =>
         {
     
@@ -69,11 +82,13 @@ function SettingsPGA(props) {
         setFormErrors(errors);
         if (Object.keys(errors).length === 0) {
             console.log('Form submitted successfully:', passwordForm);
+            appendAlert("Personal Info have been successfully changed", 'success');
             setSavedProfile({
                 ...editedProfile,
                 password: savedProfile.password
             });
-            alert("Password Updated successfully")
+            setPersonalEdit(false);
+            
         } else {
             setFormErrors(errors);
         }
@@ -112,7 +127,7 @@ function SettingsPGA(props) {
                 password: passwordForm.password
             });
             setPersonalEdit(false);
-            alert("Profile Updated successfully");
+            appendAlert("Password has been successfully changed", 'success');
         } else {
             setPasswordFormErrors(errors);
         }
@@ -147,6 +162,7 @@ function SettingsPGA(props) {
             <div style={{ display: "flex", justifyContent: "left", alignItems: "left", flexDirection: "column", textAlign:"left",
                 marginLeft:"15%", width:"70%", marginTop:"10px"
             }}>
+                <div id="liveAlertPlaceholder"></div>
                 <h4>Settings</h4>
                 <div class="row" style={{marginBottom:"20px", padding: "10px 10px", borderRadius: "10px", border: "#ddd solid 1px"}}>
                     <div style={{flexDirection:"row", justifyContent:"space-between", display:"flex"}}>

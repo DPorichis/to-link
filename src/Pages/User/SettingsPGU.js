@@ -25,25 +25,17 @@ function SettingsPGU(props) {
 
     const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
     const appendAlert = (message, type) => {
-        // Check if an alert is already present
-        if (!alertPlaceholder.querySelector('.alert')) {
-            const wrapper = document.createElement('div');
-            wrapper.innerHTML = [
-                `<div class="alert alert-${type} alert-dismissible" role="alert">`,
-                `   <div>${message}</div>`,
-                '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
-                '</div>'
-            ].join('');
-
-            alertPlaceholder.append(wrapper);
-        }
+      const wrapper = document.createElement('div')
+      wrapper.innerHTML = [
+        `<div class="alert alert-${type} alert-dismissible" role="alert">`,
+        `   <div>${message}</div>`,
+        '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+        '</div>'
+      ].join('')
+    
+      alertPlaceholder.append(wrapper)
     }
-    const alertTrigger = document.getElementById('liveAlertBtn');
-        if (alertTrigger) {
-            alertTrigger.addEventListener('click', () => {
-                appendAlert("Password has been successfully changed", 'success');
-            });
-        }
+    
 
     const validateForm = () =>
         {
@@ -94,11 +86,13 @@ function SettingsPGU(props) {
         setFormErrors(errors);
         if (Object.keys(errors).length === 0) {
             console.log('Form submitted successfully:', passwordForm);
+            appendAlert("Personal Info have been successfully changed", 'success');
             setSavedProfile({
                 ...editedProfile,
                 password: savedProfile.password
             });
-            alert("Password Updated successfully")
+            setPersonalEdit(false);
+            
         } else {
             setFormErrors(errors);
         }
@@ -137,7 +131,7 @@ function SettingsPGU(props) {
                 password: passwordForm.password
             });
             setPersonalEdit(false);
-            alert("Profile Updated successfully");
+            appendAlert("Password has been successfully changed", 'success');
         } else {
             setPasswordFormErrors(errors);
         }
