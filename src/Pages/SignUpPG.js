@@ -305,10 +305,10 @@ function SignUpPG(props) {
                         <div className="invalid-feedback">{formErrors0.agreed || 'You must agree to the terms'}</div>
                     </div>
                     </div>
-                    <div className="col-9">
-                        <button className="btn btn-primary" type="submit">Next Step</button>
-                    </div>
                 </form>
+                <div style={{display:"flex", justifyContent:"end"}}>
+                    <button className="btn btn-primary" type="submit" onClick={handleSubmit0}>Next Step</button>
+                </div>
         </div>
         </>
         : (prog === 1 ? 
@@ -450,13 +450,9 @@ function SignUpPG(props) {
                         </div>
                     </div>                
                 </div>
-                <div class="row">
-                    <div className="mb-12">
-                        <button className="btn btn-outline-danger">Cancel Account Creation</button>
-                    </div>
-                    <div className="mb-12">
+                <div style={{display:"flex", justifyContent:"end"}}>
+                        <button className="btn btn-outline-danger" style={{marginRight:"5px"}}>Cancel Account Creation</button>
                         <button className="btn btn-primary" type="submit">Next Step</button>
-                    </div>
                 </div>
             </form>
         </div>
