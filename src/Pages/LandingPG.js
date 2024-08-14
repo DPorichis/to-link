@@ -14,7 +14,7 @@ function LandingPG(props) {
             <div style={{display:"flex", width:"90%", marginLeft:"5%", flexDirection:"column"}}>
                 <div style={{display:"flex", justifyContent:"space-around", marginTop:"2%"}}>
                     <div style={{width:"50%", textAlign: "left"}}>
-                        <img src="/Accent.png"/>
+                        <img src="/Accent.png" width="100%" />
                     </div>
 
                     <div style={{display:"flex", flexDirection:"column", width:"40%", textAlign:"left", justifyContent:"center"}}>

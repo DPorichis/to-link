@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import Header from "../../Components/Header";
 import { useNavigate } from 'react-router-dom';
 
+import "./AdminDashboardPGA.css"
+
 function AdminDashboardPGA(props) {
 
     const navigate = useNavigate();
@@ -328,7 +330,7 @@ function AdminDashboardPGA(props) {
                             <th scope="col">Include in Export</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="admin-table-element">
                         {filteredData.map((usr) =>
                         <tr data-id={usr.uid}>
                             <th scope="row">{usr.uid}</th>
@@ -354,7 +356,7 @@ function AdminDashboardPGA(props) {
                             <th scope="col">ListingsCount</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="admin-table-element">
                         {filteredData.map((usr) =>
                         <tr data-id={usr.uid} onClick={handleRowClick} style={{cursor:"pointer"}}>
                             <th scope="row">{usr.uid}</th>

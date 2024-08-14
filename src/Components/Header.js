@@ -7,9 +7,11 @@ function Header(props) {
     if(props.log === 'admin')
     {
         return (
-            <nav class="navbar navbar-expand-lg bg-body-tertiary">
+            <nav class="navbar navbar-expand-lg" style={{background:"rgb(161,174,206)", background: "linear-gradient(160deg, rgba(161,174,206,1) 0%, rgba(251,252,254,1) 100%)",
+                boxShadow: "0px 5px 15px -3px rgba(0,0,0,0.75)", marginBottom:"20px"
+            }}>
             <div class="container-fluid">
-                <img src="/logoshadow.png" width="64" height="64" class="d-inline-block align-top" alt="" />
+                <img src="/cropedlogo.png" width="50" height="50" class="d-inline-block align-top" alt="" />
                 <a class="navbar-brand" href="#">To Link</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
