@@ -205,23 +205,12 @@ function SignUpPG(props) {
         <div>
             <Header />
             <div style={{width:"70%", marginLeft:"15%"}}>
-            <div style={{display:"flex", justifyContent:"space-between"}}>
-                <div>
-                    <span className="progressdot-active"/>
-                    <p>Credentials</p>
-                </div>
-                <span className={prog > 0 ? "progressbar-active" : "progressbar"}/>
-                <div>
-                    <span className={prog > 0 ? "progressdot-active" : "progressdot"}/>
-                    <p>Account<br/>Information</p>
-                </div>
-                <span className={prog > 1 ? "progressbar-active" : "progressbar"}/>
-                <div>
-                    <span className={prog > 1 ? "progressdot-active" : "progressdot"}/>
-                    <p>Ready</p>
-                </div>
-            </div>
             {prog === 0 ? 
+            <>
+            <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"
+            style={{marginBottom:"10px"}}>
+                <div class="progress-bar" style={{width: "0%"}}></div>
+            </div>
             <div style={{padding:"20px 40px", border: "#aaa 1px solid ", borderRadius: "15px", textAlign: "left"}}>
                 <h5>Enter your credentials</h5>
                 <form className="row g-3 needs-validation" noValidate onSubmit={handleSubmit0}>
@@ -321,7 +310,13 @@ function SignUpPG(props) {
                     </div>
                 </form>
         </div>
+        </>
         : (prog === 1 ? 
+            <>
+            <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"
+            style={{marginBottom:"10px"}}>
+                <div class="progress-bar" style={{width: "50%"}}></div>
+            </div>
             <div style={{padding:"20px 40px", border: "#aaa 1px solid ", borderRadius: "15px", textAlign: "left"}}>
             <h3>Account Information</h3>
             <p>Your account has been created successfully! Let's fill in your information.</p>
@@ -464,17 +459,25 @@ function SignUpPG(props) {
                     </div>
                 </div>
             </form>
-        </div>    
+        </div>
+        </>   
         :
+            <>
+            <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"
+            style={{marginBottom:"10px"}}>
+                <div class="progress-bar" style={{width: "100%"}}></div>
+            </div>
             <div style={{padding:"20px 40px", border: "#aaa 1px solid ", borderRadius: "15px", textAlign: "left"}}>    
                 <h3>You are all set!</h3>
                 <p>Your account is set up and ready to be used! Click the button bellow to log in to the amazing world of ToLink!</p>
                 <a href="/" className="btn btn-primary">Login In here</a>
             </div>
+            </>
             )}
             </div>
-
+            
         </div>
+
     );
 }
 export default SignUpPG;    

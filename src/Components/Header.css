@@ -1,0 +1,5 @@
+.nav-link.active {
+    color: #000000; /* Change to your preferred color */
+    background-color: #fbfcfe79; /* Optional: change background color */
+    border: 1px solid #aaa;
+}

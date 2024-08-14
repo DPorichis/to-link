@@ -2,6 +2,7 @@ import React from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
+import "./Header.css"
 
 function Header(props) {
     if(props.log === 'admin')
@@ -20,7 +21,8 @@ function Header(props) {
                     <div class="w-100 d-flex justify-content-center">
                     <ul class="navbar-nav">
                         <li class="nav-item mx-5">
-                            <a class={props.act !== 'home' ? "nav-link" : "nav-link active"} aria-current="page" href="/admin">Home</a>
+                            <a class={props.act !== 'home' ? "nav-link" : "nav-link active"} aria-current="page" href="/admin"
+                            style={{borderRadius: "5px"}}>Home</a>
                         </li>
                     </ul>
                     </div>
@@ -52,22 +54,28 @@ function Header(props) {
                     <div class="w-100 d-flex justify-content-center">
                     <ul class="navbar-nav">
                         <li class="nav-item mx-5">
-                            <a class={props.act !== 'home' ? "nav-link" : "nav-link active"} aria-current="page" href="/user">Home</a>
+                            <a class={props.act !== 'home' ? "nav-link" : "nav-link active"} aria-current="page" href="/user"
+                            style={{borderRadius: "5px"}} >Home</a>
                         </li>
                         <li class="nav-item mx-5">
-                            <a class={props.act !== 'profile' ? "nav-link" : "nav-link active"} href="/user/profile">My Profile</a>
+                            <a class={props.act !== 'profile' ? "nav-link" : "nav-link active"} href="/user/profile"
+                            style={{borderRadius: "5px"}}>My Profile</a>
                         </li>
                         <li class="nav-item mx-5">
-                            <a class={props.act !== 'listings' ? "nav-link" : "nav-link active"} href="/user/listings">Jobs</a>
+                            <a class={props.act !== 'listings' ? "nav-link" : "nav-link active"} href="/user/listings"
+                            style={{borderRadius: "5px"}}>Jobs</a>
                         </li>
                         <li class="nav-item mx-5">
-                            <a class={props.act !== 'network' ? "nav-link" : "nav-link active"} href="/user/network">Network</a>
+                            <a class={props.act !== 'network' ? "nav-link" : "nav-link active"} href="/user/network"
+                            style={{borderRadius: "5px"}}>Network</a>
                         </li>
                         <li class="nav-item mx-5">
-                            <a class={props.act !== 'messages' ? "nav-link" : "nav-link active"} href="/user/messages">Messages</a>
+                            <a class={props.act !== 'messages' ? "nav-link" : "nav-link active"} href="/user/messages"
+                            style={{borderRadius: "5px"}}>Messages</a>
                         </li>
                         <li class="nav-item mx-5">
-                            <a class={props.act !== 'notif' ? "nav-link" : "nav-link active"} href="/user/notifications">Notifications</a>
+                            <a class={props.act !== 'notif' ? "nav-link" : "nav-link active"} href="/user/notifications"
+                            style={{borderRadius: "5px"}}>Notifications</a>
                         </li>
                         </ul>
                         </div>

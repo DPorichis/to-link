@@ -35,25 +35,25 @@ function HomePGU(props) {
     imgURL: "/logo192.png",
     },
     {
-        name: "Theopoula Tzini",
-        title: "CEO of IBIZA",
-        imgURL: "/logo192.png",
-        },
-        {
-            name: "Theopoula Tzini",
-            title: "CEO of IBIZA",
-            imgURL: "/logo192.png",
-            },
-            {
-                name: "Theopoula Tzini",
-                title: "CEO of IBIZA",
-                imgURL: "/logo192.png",
-                },
-                {
-                    name: "Theopoula Tzini",
-                    title: "CEO of IBIZA",
-                    imgURL: "/logo192.png",
-                    },
+    name: "Theopoula Tzini",
+    title: "CEO of IBIZA",
+    imgURL: "/logo192.png",
+    },
+    {
+    name: "Theopoula Tzini",
+    title: "CEO of IBIZA",
+    imgURL: "/logo192.png",
+    },
+    {
+    name: "Theopoula Tzini",
+    title: "CEO of IBIZA",
+    imgURL: "/logo192.png",
+    },
+    {
+    name: "Theopoula Tzini",
+    title: "CEO of IBIZA",
+    imgURL: "/logo192.png",
+    }
     ];
     
     return (
@@ -95,32 +95,44 @@ function HomePGU(props) {
                 </div>
             </div>
             <div style={{width: "60%",maxHeight:"90vh", overflow:"auto"}}>
-                <h5 style={{textAlign:"left"}}>Upload</h5>
-                <hr style={{ border: "1px solid black", margin: "10px 0" }} />
-                <div className="UploadBox" style={{display:"flex",flexDirection:"column",backgroundColor: "#96b9e42c",justifyContent:"flex-start",borderRadius:"9px"}}>
-                    <div style={{display:"flex",flexDirection:"row",padding:"10px 10px"}}>
+                <h5 style={{textAlign:"left",marginBottom:"0px"}}>Upload</h5>
+                <hr style={{ border: "1px solid black", margin: "5px 0px" }} />
+                <div className="UploadBox" style={{display:"flex",flexDirection:"column",backgroundColor: "#96b9e42c",justifyContent:"flex-start",borderRadius:"9px",
+                    width:"95%", marginLeft:"2.5%", border: "solid #A1AECE 1px"}}>
+                <div style={{display:"flex",flexDirection:"row",padding:"10px 10px"}}>
                     <img src="/logo192.png" alt="Avatar" style={{width :"50px",height:"50px"}} className="link-image" />
-                    <input style={{width:"90%",height:"100%",border:"none",marginTop:"4px",borderRadius:"9px",height:"40px"}} placeholder="Brag to your Colleges about something..." type="text" /> 
-                    </div>
-                    <div style={{textAlign:"left",marginLeft:"10%"}}>
-                        <button style={{width:"30%",backgroundColor: "#96b9e42c",border:"none"}}>
-                            <img src="/upload.svg" style={{}} />
-                            Upload Media
+                    <div style={{display:"flex", flexDirection:"column", flex: "1"}}>
+                        
+                    <input style={{flex:"1", border:"none", marginTop:"4px", marginRight:"4px", marginLeft:"4px",borderRadius:"9px",
+                        padding:"8px 5px"
+                    }} placeholder="Brag to your Colleges about something..." type="text" /> 
+                    <div style={{display:"flex", justifyContent:"space-between", marginTop:"8px", marginRight:"4px", marginLeft:"4px"}}>
+                        <div>
+                            <button type="button" class="btn btn-light" style={{marginRight:"4px"}}>
+                                <img src="/upload.svg" style={{}} />
+                                Upload Media
+                            </button>
+                            <button type="button" class="btn btn-light">
+                                <img src="/link.svg" style={{}} />
+                                Insert TOLINK
+                            </button>
+                        </div>
+                        <button type="button" class="btn btn-primary">
+                            Upload
                         </button>
-                        <button style={{width:"30%",backgroundColor: "#96b9e42c",border:"none"}}>
-                            <img src="/link.svg" style={{}} />
-                            Insert TOLINK
-                        </button>
                     </div>
+                    </div>  
+                </div>
+                
                 </div>
                 <div style={{display:"flex", flexDirection:"row",justifyContent:"space-between",marginTop:"10px"}}>
                     <h5 style={{textAlign:"left",marginBottom:"0px"}}>Your Feed</h5>
-                    <select name="Short by" style={{ backgroundColor: "#cecdcd", border: "none", outline: "none" }}>
-                        <option value="Date">Short by: Date</option>
-                        <option value="Recomended">Short by: Recommended</option>
+                    <select name="Short by" style={{ backgroundColor: "#fff", border: "1px solid #ccc", borderRadius:"3px", outline: "none"}}>
+                        <option value="Date">Sort by: Date</option>
+                        <option value="Recomended">Sort by: Recommended</option>
                     </select>
                 </div>
-                <hr style={{ border: "1px solid black", margin: "10px 0",marginTop:"5px" }} />
+                <hr style={{ border: "1px solid black", margin: "5px 0px" }} />
                 <div>
                     <Postbox photolist ={[ "/testing-post1.png", "/testing-post.png"]}/>
                     <Postbox photolist ={[ "/testing-post1.png"]}/>
