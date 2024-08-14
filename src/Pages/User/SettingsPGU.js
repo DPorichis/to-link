@@ -20,8 +20,30 @@ function SettingsPGU(props) {
     const [personalEdit, setPersonalEdit] = useState(false);
     const [loginEdit, setLoginEdit] = useState(false);
 
+    
 
 
+    const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
+    const appendAlert = (message, type) => {
+        // Check if an alert is already present
+        if (!alertPlaceholder.querySelector('.alert')) {
+            const wrapper = document.createElement('div');
+            wrapper.innerHTML = [
+                `<div class="alert alert-${type} alert-dismissible" role="alert">`,
+                `   <div>${message}</div>`,
+                '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+                '</div>'
+            ].join('');
+
+            alertPlaceholder.append(wrapper);
+        }
+    }
+    const alertTrigger = document.getElementById('liveAlertBtn');
+        if (alertTrigger) {
+            alertTrigger.addEventListener('click', () => {
+                appendAlert("Password has been successfully changed", 'success');
+            });
+        }
 
     const validateForm = () =>
         {
@@ -150,6 +172,7 @@ function SettingsPGU(props) {
             <div style={{ display: "flex", justifyContent: "left", alignItems: "left", flexDirection: "column", textAlign:"left",
                 marginLeft:"15%", width:"70%", marginTop:"10px"
             }}>
+                <div id="liveAlertPlaceholder"></div>
                 <h4>Settings</h4>
                 <div class="row" style={{marginBottom:"20px", padding: "10px 10px", borderRadius: "10px", border: "#ddd solid 1px"}}>
                     <div style={{flexDirection:"row", justifyContent:"space-between", display:"flex"}}>
@@ -295,7 +318,7 @@ function SettingsPGU(props) {
                             </div>
                         </div>
                         <div style={{display:"flex", flexDirection:"row", justifyContent:"right"}}>
-                            <button class="btn btn-primary">
+                            <button class="btn btn-primary" id="liveAlertBtn">
                                 Change Password
                             </button>
                         </div>
