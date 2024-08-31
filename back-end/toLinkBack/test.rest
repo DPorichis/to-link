@@ -1,0 +1,30 @@
+POST http://127.0.0.1:8000/login
+Content-Type: application/json
+
+{"email": "jim", "password": "James"}
+
+###
+
+POST http://127.0.0.1:8000/signup
+Content-Type: application/json
+
+{"name": "James", "surname": "James", "email": "jim", "password":"James", "country": "James", "city": "James", "phone": "123", "birthdate": "2003-12-02"}
+
+###
+
+PUT http://127.0.0.1:8000/profile/update/
+Cookie: sessionid=hlntaklqgugshe1qzfnm7vr8449xwqi0; csrftoken=l2Ii7YvKjkeDCjxpVg6j1trNr0MxnOD2;
+X-CSRFToken: l2Ii7YvKjkeDCjxpVg6j1trNr0MxnOD2
+Content-Type: application/json
+
+{
+    "pfp": "BBB.jpg",
+    "name": "Updated Name",
+    "surname": "Updated Surname",
+    "title": "Updated Title",
+    "bio": "Updated Bio",
+    "phone": "1234567890",
+    "website": "http://newwebsite.com",
+    "experience": {"company": "New Company", "position": "New Position"},
+    "education": {"school": "New School", "degree": "New Degree"}
+}
