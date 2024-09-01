@@ -137,7 +137,7 @@ class Dm(models.Model):
     convo = models.ForeignKey(Convo, on_delete=models.CASCADE, db_column='Convo_ID')  # Field name made lowercase.
     media = models.ForeignKey(Media, on_delete=models.CASCADE, db_column='Media_ID', blank=True, null=True)  # Field name made lowercase.
     user = models.ForeignKey(Profile, on_delete=models.CASCADE, db_column='User_ID')  # Field name made lowercase.
-    timestamp = models.DateTimeField(db_column='Timestamp', blank=True, null=True)  # Field name made lowercase.
+    timestamp = models.DateTimeField(auto_now_add=True)  # Field name made lowercase.
     text = models.TextField( blank=True, null=True)  # Field name made lowercase.
 
 

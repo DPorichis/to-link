@@ -1,16 +1,19 @@
+# This is a test bench for the API functionality
+
+### Login API 
 POST http://127.0.0.1:8000/login
 Content-Type: application/json
 
 {"email": "jim", "password": "James"}
 
-###
+### Sign Up API
 
 POST http://127.0.0.1:8000/signup
 Content-Type: application/json
 
 {"name": "James", "surname": "James", "email": "jim", "password":"James", "country": "James", "city": "James", "phone": "123", "birthdate": "2003-12-02"}
 
-###
+### Profile Update API
 
 PUT http://127.0.0.1:8000/profile/update/
 Cookie: sessionid=it3wx3pr59jlig5a4rxtmb8knogkyioh; csrftoken=idIIa9M8ynhW7FOwUNyVZzi5x25EVAvR;
@@ -29,7 +32,7 @@ Content-Type: application/json
     "education": {"school": "New School", "degree": "New Degree"}
 }
 
-### Create Post
+### Upload Post API
 
 POST http://127.0.0.1:8000/posts/upload/
 Content-Type: application/json
@@ -43,7 +46,7 @@ X-CSRFToken: idIIa9M8ynhW7FOwUNyVZzi5x25EVAvR
 }
 
 
-### Like/Unlike Post
+### Fetch Post API
 
 POST http://127.0.0.1:8000/posts/view/
 Content-Type: application/json
@@ -54,7 +57,7 @@ X-CSRFToken: idIIa9M8ynhW7FOwUNyVZzi5x25EVAvR
   "post_id": 2
 }
 
-###
+### Like/Unlike Post API
 
 POST http://127.0.0.1:8000/posts/like/
 Content-Type: application/json
@@ -65,7 +68,7 @@ X-CSRFToken: idIIa9M8ynhW7FOwUNyVZzi5x25EVAvR
   "post_id": 1
 }
 
-###
+### Comment Post API
 
 POST http://127.0.0.1:8000/posts/comment/new
 Content-Type: application/json
@@ -77,7 +80,7 @@ X-CSRFToken: DoRC7DLel6KMcPCrRByh2xDMHUeMEKka
   "text": "No stop!"
 }
 
-###
+### Fetch Comments API
 
 POST http://127.0.0.1:8000/posts/comment/show
 Content-Type: application/json
