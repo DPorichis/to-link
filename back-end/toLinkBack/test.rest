@@ -13,7 +13,7 @@ Content-Type: application/json
 ###
 
 PUT http://127.0.0.1:8000/profile/update/
-Cookie: sessionid=hlntaklqgugshe1qzfnm7vr8449xwqi0; csrftoken=l2Ii7YvKjkeDCjxpVg6j1trNr0MxnOD2;
+Cookie: sessionid=fb99nnywntixzlw1wzuujd49jyasmro8; csrftoken=cG2qNn5UNPtuiRN26v6HsPGpFRyP3TF2;
 X-CSRFToken: l2Ii7YvKjkeDCjxpVg6j1trNr0MxnOD2
 Content-Type: application/json
 

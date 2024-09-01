@@ -1,11 +1,11 @@
 from django.urls import re_path
-from . import views
+from .views import login, signup, update_profile, logout, updateuser
 
 
 urlpatterns = [
-    re_path('login', views.login),
-    re_path('signup', views.signup),
-    re_path('updateuser', views.updateuser),
-    re_path('logout', views.logout),
-    re_path('profile/update/', views.update_profile),
+    re_path('login', login),
+    re_path('signup', signup),
+    re_path('updateuser', updateuser),
+    re_path('logout', logout),
+    re_path('profile/update/', update_profile),
 ]

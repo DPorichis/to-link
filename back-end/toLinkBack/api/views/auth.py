@@ -2,16 +2,12 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from rest_framework import status
-from rest_framework.authtoken.models import Token
 
-from .serializers import UserSerializer, ProfileUpdateSerializer
-from django.contrib.auth.hashers import check_password
-from .models import User, Profile
+from api.serializers import UserSerializer
+from api.models import User, Profile
 
 from django.contrib.auth import authenticate, login as django_login, logout as django_logout
-
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view
 
 @api_view(['POST'])
 def login(request):
@@ -54,36 +50,6 @@ def signup(request):
         return Response({"message": "User created successfully"}, status=status.HTTP_201_CREATED)
     else:
         return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
-
-
-
-@api_view(['POST'])
-def updateuser(request):
-    return Response({})
-
-@api_view(['PUT'])
-@permission_classes([IsAuthenticated])
-def update_profile(request):
-    # Get the authenticated user
-    user = request.user
-    
-    # Attempt to get the profile associated with the authenticated user
-    try:
-        profile = Profile.objects.get(user_id=user)
-    except Profile.DoesNotExist:
-        return Response({"error": "Profile does not exist."}, status=status.HTTP_404_NOT_FOUND)
-    
-    # Create the serializer with the current profile and the request data
-    serializer = ProfileUpdateSerializer(profile, data=request.data, partial=True)  # `partial=True` to allow for partial updates
-
-    if serializer.is_valid():
-        # Save the updated profile information
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    else:
-        # Return validation errors
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
 
 @api_view(['POST'])
 def logout(request):

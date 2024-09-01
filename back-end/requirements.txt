@@ -1,3 +1,5 @@
-django=5.0
+django==5.0
 djangorestframework
 environs
+markdown
+django-filter
