@@ -100,21 +100,19 @@ class Post(models.Model):
     text = models.TextField()  # Field name made lowercase.
     media = models.JSONField(blank=True, null=True)  # Field name made lowercase.
     links = models.JSONField(blank=True, null=True)  # Field name made lowercase.
-    like_cnt = models.IntegerField()  # Field name made lowercase.
-    comment_cnt = models.IntegerField()  # Field name made lowercase.
+    like_cnt = models.IntegerField(default=0)  # Field name made lowercase.
+    comment_cnt = models.IntegerField(default=0)  # Field name made lowercase.
 
 
 class Comment(models.Model):
-    post = models.OneToOneField(Post, on_delete=models.CASCADE, db_column='Post_ID', primary_key=True)  # Field name made lowercase. The composite primary key (Post_ID, User_ID) found, that is not supported. The first column is selected.
+    comment_id = models.AutoField(db_column='Comment_ID', primary_key=True)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, db_column='Post_ID')  # Field name made lowercase. The composite primary key (Post_ID, User_ID) found, that is not supported. The first column is selected.
     user = models.ForeignKey(Profile, on_delete=models.CASCADE, db_column='User_ID')  # Field name made lowercase.
     text = models.TextField()  # Field name made lowercase.
 
-    class Meta:
-        unique_together = (('post', 'user'),)
-
 
 class LikedBy(models.Model):
-    post = models.OneToOneField(Post, on_delete=models.CASCADE, db_column='Post_ID', primary_key=True)  # Field name made lowercase. The composite primary key (Post_ID, User_ID) found, that is not supported. The first column is selected.
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, db_column='Post_ID')  # Field name made lowercase. The composite primary key (Post_ID, User_ID) found, that is not supported. The first column is selected.
     user = models.ForeignKey(Profile, on_delete=models.CASCADE, db_column='User_ID')  # Field name made lowercase.
 
     class Meta:

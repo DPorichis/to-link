@@ -13,8 +13,8 @@ Content-Type: application/json
 ###
 
 PUT http://127.0.0.1:8000/profile/update/
-Cookie: sessionid=fb99nnywntixzlw1wzuujd49jyasmro8; csrftoken=cG2qNn5UNPtuiRN26v6HsPGpFRyP3TF2;
-X-CSRFToken: l2Ii7YvKjkeDCjxpVg6j1trNr0MxnOD2
+Cookie: sessionid=it3wx3pr59jlig5a4rxtmb8knogkyioh; csrftoken=idIIa9M8ynhW7FOwUNyVZzi5x25EVAvR;
+X-CSRFToken: idIIa9M8ynhW7FOwUNyVZzi5x25EVAvR
 Content-Type: application/json
 
 {
@@ -27,4 +27,63 @@ Content-Type: application/json
     "website": "http://newwebsite.com",
     "experience": {"company": "New Company", "position": "New Position"},
     "education": {"school": "New School", "degree": "New Degree"}
+}
+
+### Create Post
+
+POST http://127.0.0.1:8000/posts/upload/
+Content-Type: application/json
+Cookie: sessionid=it3wx3pr59jlig5a4rxtmb8knogkyioh; csrftoken=idIIa9M8ynhW7FOwUNyVZzi5x25EVAvR;
+X-CSRFToken: idIIa9M8ynhW7FOwUNyVZzi5x25EVAvR
+
+{
+  "text": "This is a sample post.",
+  "media": {"images": ["image1.png", "image2.png"]},
+  "links": {"link1": "http://example.com"}
+}
+
+
+### Like/Unlike Post
+
+POST http://127.0.0.1:8000/posts/view/
+Content-Type: application/json
+Cookie: sessionid=it3wx3pr59jlig5a4rxtmb8knogkyioh; csrftoken=idIIa9M8ynhW7FOwUNyVZzi5x25EVAvR;
+X-CSRFToken: idIIa9M8ynhW7FOwUNyVZzi5x25EVAvR
+
+{
+  "post_id": 2
+}
+
+###
+
+POST http://127.0.0.1:8000/posts/like/
+Content-Type: application/json
+Cookie: sessionid=it3wx3pr59jlig5a4rxtmb8knogkyioh; csrftoken=idIIa9M8ynhW7FOwUNyVZzi5x25EVAvR;
+X-CSRFToken: idIIa9M8ynhW7FOwUNyVZzi5x25EVAvR
+
+{
+  "post_id": 1
+}
+
+###
+
+POST http://127.0.0.1:8000/posts/comment/new
+Content-Type: application/json
+Cookie: sessionid=m4iv3sfxwobhd137n7f4dfw3ae167hsr; csrftoken=DoRC7DLel6KMcPCrRByh2xDMHUeMEKka;
+X-CSRFToken: DoRC7DLel6KMcPCrRByh2xDMHUeMEKka
+
+{
+  "post": 1,
+  "text": "No stop!"
+}
+
+###
+
+POST http://127.0.0.1:8000/posts/comment/show
+Content-Type: application/json
+Cookie: sessionid=m4iv3sfxwobhd137n7f4dfw3ae167hsr; csrftoken=DoRC7DLel6KMcPCrRByh2xDMHUeMEKka;
+X-CSRFToken: DoRC7DLel6KMcPCrRByh2xDMHUeMEKka
+
+{
+  "post": 1
 }
