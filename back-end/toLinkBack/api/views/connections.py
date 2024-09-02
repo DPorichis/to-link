@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from api.models import Request, Profile,User,Link
+from api.models import Request, Profile,Link, Convo
 from api.serializers import RequestSerializer,LinkSerializer
 
 from django.db.models import F,Q
@@ -63,6 +63,7 @@ def response_request(request):
     
     if response == "accept":
         Link.objects.create(user_id_from=user_req, user_id_to=user_id_to)
+        Convo.objects.create(user_id1=user_req, user_id2=user_id_to)
         request.delete()
         return Response({"message": "Request accepted successfully."})
     else:

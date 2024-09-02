@@ -20,7 +20,7 @@ class ConvoSerializer(serializers.ModelSerializer):
     def get_user_info(self, obj):
         # Get the authenticated user from the context
         authenticated_user = self.context.get('authenticated_user')
-
+        print(obj)
         # Determine which user is not the authenticated user
         if obj.user_id1 == authenticated_user:
             other_user = obj.user_id2

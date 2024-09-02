@@ -128,7 +128,7 @@ class Convo(models.Model):
     convo_id = models.AutoField(db_column='Convo_ID', primary_key=True)  # Field name made lowercase.
     user_id1 = models.ForeignKey(Profile, on_delete=models.CASCADE, db_column='User_ID1')  # Field name made lowercase.
     user_id2 = models.ForeignKey(Profile, on_delete=models.CASCADE, db_column='User_ID2', related_name='convo_user_id2_set')  # Field name made lowercase.
-    timestamp = models.DateTimeField()
+    timestamp = models.DateTimeField(auto_now_add=True)
 
 class Media(models.Model):
     media_id = models.AutoField(db_column='Media_ID', primary_key=True)  # Field name made lowercase.
