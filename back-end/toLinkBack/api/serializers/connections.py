@@ -12,5 +12,5 @@ class LinkSerializer(serializers.ModelSerializer):
     class Meta:
         model = Link
         fields = ["user_id_from", "user_id_to"]
-        
+        read_only_fields = ["user_id_from", "user_id_to"]
         
