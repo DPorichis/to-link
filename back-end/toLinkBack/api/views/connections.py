@@ -27,6 +27,7 @@ def make_request(request):
     
     if Link.objects.filter(Q(user_id_to=user_id_from, user_id_from=user_id_to) | Q(user_id_to=user_id_to, user_id_from=user_id_from)).exists():
         return Response({"error": "You are already friends with this user."}, status=status.HTTP_400_BAD_REQUEST)
+    
     try:
         request = Request.objects.get(user_id_to=user_id_to, user_id_from=user_id_from)
         request.delete()

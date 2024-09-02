@@ -55,15 +55,15 @@ def get_listing_by_id(request):
 @permission_classes([IsAuthenticated])
 def upload_listing(request):
     # Get the authenticated user
-    user = request.user   
+    user = request.user
     
     # Attempt to get the profile associated with the authenticated user
     try:
-        profile = Profile.objects.get(user_id=user_target)
+        profile = Profile.objects.get(user_id=user)
     except Profile.DoesNotExist:
         return Response({"error": "Profile does not exist."}, status=status.HTTP_404_NOT_FOUND)
     
-    serializer = ProfileSerializer(profile,  context={'authenticated_user': user})
+    serializer = ListingSerializer(user=profile, )
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
