@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from api.models import Request, Profile,User,Link
-from api.serializers import RequestSerializer
+from api.serializers import RequestSerializer,LinkSerializer
 
 
 
@@ -80,7 +80,7 @@ def fetch_connections(request):
     
     try:
         links = Link.objects.filter(user_id_to=user_id_to)
-        serializer = RequestSerializer(links, many= True)
+        serializer = LinkSerializer(links, many= True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     except Request.DoesNotExist:
         return Response({"error": "Link not found."}, status=status.HTTP_404_NOT_FOUND)
