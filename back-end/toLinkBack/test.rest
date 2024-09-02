@@ -11,13 +11,13 @@ Content-Type: application/json
 POST http://127.0.0.1:8000/signup
 Content-Type: application/json
 
-{"name": "James", "surname": "James", "email": "jim", "password":"James", "country": "James", "city": "James", "phone": "123", "birthdate": "2003-12-02"}
+{"name": "James", "surname": "James", "email": "ji", "password":"James", "country": "James", "city": "James", "phone": "123", "birthdate": "2003-12-02"}
 
 ### Profile Update API
 
-PUT http://127.0.0.1:8000/profile/update/
-Cookie: sessionid=it3wx3pr59jlig5a4rxtmb8knogkyioh; csrftoken=idIIa9M8ynhW7FOwUNyVZzi5x25EVAvR;
-X-CSRFToken: idIIa9M8ynhW7FOwUNyVZzi5x25EVAvR
+PUT http://127.0.0.1:8000/profile/own/update/
+Cookie: sessionid=o36du27z8gjo260sczj070yjz5tl7q2b; csrftoken=DrKIOaInwWFgIokyaBGEHtpbfLRBPQnm;
+X-CSRFToken: DrKIOaInwWFgIokyaBGEHtpbfLRBPQnm
 Content-Type: application/json
 
 {
@@ -32,12 +32,34 @@ Content-Type: application/json
     "education": {"school": "New School", "degree": "New Degree"}
 }
 
+### Fetch your profile api
+
+POST http://127.0.0.1:8000/profile/own/fetch
+Content-Type: application/json
+Cookie: sessionid=o36du27z8gjo260sczj070yjz5tl7q2b; csrftoken=DrKIOaInwWFgIokyaBGEHtpbfLRBPQnm;
+X-CSRFToken: DrKIOaInwWFgIokyaBGEHtpbfLRBPQnm
+
+{
+}
+
+### Fetch outside profile
+
+POST http://127.0.0.1:8000/profile/view/
+Content-Type: application/json
+Cookie: sessionid=o36du27z8gjo260sczj070yjz5tl7q2b; csrftoken=DrKIOaInwWFgIokyaBGEHtpbfLRBPQnm;
+X-CSRFToken: DrKIOaInwWFgIokyaBGEHtpbfLRBPQnm
+
+{
+  "user_id": 2
+}
+
+
 ### Upload Post API
 
 POST http://127.0.0.1:8000/posts/upload/
 Content-Type: application/json
-Cookie: sessionid=it3wx3pr59jlig5a4rxtmb8knogkyioh; csrftoken=idIIa9M8ynhW7FOwUNyVZzi5x25EVAvR;
-X-CSRFToken: idIIa9M8ynhW7FOwUNyVZzi5x25EVAvR
+Cookie: sessionid=o36du27z8gjo260sczj070yjz5tl7q2b; csrftoken=DrKIOaInwWFgIokyaBGEHtpbfLRBPQnm;
+X-CSRFToken: DrKIOaInwWFgIokyaBGEHtpbfLRBPQnm
 
 {
   "text": "This is a sample post.",
@@ -50,8 +72,8 @@ X-CSRFToken: idIIa9M8ynhW7FOwUNyVZzi5x25EVAvR
 
 POST http://127.0.0.1:8000/posts/view/
 Content-Type: application/json
-Cookie: sessionid=it3wx3pr59jlig5a4rxtmb8knogkyioh; csrftoken=idIIa9M8ynhW7FOwUNyVZzi5x25EVAvR;
-X-CSRFToken: idIIa9M8ynhW7FOwUNyVZzi5x25EVAvR
+Cookie: sessionid=o36du27z8gjo260sczj070yjz5tl7q2b; csrftoken=DrKIOaInwWFgIokyaBGEHtpbfLRBPQnm;
+X-CSRFToken: DrKIOaInwWFgIokyaBGEHtpbfLRBPQnm
 
 {
   "post_id": 2
@@ -61,22 +83,22 @@ X-CSRFToken: idIIa9M8ynhW7FOwUNyVZzi5x25EVAvR
 
 POST http://127.0.0.1:8000/posts/like/
 Content-Type: application/json
-Cookie: sessionid=it3wx3pr59jlig5a4rxtmb8knogkyioh; csrftoken=idIIa9M8ynhW7FOwUNyVZzi5x25EVAvR;
-X-CSRFToken: idIIa9M8ynhW7FOwUNyVZzi5x25EVAvR
+Cookie: sessionid=o36du27z8gjo260sczj070yjz5tl7q2b; csrftoken=DrKIOaInwWFgIokyaBGEHtpbfLRBPQnm;
+X-CSRFToken: DrKIOaInwWFgIokyaBGEHtpbfLRBPQnm
 
 {
-  "post_id": 1
+  "post_id": 2
 }
 
 ### Comment Post API
 
 POST http://127.0.0.1:8000/posts/comment/new
 Content-Type: application/json
-Cookie: sessionid=m4iv3sfxwobhd137n7f4dfw3ae167hsr; csrftoken=DoRC7DLel6KMcPCrRByh2xDMHUeMEKka;
-X-CSRFToken: DoRC7DLel6KMcPCrRByh2xDMHUeMEKka
+Cookie: sessionid=o36du27z8gjo260sczj070yjz5tl7q2b; csrftoken=DrKIOaInwWFgIokyaBGEHtpbfLRBPQnm;
+X-CSRFToken: DrKIOaInwWFgIokyaBGEHtpbfLRBPQnm
 
 {
-  "post": 1,
+  "post": 2,
   "text": "No stop!"
 }
 
@@ -84,9 +106,11 @@ X-CSRFToken: DoRC7DLel6KMcPCrRByh2xDMHUeMEKka
 
 POST http://127.0.0.1:8000/posts/comment/show
 Content-Type: application/json
-Cookie: sessionid=m4iv3sfxwobhd137n7f4dfw3ae167hsr; csrftoken=DoRC7DLel6KMcPCrRByh2xDMHUeMEKka;
-X-CSRFToken: DoRC7DLel6KMcPCrRByh2xDMHUeMEKka
+Cookie: sessionid=o36du27z8gjo260sczj070yjz5tl7q2b; csrftoken=DrKIOaInwWFgIokyaBGEHtpbfLRBPQnm;
+X-CSRFToken: DrKIOaInwWFgIokyaBGEHtpbfLRBPQnm
 
 {
-  "post": 1
+  "post": 2
 }
+
+

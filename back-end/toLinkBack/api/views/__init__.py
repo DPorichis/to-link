@@ -5,5 +5,5 @@ from .dms import *
 from .feed import *
 from .listings import *
 from .posts import *
-
+from .profile import *
 from .settings import *

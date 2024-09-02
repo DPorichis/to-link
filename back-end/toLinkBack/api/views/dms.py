@@ -3,9 +3,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from api.models import Profile, Dm, Convo
-from api.serializers import DMSerializer, CommentSerializer
-from django.db.models import F
-
+from api.serializers import DMSerializer, ConvoSerializer
+from django.db.models import F, Q
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -19,7 +18,7 @@ def get_dms_of_convo(request):
 
     try:
         # Retrieve all comments for the post
-        dms = Dm.objects.filter(convo_id=convo_id)
+        dms = Dm.objects.filter(convo_id=convo_id).order_by('timestamp')
         
         # Serialize the comments
         serializer = DMSerializer(dms, many=True)
@@ -56,31 +55,31 @@ def send_dm(request):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])  # Requires authentication
-def like_post(request):
-    post_id = request.data.get('post_id')
-
-    # Validate input data
-    if not post_id:
-        return Response({"error": "Post ID is required."}, status=status.HTTP_400_BAD_REQUEST)
-
-    try:
-        # Try to find the post by ID
-        post = Post.objects.get(post_id=post_id)
-    except Post.DoesNotExist:
-        return Response({"error": "Post not found."}, status=status.HTTP_404_NOT_FOUND)
+def fetch_convo_menu(request):
 
     # Check if the like already exists
     user = request.user.profile
     try:
-        liked_by = LikedBy.objects.get(post=post, user=user)
-        # If exists, unlike the post
-        liked_by.delete()
-        post.like_cnt = F('like_cnt') - 1
-        post.save(update_fields=['like_cnt'])
-        return Response({"message": "Post unliked successfully."}, status=status.HTTP_200_OK)
-    except LikedBy.DoesNotExist:
-        # If not exists, like the post
-        LikedBy.objects.create(post=post, user=user)
-        post.like_cnt = F('like_cnt') + 1
-        post.save(update_fields=['like_cnt'])
-        return Response({"message": "Post liked successfully."}, status=status.HTTP_200_OK)
+    
+        convos = Convo.objects.filter(Q(user_id1=user) | Q(user_id2=user)).order_by('-timestamp')
+        
+        # Serialize the comments
+        serializer = ConvoSerializer(convos, many=True, context={'authenticated_user': user})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Convo.DoesNotExist:
+        return Response({}, status=status.HTTP_200_OK)
+    
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def retrive_convo(request):
+    # Check if the like already exists
+    user = request.user.profile
+    other_user = request.data.get('other_user')
+    try:
+        # If Convos get created at the same time, duplicates may be created
+        convos = Convo.objects.filter(Q(user_id1=user, user_id2=other_user) | Q(user_id2=user, user_id1=other_user))        
+        serializer = ConvoSerializer(convos, context={'authenticated_user': user})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Convo.DoesNotExist:
+        return Response({}, status=status.HTTP_200_OK)
