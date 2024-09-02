@@ -5,6 +5,8 @@ from rest_framework import status
 from api.models import Profile, Dm, Convo
 from api.serializers import DMSerializer, ConvoSerializer
 from django.db.models import F, Q
+from django.utils import timezone
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -66,6 +68,9 @@ def send_dm(request):
     if serializer.is_valid():
         # Save the serializer to create a new post with the uploaded file
         dm = serializer.save(user=profile)
+        # Update the timestamp of the conversation
+        conv.timestamp = timezone.now()
+        conv.save()
         return Response(DMSerializer(dm).data, status=status.HTTP_201_CREATED)
     else:
         # Return an error response if the data is invalid
