@@ -2,8 +2,8 @@ from django.urls import re_path
 from .views import login, signup, update_profile, logout, updateuser, get_post_by_id, \
     upload_post, like_post, comment_post, get_comments_by_post, get_dms_of_convo, \
     send_dm, fetch_convo_menu, retrive_convo, retrive_own_profile, retrive_profile, \
-    upload_listing, show_listings, get_listing_by_id, make_request, response_request, \
-    fetch_request, fetch_connections
+    upload_listing, show_listings, get_applied_by_listing_id, make_request, response_request, \
+    apply_by_id, fetch_request, fetch_connections, get_listing_by_id
 
 urlpatterns = [
     re_path('login', login),
@@ -28,7 +28,9 @@ urlpatterns = [
 
     re_path('listings/new', upload_listing),
     re_path('listings/list', show_listings),
-    re_path('listings/fetch', get_listing_by_id),
+    re_path('listing/fetch', get_listing_by_id),
+    re_path('listings/applied/fetch', get_applied_by_listing_id),
+    re_path('listings/applied/new', apply_by_id),
 
     re_path('request/new', make_request),
     re_path('request/list', fetch_request),

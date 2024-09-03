@@ -88,6 +88,8 @@ class Listing(models.Model):
     time = models.CharField(max_length=45)  # Field name made lowercase.
     level = models.CharField(max_length=45)  # Field name made lowercase.
     desc = models.TextField()  # Field name made lowercase.
+    apl_cnt = models.IntegerField(blank=True, default=0)
+    timestamp = models.DateTimeField(auto_now_add=True)  # Field name made lowercase.
 
 
 class Applied(models.Model):

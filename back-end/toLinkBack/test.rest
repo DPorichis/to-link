@@ -11,13 +11,13 @@ Content-Type: application/json
 POST http://127.0.0.1:8000/signup
 Content-Type: application/json
 
-{"name": "James", "surname": "James", "email": "jim", "password":"James", "country": "James", "city": "James", "phone": "123", "birthdate": "2003-12-02"}
+{"name": "James", "surname": "James", "email": "ji", "password":"James", "country": "James", "city": "James", "phone": "123", "birthdate": "2003-12-02"}
 
 ### Profile Update API
 
 PUT http://127.0.0.1:8000/profile/own/update/
-Cookie: sessionid=o36du27z8gjo260sczj070yjz5tl7q2b; csrftoken=DrKIOaInwWFgIokyaBGEHtpbfLRBPQnm;
-X-CSRFToken: DrKIOaInwWFgIokyaBGEHtpbfLRBPQnm
+Cookie: sessionid=9b4jnvvzyiem8c8z0yah8g6fxllgetv1; csrftoken=HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9;
+X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
 Content-Type: application/json
 
 {
@@ -36,8 +36,8 @@ Content-Type: application/json
 
 POST http://127.0.0.1:8000/profile/own/fetch
 Content-Type: application/json
-Cookie: sessionid=o36du27z8gjo260sczj070yjz5tl7q2b; csrftoken=DrKIOaInwWFgIokyaBGEHtpbfLRBPQnm;
-X-CSRFToken: DrKIOaInwWFgIokyaBGEHtpbfLRBPQnm
+Cookie: sessionid=9b4jnvvzyiem8c8z0yah8g6fxllgetv1; csrftoken=HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9;
+X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
 
 {
 }
@@ -46,8 +46,8 @@ X-CSRFToken: DrKIOaInwWFgIokyaBGEHtpbfLRBPQnm
 
 POST http://127.0.0.1:8000/profile/view/
 Content-Type: application/json
-Cookie: sessionid=o36du27z8gjo260sczj070yjz5tl7q2b; csrftoken=DrKIOaInwWFgIokyaBGEHtpbfLRBPQnm;
-X-CSRFToken: DrKIOaInwWFgIokyaBGEHtpbfLRBPQnm
+Cookie: sessionid=9b4jnvvzyiem8c8z0yah8g6fxllgetv1; csrftoken=HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9;
+X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
 
 {
   "user_id": 2
@@ -58,8 +58,8 @@ X-CSRFToken: DrKIOaInwWFgIokyaBGEHtpbfLRBPQnm
 
 POST http://127.0.0.1:8000/posts/upload/
 Content-Type: application/json
-Cookie: sessionid=o36du27z8gjo260sczj070yjz5tl7q2b; csrftoken=DrKIOaInwWFgIokyaBGEHtpbfLRBPQnm;
-X-CSRFToken: DrKIOaInwWFgIokyaBGEHtpbfLRBPQnm
+Cookie: sessionid=9b4jnvvzyiem8c8z0yah8g6fxllgetv1; csrftoken=HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9;
+X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
 
 {
   "text": "This is a sample post.",
@@ -72,8 +72,8 @@ X-CSRFToken: DrKIOaInwWFgIokyaBGEHtpbfLRBPQnm
 
 POST http://127.0.0.1:8000/posts/view/
 Content-Type: application/json
-Cookie: sessionid=o36du27z8gjo260sczj070yjz5tl7q2b; csrftoken=DrKIOaInwWFgIokyaBGEHtpbfLRBPQnm;
-X-CSRFToken: DrKIOaInwWFgIokyaBGEHtpbfLRBPQnm
+Cookie: sessionid=9b4jnvvzyiem8c8z0yah8g6fxllgetv1; csrftoken=HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9;
+X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
 
 {
   "post_id": 2
@@ -83,8 +83,8 @@ X-CSRFToken: DrKIOaInwWFgIokyaBGEHtpbfLRBPQnm
 
 POST http://127.0.0.1:8000/posts/like/
 Content-Type: application/json
-Cookie: sessionid=o36du27z8gjo260sczj070yjz5tl7q2b; csrftoken=DrKIOaInwWFgIokyaBGEHtpbfLRBPQnm;
-X-CSRFToken: DrKIOaInwWFgIokyaBGEHtpbfLRBPQnm
+Cookie: sessionid=9b4jnvvzyiem8c8z0yah8g6fxllgetv1; csrftoken=HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9;
+X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
 
 {
   "post_id": 2
@@ -94,8 +94,8 @@ X-CSRFToken: DrKIOaInwWFgIokyaBGEHtpbfLRBPQnm
 
 POST http://127.0.0.1:8000/posts/comment/new
 Content-Type: application/json
-Cookie: sessionid=o36du27z8gjo260sczj070yjz5tl7q2b; csrftoken=DrKIOaInwWFgIokyaBGEHtpbfLRBPQnm;
-X-CSRFToken: DrKIOaInwWFgIokyaBGEHtpbfLRBPQnm
+Cookie: sessionid=9b4jnvvzyiem8c8z0yah8g6fxllgetv1; csrftoken=HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9;
+X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
 
 {
   "post": 2,
@@ -106,8 +106,8 @@ X-CSRFToken: DrKIOaInwWFgIokyaBGEHtpbfLRBPQnm
 
 POST http://127.0.0.1:8000/posts/comment/show
 Content-Type: application/json
-Cookie: sessionid=o36du27z8gjo260sczj070yjz5tl7q2b; csrftoken=DrKIOaInwWFgIokyaBGEHtpbfLRBPQnm;
-X-CSRFToken: DrKIOaInwWFgIokyaBGEHtpbfLRBPQnm
+Cookie: sessionid=9b4jnvvzyiem8c8z0yah8g6fxllgetv1; csrftoken=HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9;
+X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
 
 {
   "post": 2
@@ -120,8 +120,8 @@ X-CSRFToken: DrKIOaInwWFgIokyaBGEHtpbfLRBPQnm
 ### Testing Requests
 POST http://127.0.0.1:8000/request/new
 Content-Type: application/json
-Cookie: sessionid=zf448yyl5zdaum9o58q03v5n81e38bfm; csrftoken=HsJgSyHlc2WKbqGmOS7A1IaOqkhLR5BY;
-X-CSRFToken: HsJgSyHlc2WKbqGmOS7A1IaOqkhLR5BY
+Cookie: sessionid=9b4jnvvzyiem8c8z0yah8g6fxllgetv1; csrftoken=HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9;
+X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
 
 {
   "request_id": 2
@@ -143,8 +143,8 @@ X-CSRFToken: 73e8ntuHXM7nlrQg6xKgMXgSaijyqigK
 ### Testing Requests
 POST http://127.0.0.1:8000/links/list
 Content-Type: application/json
-Cookie: sessionid=zf448yyl5zdaum9o58q03v5n81e38bfm; csrftoken=HsJgSyHlc2WKbqGmOS7A1IaOqkhLR5BY;
-X-CSRFToken: HsJgSyHlc2WKbqGmOS7A1IaOqkhLR5BY
+Cookie: sessionid=9b4jnvvzyiem8c8z0yah8g6fxllgetv1; csrftoken=HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9;
+X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
 
 {
 }
@@ -163,8 +163,8 @@ X-CSRFToken: 73e8ntuHXM7nlrQg6xKgMXgSaijyqigK
 
 POST http://127.0.0.1:8000/convo/list/
 Content-Type: application/json
-Cookie: sessionid=zf448yyl5zdaum9o58q03v5n81e38bfm; csrftoken=HsJgSyHlc2WKbqGmOS7A1IaOqkhLR5BY;
-X-CSRFToken: HsJgSyHlc2WKbqGmOS7A1IaOqkhLR5BY
+Cookie: sessionid=9b4jnvvzyiem8c8z0yah8g6fxllgetv1; csrftoken=HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9;
+X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
 
 {
 }
@@ -173,8 +173,8 @@ X-CSRFToken: HsJgSyHlc2WKbqGmOS7A1IaOqkhLR5BY
 
 POST http://127.0.0.1:8000/convo/dm/new
 Content-Type: application/json
-Cookie: sessionid=zf448yyl5zdaum9o58q03v5n81e38bfm; csrftoken=HsJgSyHlc2WKbqGmOS7A1IaOqkhLR5BY;
-X-CSRFToken: HsJgSyHlc2WKbqGmOS7A1IaOqkhLR5BY
+Cookie: sessionid=9b4jnvvzyiem8c8z0yah8g6fxllgetv1; csrftoken=HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9;
+X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
 
 {
   "convo": "1",
@@ -185,8 +185,8 @@ X-CSRFToken: HsJgSyHlc2WKbqGmOS7A1IaOqkhLR5BY
 
 POST http://127.0.0.1:8000/convo/dm/fetch
 Content-Type: application/json
-Cookie: sessionid=zf448yyl5zdaum9o58q03v5n81e38bfm; csrftoken=HsJgSyHlc2WKbqGmOS7A1IaOqkhLR5BY;
-X-CSRFToken: HsJgSyHlc2WKbqGmOS7A1IaOqkhLR5BY
+Cookie: sessionid=9b4jnvvzyiem8c8z0yah8g6fxllgetv1; csrftoken=HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9;
+X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
 
 {
   "convo": "1"
@@ -196,8 +196,8 @@ X-CSRFToken: HsJgSyHlc2WKbqGmOS7A1IaOqkhLR5BY
 
 POST http://127.0.0.1:8000/convo/find/
 Content-Type: application/json
-Cookie: sessionid=zf448yyl5zdaum9o58q03v5n81e38bfm; csrftoken=HsJgSyHlc2WKbqGmOS7A1IaOqkhLR5BY;
-X-CSRFToken: HsJgSyHlc2WKbqGmOS7A1IaOqkhLR5BY
+Cookie: sessionid=9b4jnvvzyiem8c8z0yah8g6fxllgetv1; csrftoken=HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9;
+X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
 
 {
   "other_user": "2"
@@ -207,9 +207,68 @@ X-CSRFToken: HsJgSyHlc2WKbqGmOS7A1IaOqkhLR5BY
 
 POST http://127.0.0.1:8000/convo/list/
 Content-Type: application/json
-Cookie: sessionid=zf448yyl5zdaum9o58q03v5n81e38bfm; csrftoken=HsJgSyHlc2WKbqGmOS7A1IaOqkhLR5BY;
-X-CSRFToken: HsJgSyHlc2WKbqGmOS7A1IaOqkhLR5BY
+Cookie: sessionid=9b4jnvvzyiem8c8z0yah8g6fxllgetv1; csrftoken=HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9;
+X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
 
 {
+}
+
+###
+
+POST http://127.0.0.1:8000/listings/new
+Content-Type: application/json
+Cookie: sessionid=9b4jnvvzyiem8c8z0yah8g6fxllgetv1; csrftoken=HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9;
+X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
+
+{
+  "title": "Nothing Much",
+  "visible": 3,
+  "spot": "Hybrid",
+  "time": "Full-time",
+  "level": "Entry-level",
+  "desc": "Kati poly symantiko"
+}
+
+###
+
+POST http://127.0.0.1:8000/listings/list
+Content-Type: application/json
+Cookie: sessionid=9b4jnvvzyiem8c8z0yah8g6fxllgetv1; csrftoken=HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9;
+X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
+
+{
+  "specify_user": 2
+}
+
+###
+
+POST http://127.0.0.1:8000/listings/fetch
+Content-Type: application/json
+Cookie: sessionid=9b4jnvvzyiem8c8z0yah8g6fxllgetv1; csrftoken=HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9;
+X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
+
+{
+}
+
+###
+
+POST http://127.0.0.1:8000/listings/applied/fetch
+Content-Type: application/json
+Cookie: sessionid=9b4jnvvzyiem8c8z0yah8g6fxllgetv1; csrftoken=HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9;
+X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
+
+{
+  "listing_id": 1
+}
+
+###
+
+POST http://127.0.0.1:8000/listings/applied/new
+Content-Type: application/json
+Cookie: sessionid=voxn1ekrdotdz1ksnuu88vq9zdgcf264; csrftoken=8A8wBzBfuuysMWdW3x4N85WllAXoglvJ;
+X-CSRFToken: 8A8wBzBfuuysMWdW3x4N85WllAXoglvJ
+
+{
+  "listing_id": 1
 }
 
