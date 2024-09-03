@@ -26,7 +26,7 @@ class LinkSerializer(serializers.ModelSerializer):
     user_info = serializers.SerializerMethodField()
     class Meta:
         model = Link
-        fields = ["user_id_from", "user_id_to"]
+        fields = ["user_id_from", "user_id_to",'user_info']
         read_only_fields= ["user_id_to"]
     
     def get_user_info(self, obj):

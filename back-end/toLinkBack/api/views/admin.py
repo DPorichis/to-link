@@ -8,7 +8,7 @@ from django.db.models import Q
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def fetch_connections(request):
+def admin_fetch_connections(request):
     # Get the user ID from the request data
     user_id = request.data.get('user_id')
 

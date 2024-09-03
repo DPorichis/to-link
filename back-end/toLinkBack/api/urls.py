@@ -3,7 +3,7 @@ from .views import login, signup, update_profile, logout, updateuser, get_post_b
     upload_post, like_post, comment_post, get_comments_by_post, get_dms_of_convo, \
     send_dm, fetch_convo_menu, retrive_convo, retrive_own_profile, retrive_profile, \
     upload_listing, show_listings, get_applied_by_listing_id, make_request, response_request, \
-    apply_by_id, fetch_request, fetch_connections, get_listing_by_id
+    apply_by_id, fetch_request, fetch_connections, get_listing_by_id, admin_fetch_connections
 
 urlpatterns = [
     re_path('login', login),
@@ -36,4 +36,8 @@ urlpatterns = [
     re_path('request/list', fetch_request),
     re_path('request/respond', response_request),
     re_path('links/list', fetch_connections),
+
+
+
+    re_path('admin/fetch/connections', admin_fetch_connections)
 ]
