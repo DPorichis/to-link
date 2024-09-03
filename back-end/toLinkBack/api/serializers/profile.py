@@ -89,3 +89,10 @@ class ProfileSerializer(serializers.ModelSerializer):
             "post_cnt": obj.post_cnt,
             "listings_cnt": obj.listings_cnt,
         }
+
+
+class AdminProfileSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Profile
+            fields = ['pfp', 'name', 'surname', 'title', 'bio', 'phone', 'website', 'experience', 'education']
+            # Add any other fields you want to be updatable

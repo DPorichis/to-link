@@ -132,16 +132,27 @@ class Convo(models.Model):
     user_id2 = models.ForeignKey(Profile, on_delete=models.CASCADE, db_column='User_ID2', related_name='convo_user_id2_set')  # Field name made lowercase.
     timestamp = models.DateTimeField(auto_now_add=True)
 
-class Media(models.Model):
-    media_id = models.AutoField(db_column='Media_ID', primary_key=True)  # Field name made lowercase.
-    media = models.TextField()
-    alt = models.CharField(max_length=45, blank=True, null=True)
+class ConvoMedia(models.Model):
+    convo_media_id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE)  # Link the picture to a user
+    convo = models.ForeignKey(Convo, on_delete=models.CASCADE)  # Link the picture to a user
+    image = models.ImageField(upload_to='covomedia/')  # Store the uploaded image
 
+class PostMedia(models.Model):
+    post_media_id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE)  # Link the picture to a user
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)  # Link the picture to a user
+    image = models.ImageField(upload_to='postmedia/')  # Store the uploaded image
+
+class ProfileMedia(models.Model):
+    profile_media_id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE)  # Link the picture to a user
+    image = models.ImageField(upload_to='profilemedia/')  # Store the uploaded image
 
 class Dm(models.Model):
     dm_id = models.AutoField(db_column='DM_ID', primary_key=True)  # Field name made lowercase.
     convo = models.ForeignKey(Convo, on_delete=models.CASCADE, db_column='Convo_ID')  # Field name made lowercase.
-    media = models.ForeignKey(Media, on_delete=models.CASCADE, db_column='Media_ID', blank=True, null=True)  # Field name made lowercase.
+    media = models.ForeignKey(ConvoMedia, on_delete=models.CASCADE, db_column='Media_ID', blank=True, null=True)  # Field name made lowercase.
     user = models.ForeignKey(Profile, on_delete=models.CASCADE, db_column='User_ID')  # Field name made lowercase.
     timestamp = models.DateTimeField(auto_now_add=True)  # Field name made lowercase.
     text = models.TextField( blank=True, null=True)  # Field name made lowercase.
@@ -166,7 +177,6 @@ class Request(models.Model):
 
     class Meta:
         unique_together = (('user_id_from', 'user_id_to'),)
-
 
 class Sessions(models.Model):
     session = models.IntegerField(primary_key=True)  # Field name made lowercase.

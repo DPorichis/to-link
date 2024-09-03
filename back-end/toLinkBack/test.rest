@@ -58,8 +58,8 @@ X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
 
 POST http://127.0.0.1:8000/posts/upload/
 Content-Type: application/json
-Cookie: sessionid=9b4jnvvzyiem8c8z0yah8g6fxllgetv1; csrftoken=HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9;
-X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
+Cookie: sessionid=voxn1ekrdotdz1ksnuu88vq9zdgcf264; csrftoken=8A8wBzBfuuysMWdW3x4N85WllAXoglvJ;
+X-CSRFToken: 8A8wBzBfuuysMWdW3x4N85WllAXoglvJ
 
 {
   "text": "This is a sample post.",
@@ -87,7 +87,7 @@ Cookie: sessionid=9b4jnvvzyiem8c8z0yah8g6fxllgetv1; csrftoken=HuFATLQXxbgzoERYUs
 X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
 
 {
-  "post_id": 2
+  "post_id": 1
 }
 
 ### Comment Post API
@@ -98,7 +98,7 @@ Cookie: sessionid=9b4jnvvzyiem8c8z0yah8g6fxllgetv1; csrftoken=HuFATLQXxbgzoERYUs
 X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
 
 {
-  "post": 2,
+  "post": 1,
   "text": "No stop!"
 }
 
@@ -283,4 +283,82 @@ X-CSRFToken: 8A8wBzBfuuysMWdW3x4N85WllAXoglvJ
 
 {
   "user_id": 2
+}
+
+###
+
+POST http://127.0.0.1:8000/admin/fetch/applications
+Content-Type: application/json
+Cookie: sessionid=voxn1ekrdotdz1ksnuu88vq9zdgcf264; csrftoken=8A8wBzBfuuysMWdW3x4N85WllAXoglvJ;
+X-CSRFToken: 8A8wBzBfuuysMWdW3x4N85WllAXoglvJ
+
+{
+  "user_id": 2
+}
+
+###
+
+POST http://127.0.0.1:8000/admin/fetch/profile
+Content-Type: application/json
+Cookie: sessionid=voxn1ekrdotdz1ksnuu88vq9zdgcf264; csrftoken=8A8wBzBfuuysMWdW3x4N85WllAXoglvJ;
+X-CSRFToken: 8A8wBzBfuuysMWdW3x4N85WllAXoglvJ
+
+{
+  "user_id": 2
+}
+
+###
+
+POST http://127.0.0.1:8000/admin/fetch/personal
+Content-Type: application/json
+Cookie: sessionid=voxn1ekrdotdz1ksnuu88vq9zdgcf264; csrftoken=8A8wBzBfuuysMWdW3x4N85WllAXoglvJ;
+X-CSRFToken: 8A8wBzBfuuysMWdW3x4N85WllAXoglvJ
+
+{
+  "user_id": 2
+}
+
+
+###
+
+POST http://127.0.0.1:8000/admin/fetch/listings
+Content-Type: application/json
+Cookie: sessionid=voxn1ekrdotdz1ksnuu88vq9zdgcf264; csrftoken=8A8wBzBfuuysMWdW3x4N85WllAXoglvJ;
+X-CSRFToken: 8A8wBzBfuuysMWdW3x4N85WllAXoglvJ
+
+{
+  "user_id": 1
+}
+
+###
+
+POST http://127.0.0.1:8000/admin/fetch/posts
+Content-Type: application/json
+Cookie: sessionid=voxn1ekrdotdz1ksnuu88vq9zdgcf264; csrftoken=8A8wBzBfuuysMWdW3x4N85WllAXoglvJ;
+X-CSRFToken: 8A8wBzBfuuysMWdW3x4N85WllAXoglvJ
+
+{
+  "user_id": 2
+}
+
+###
+
+POST http://127.0.0.1:8000/admin/fetch/comments
+Content-Type: application/json
+Cookie: sessionid=voxn1ekrdotdz1ksnuu88vq9zdgcf264; csrftoken=8A8wBzBfuuysMWdW3x4N85WllAXoglvJ;
+X-CSRFToken: 8A8wBzBfuuysMWdW3x4N85WllAXoglvJ
+
+{
+  "user_id": 1
+}
+
+###
+
+POST http://127.0.0.1:8000/admin/fetch/likes
+Content-Type: application/json
+Cookie: sessionid=voxn1ekrdotdz1ksnuu88vq9zdgcf264; csrftoken=8A8wBzBfuuysMWdW3x4N85WllAXoglvJ;
+X-CSRFToken: 8A8wBzBfuuysMWdW3x4N85WllAXoglvJ
+
+{
+  "user_id": 1
 }

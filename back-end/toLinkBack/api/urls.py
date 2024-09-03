@@ -3,7 +3,9 @@ from .views import login, signup, update_profile, logout, updateuser, get_post_b
     upload_post, like_post, comment_post, get_comments_by_post, get_dms_of_convo, \
     send_dm, fetch_convo_menu, retrive_convo, retrive_own_profile, retrive_profile, \
     upload_listing, show_listings, get_applied_by_listing_id, make_request, response_request, \
-    apply_by_id, fetch_request, fetch_connections, get_listing_by_id, admin_fetch_connections
+    apply_by_id, fetch_request, fetch_connections, get_listing_by_id, admin_fetch_connections, \
+    admin_fetch_applications, admin_fetch_profile, admin_fetch_personal, admin_fetch_listings, \
+    admin_fetch_posts, admin_fetch_comments, admin_fetch_likes
 
 urlpatterns = [
     re_path('login', login),
@@ -39,5 +41,12 @@ urlpatterns = [
 
 
 
-    re_path('admin/fetch/connections', admin_fetch_connections)
+    re_path('admin/fetch/listings', admin_fetch_listings),
+    re_path('admin/fetch/personal', admin_fetch_personal),
+    re_path('admin/fetch/profile', admin_fetch_profile),
+    re_path('admin/fetch/applications', admin_fetch_applications),
+    re_path('admin/fetch/posts', admin_fetch_posts),
+    re_path('admin/fetch/comments', admin_fetch_comments),
+    re_path('admin/fetch/likes', admin_fetch_likes),
+    re_path('admin/fetch/connections', admin_fetch_connections)    
 ]
