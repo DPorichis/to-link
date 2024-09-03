@@ -11,7 +11,7 @@ Content-Type: application/json
 POST http://127.0.0.1:8000/signup
 Content-Type: application/json
 
-{"name": "James", "surname": "James", "email": "ji", "password":"James", "country": "James", "city": "James", "phone": "123", "birthdate": "2003-12-02"}
+{"name": "James", "surname": "James", "email": "ah@ah.a", "password":"James", "country": "James", "city": "James", "phone": "123", "birthdate": "2003-12-02"}
 
 ### Profile Update API
 

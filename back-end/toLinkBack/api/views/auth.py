@@ -47,7 +47,7 @@ def signup(request):
             email=user.email
         )
 
-        return Response({"message": "User created successfully"}, status=status.HTTP_201_CREATED)
+        return Response({"success": "User created successfully"}, status=status.HTTP_201_CREATED)
     else:
         return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
 

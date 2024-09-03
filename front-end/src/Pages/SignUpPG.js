@@ -68,9 +68,9 @@ function SignUpPG(props) {
         });
     };
 
-    const handleSubmit0 = (e) => {
+    const handleSubmit0 = async (e) => {
         e.preventDefault();
-        const errors = validateForm();
+        const errors = await validateForm();
         if (Object.keys(errors).length === 0) {
             console.log('Form submitted successfully:', formData0);
             setFormData1({
@@ -78,15 +78,13 @@ function SignUpPG(props) {
                 pfFirstName: formData0.firstName,
                 pfLastName: formData0.lastName,
             });
-            
-            
             setProg(1);
         } else {
-        setFormErrors0(errors);
+            setFormErrors0(errors);
         }
     };
     
-    const validateForm = () => {
+    const validateForm = async () => {
         const errors = {};
         const registeredEmails = ['john@example.com', 'jane@example.com'];
         
@@ -94,21 +92,14 @@ function SignUpPG(props) {
         errors.passwordVal = 'Passwords do not match';
         }
         
-
         // Regular expression for validating an email
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
 
         if (formData0.email === "" || !re.test(formData0.email))
         {
         errors.email = 'You must enter a valid email address'
         }
         
-        if (registeredEmails.includes(formData0.email)) {
-        errors.email = 'Email is already in use';
-        }
-
-
         if (formData0.agreed === false){
         errors.agreed = 'You must agree to the terms'
         }
@@ -125,7 +116,37 @@ function SignUpPG(props) {
         errors.lastName = 'You must enter a last name'
         }
 
+        if (Object.keys(errors).length===0){
+            try {
+                const response = await fetch("http://127.0.0.1:8000/signup", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  name: formData0.firstName,
+                  surname: formData0.lastName,
+                  email: formData0.email,
+                  password: formData0.password,
+                }),
+            });
+            
+            const data = await response.json();
 
+            // Check if the 'success' field is present
+            if ('success' in data) {
+                console.log("Success field is present:", data.success);
+                // Handle the success case
+            } else {
+                console.log("Failed:", data);
+                errors.email = 'Email is already in use'
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            errors.email = 'Email is already in use'
+        }
+        }
+        
         return errors;
     };
 
@@ -198,6 +219,7 @@ function SignUpPG(props) {
     };
 
     const handleSubmit1 = () => {
+        
         setProg(2);
     };
 
