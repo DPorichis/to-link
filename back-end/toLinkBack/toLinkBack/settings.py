@@ -69,13 +69,17 @@ CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:3000"
 ]
 
+SESSION_TRUSTED_ORIGINS = [
+    "http://localhost:3000",  # Your React app URL
+    "http://127.0.0.1:3000"
+]
 
 # Secure cookie settings
-SESSION_COOKIE_SAMESITE = 'None' #
+SESSION_COOKIE_SAMESITE = 'None' 
 SESSION_COOKIE_SECURE = True  # Ensure you use HTTPS in production
-CSRF_COOKIE_SAMESITE = 'None' # 
+CSRF_COOKIE_SAMESITE = 'None' 
 CSRF_COOKIE_SECURE = True  # Ensure you use HTTPS in production
-SESSION_COOKIE_HTTPONLY = True
+# SESSION_COOKIE_HTTPONLY = True
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_METHODS = [
