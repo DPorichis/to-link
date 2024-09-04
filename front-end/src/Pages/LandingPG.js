@@ -5,9 +5,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 import Postbox from "../Components/Feed/Postbox";
-
+import { useNavigate } from 'react-router-dom';
 
 function LandingPG(props) {
+
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         email: '',
@@ -90,6 +92,7 @@ function LandingPG(props) {
             console.error("Error:", error);
             return
         }
+        navigate(`/user`);
     };
 
     const handleChange = (e) => {
@@ -172,11 +175,11 @@ function LandingPG(props) {
                         <div style={{textAlign:"left", background: "#e2d9d0", padding: "20px 10px", borderRadius: "5px",
                         border: "solid 1px", borderColor:"#ccc", height:"fit-content", textAlign: "center"}}>
                             <h5>
-                                Welcome back Jim!
+                                Welcome back {userLoggedIn.profile_info.name}!
                             </h5>
                             <img src="/logo192.png" style={{width:"100px", height:"100px"}} />
                             <div style={{display:"flex", width:"100%", marginTop:"10px", flexDirection:"column"}}>
-                                <button class="btn btn-primary" style={{width:"100%", marginTop:"10px"}} onClick={testCookie}>Continue as Jim</button>
+                                <a class="btn btn-primary" style={{width:"100%", marginTop:"10px"}} href="/user">Continue as {userLoggedIn.profile_info.name}</a>
                                 <button class="btn btn-outline-danger" style={{width:"100%", marginTop:"10px"}} onClick={handleLogout}>Logout</button>
                             </div>
                         </div>

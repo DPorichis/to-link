@@ -16,20 +16,12 @@ Content-Type: application/json
 ### Profile Update API
 
 POST http://127.0.0.1:8000/profile/own/update/
-Cookie: sessionid=gb7o6vwhe92ol781vm1trvsjegg038vk; csrftoken=etDpDPZ2BtqAvFAeVlVS4xO1cw8BY5xg;
-X-CSRFToken: etDpDPZ2BtqAvFAeVlVS4xO1cw8BY5xg
+Cookie: sessionid=mq3j63szyzdr0x6979ujql2ahdmxzcx9; csrftoken=WiokDNU9tbnSQttgOAw9BRQvyaZ6DIDa;
+X-CSRFToken: WiokDNU9tbnSQttgOAw9BRQvyaZ6DIDa
 Content-Type: application/json
 
 {
-    "pfp": "BBB.jpg",
-    "name": "Updated Name",
-    "surname": "Updated Surname",
-    "title": "Updated Title",
-    "bio": "Updated Bio",
-    "phone": "1234567890",
-    "website": "http://newwebsite.com",
-    "experience": {"company": "New Company", "position": "New Position"},
-    "education": {"school": "New School", "degree": "New Degree"}
+    "title": "Updated AAAAAAAAAAAAAA"
 }
 
 ### Fetch your profile api

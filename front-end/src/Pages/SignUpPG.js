@@ -40,6 +40,11 @@ function SignUpPG(props) {
         agreed:''
     });
 
+    const [formErrors1, setFormErrors1] = useState({
+        pfFirstName:'',
+        pfLastName:''
+    });
+
     const [formData1, setFormData1] = useState({
         birthdate: null,
         country: '',
@@ -264,10 +269,58 @@ function SignUpPG(props) {
         }
         return cookieValue;
     };
+
+    const validateForm1 = () => {
+
+        const errors = {};
+        
+        if (formData1.pfFirstName === ""){
+            errors.pfFirstName = 'You must enter a first name'
+        }
+
+        if (formData0.pfLastName === ""){
+            errors.pfLastName = 'You must enter a last name'
+        }
+
+        return errors;
+    };
+
+
     const handleSubmit1 = async (e) => {
         e.preventDefault()
+        
+        const errors = validateForm1();
+        
+        if (Object.keys(errors).length !== 0) {
+            setFormErrors1(errors);
+        }
+
+
         const csrfToken = getCookie('csrftoken');
         
+        const replaceEmptyStringsWithNull = (obj) => {
+            const cleanedObj = {};
+            for (const [key, value] of Object.entries(obj)) {
+                if (value !== '')
+                {
+                    cleanedObj[key] = value;
+                }
+                
+            }
+            return cleanedObj;
+        };
+
+        const cleanedFormData1 = replaceEmptyStringsWithNull({
+            name: formData1.pfFirstName,
+            surname: formData1.pfLastName,
+            title: formData1.pfTitle,
+            bio: formData1.pfBio,
+            phone: formData1.pfPhone,
+            website: formData1.pfWebsite,
+            experience: formData1.pfExperience,
+            education: formData1.pfEducation
+        });
+
         try {
             const response = await fetch("http://127.0.0.1:8000/profile/own/update/", {
             method: "POST",
@@ -276,16 +329,7 @@ function SignUpPG(props) {
                 'X-CSRFToken': csrfToken,
             },
             credentials: 'include', // Include cookies in the request
-            body: JSON.stringify({
-                "name": formData1.pfFirstName,
-                "surname": formData1.pfLastName,
-                "title": formData1.pfTitle,
-                "bio": formData1.pfBio,
-                "phone": formData1.pfPhone,
-                "website": formData1.pfWebsite,
-                "experience": formData1.pfWebsite,
-                "education": formData1.pfEducation
-            }),
+            body: JSON.stringify({cleanedFormData1}),
         });
         console.log(response)
         } catch (error) {
@@ -457,15 +501,33 @@ function SignUpPG(props) {
                         onChange={handleChange1} />
                         <div class="row">
                             <div class="col-md-6" style={{marginBottom:"5px"}}>
-                                <label for="pfFirstName" class="form-label" style={{marginBottom:"2px"}}>Name</label>
-                                <input type="text" class="form-control" name="pfFirstName"
-                                onChange={handleChange1} value={formData1.pfFirstName}/>
+                                <label htmlFor="lastName" className="form-label">First Name</label>
+                                <input
+                                    type="text"
+                                    className={`form-control ${formErrors1.pfFirstName ? 'is-invalid' : ''}`}
+                                    id="pfFirstName"
+                                    name="pfFirstName"
+                                    value={formData1.pfFirstName}
+                                    onChange={handleChange1}
+                                    required
+                                    placeholder="ex. Jim"
+                                />
+                                <div className="invalid-feedback">{formErrors1.pfFirstName || 'Please enter your last name.'}</div>
                             </div>
                             
                             <div class="col-md-6" style={{marginBottom:"5px"}}>
-                                <label for="pfLastName" class="form-label" style={{marginBottom:"2px"}}>Surname</label>
-                                <input type="text" class="form-control" name="pfLastName" 
-                                onChange={handleChange1} value={formData1.pfLastName}/>
+                                <label htmlFor="lastName" className="form-label">Last Name</label>
+                                <input
+                                    type="text"
+                                    className={`form-control ${formErrors1.pfLastName ? 'is-invalid' : ''}`}
+                                    id="lastNpfLastNameame"
+                                    name="pfLastName"
+                                    value={formData1.pfLastName}
+                                    onChange={handleChange1}
+                                    required
+                                    placeholder="ex. Johnson"
+                                />
+                                <div className="invalid-feedback">{formErrors1.pfLastName || 'Please enter your last name.'}</div>
                             </div>
                         </div>
                         <div class="col-mb-3" style={{marginBottom:"5px"}}>
