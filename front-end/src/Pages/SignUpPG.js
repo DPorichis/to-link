@@ -136,7 +136,23 @@ function SignUpPG(props) {
             // Check if the 'success' field is present
             if ('success' in data) {
                 console.log("Success field is present:", data.success);
-                // Handle the success case
+                try {
+                    const response = await fetch("http://127.0.0.1:8000/login", {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                      email: formData0.email,
+                      password: formData0.password,
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => console.log(data));
+                } catch (error) {
+                    console.error("Error:", error);
+                    errors.email = 'Sign in error'
+                }
             } else {
                 console.log("Failed:", data);
                 errors.email = 'Email is already in use'
@@ -218,8 +234,53 @@ function SignUpPG(props) {
       }));
     };
 
-    const handleSubmit1 = () => {
+    const getCookie = (name) => {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+          const cookies = document.cookie.split(';');
+          for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === `${name}=`) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+            }
+          }
+        }
+        return cookieValue;
+    };
+    const handleSubmit1 = async () => {
+
+        const csrfToken = getCookie('csrftoken');
+        const sessionId = getCookie('sessionid');
+        console.log(csrfToken)
+        console.log(sessionId)
         
+        
+        try {
+            const response = await fetch("http://127.0.0.1:8000/profile/own/update/", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken,
+                'Cookie': `sessionid=${sessionId}; csrftoken=${csrfToken}`,  // Manually set the cookie
+            },
+            credentials: 'include', // Include cookies in the request
+            body: JSON.stringify({
+                "name": formData1.pfFirstName,
+                "surname": formData1.pfLastName,
+                "title": formData1.pfTitle,
+                "bio": formData1.pfBio,
+                "phone": formData1.pfPhone,
+                "website": formData1.pfWebsite,
+                "experience": formData1.pfWebsite,
+                "education": formData1.pfEducation
+            }),
+        });
+        console.log(response)
+        } catch (error) {
+            console.error("Error:", error);
+            return
+        }
         setProg(2);
     };
 

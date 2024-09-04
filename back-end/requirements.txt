@@ -4,3 +4,4 @@ environs
 markdown
 django-filter
 Pillow
+django-cors-headers

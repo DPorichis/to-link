@@ -19,7 +19,7 @@ def login(request):
         return Response({"error": "Email and password are required."}, status=status.HTTP_400_BAD_REQUEST)
 
     # Authenticate the user
-    user = authenticate(email=email, password=password)
+    user = authenticate(request, email=email, password=password)
 
     if user is not None:
         # Log in the user by creating a session

@@ -16,7 +16,7 @@ from rest_framework.permissions import IsAuthenticated
 def updateuser(request):
     return Response({})
 
-@api_view(['PUT'])
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def update_profile(request):
     # Get the authenticated user

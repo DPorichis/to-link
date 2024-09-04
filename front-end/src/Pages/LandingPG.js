@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import Header from "../Components/Header";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -8,6 +8,125 @@ import Postbox from "../Components/Feed/Postbox";
 
 
 function LandingPG(props) {
+
+    const [formData, setFormData] = useState({
+        email: '',
+        password: '',
+    });
+
+    const [userLoggedIn, setUser] = useState({})
+
+    const [loading, setLoading] = useState(true);
+
+    const getCookie = (name) => {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+          const cookies = document.cookie.split(';');
+          for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === `${name}=`) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+            }
+          }
+        }
+        return cookieValue;
+    };
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            const csrfToken = getCookie('csrftoken');
+            console.log(csrfToken)
+
+            console.log(document.cookie);
+            const response = await fetch("http://127.0.0.1:8000/profile/own/fetch", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                })
+            })
+            
+            if (response.ok) {
+                // Fetch user account details if authenticated
+                const userData = await response.json();
+                setUser(userData);
+            } else {
+                setUser(null);
+                document.cookie = `csrftoken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+                document.cookie = `sessionid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+            }
+
+            setLoading(false);
+        };
+
+        fetchUser();
+    }, []);
+
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await fetch("http://127.0.0.1:8000/login", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: "include",
+            body: JSON.stringify({
+                "email": formData.email,
+                "password": formData.password
+            }),
+        });
+        console.log(response)
+        console.log(document.cookie);
+        } catch (error) {
+            console.error("Error:", error);
+            return
+        }
+    };
+
+    const handleChange = (e) => {
+        const {name, value} = e.target;
+        setFormData({
+        ...formData,
+        [name]: value,
+        });
+    };
+
+    
+
+    const testCookie = async () => {
+        const csrfToken = getCookie('csrftoken');
+        console.log(csrfToken)
+
+        console.log(document.cookie);
+        try {
+            const response = await fetch("http://127.0.0.1:8000/profile/own/fetch", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+            credentials: "include",
+            body: JSON.stringify({
+            })
+        }).then(response => response.json())
+        .then(data => console.log(data))
+        .catch(error => console.error('Error:', error));;
+        console.log(response)
+        } catch (error) {
+            console.error("Error:", error);
+            return
+        }
+    }
+
+
+    if (loading) return <p>Loading...</p>;
+
     return (
         <div>
             <Header />
@@ -20,30 +139,47 @@ function LandingPG(props) {
                     <div style={{display:"flex", flexDirection:"column", width:"40%", textAlign:"left", justifyContent:"center"}}>
                     <h3>Welcome to whatever this is</h3>
                     <p>All your favorite high ego friends are waiting inside!</p>
+                    {userLoggedIn?
+                        <div style={{textAlign:"left", background: "#e2d9d0", padding: "20px 10px", borderRadius: "5px",
+                        border: "solid 1px", borderColor:"#ccc", height:"fit-content", textAlign: "center"}}>
+                            <h5>
+                                Welcome back Jim!
+                            </h5>
+                            <img src="/logo192.png" style={{width:"100px", height:"100px"}} />
+                            <div style={{display:"flex", width:"100%", marginTop:"10px", flexDirection:"column"}}>
+                                <button class="btn btn-primary" style={{width:"100%", marginTop:"10px"}} onClick={testCookie}>Continue as Jim</button>
+                                <button class="btn btn-outline-danger" style={{width:"100%", marginTop:"10px"}} onClick={testCookie}>Logout</button>
+                            </div>
+                        </div>
+                    :
+                        <div style={{textAlign:"left", background: "#e2d9d0", padding: "20px 10px", borderRadius: "5px",
+                            border: "solid 1px", borderColor:"#ccc", height:"fit-content"}}>
+                            <form onSubmit={handleSubmit}>
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email address</label>
+                                    <input type="email" class="form-control" id="email" aria-describedby="emailHelp" 
+                                    value={formData.email} name="email" onChange={handleChange}/>
+                                    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="password" class="form-label">Password</label>
+                                    <input type="password" class="form-control" id="password" 
+                                    value={formData.password} name="password" onChange={handleChange}/>
+                                </div>
+                                <div style={{display: "flex", justifyContent: "space-between"}}>
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" class="form-check-input" id="exampleCheck1" />
+                                    <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Sign In</button>
+                                </div>
+                            </form>
+                        </div>
+                    }
+                    
 
-                    <div style={{textAlign:"left", background: "#e2d9d0", padding: "20px 10px", borderRadius: "5px",
-                        border: "solid 1px", borderColor:"#ccc", height:"fit-content"}}>
-                        <form>
-                            <div class="mb-3">
-                                <label for="exampleInputEmail1" class="form-label">Email address</label>
-                                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" />
-                                <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="exampleInputPassword1" class="form-label">Password</label>
-                                <input type="password" class="form-control" id="exampleInputPassword1" />
-                            </div>
-                            <div style={{display: "flex", justifyContent: "space-between"}}>
-                            <div class="mb-3 form-check">
-                                <input type="checkbox" class="form-check-input" id="exampleCheck1" />
-                                <label class="form-check-label" for="exampleCheck1">Check me out</label>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Sign In</button>
-                            </div>
-                        </form>
-                    </div>
                     <div style={{borderTop: "solid 1px #aaa", display:"flex", width:"100%", marginTop:"10px", paddingTop:"10px"}}>
-                    <button class="btn btn-primary" style={{width:"100%"}}>Sign up</button>
+                        <button class="btn btn-primary" style={{width:"100%"}} onClick={testCookie}>Sign up</button>
                     </div>
                     </div>
  

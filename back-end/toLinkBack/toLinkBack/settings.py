@@ -25,8 +25,10 @@ SECRET_KEY = 'django-insecure-cco*y1%m0$be*l80qyzr4#(u*qrj=da03nq7x$r6n0b1-om)r)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost:3000'
+]
 
 # Application definition
 
@@ -58,6 +60,30 @@ ROOT_URLCONF = 'toLinkBack.urls'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # Add your React frontend URL
     "http://127.0.0.1:3000",
+    "http://127.0.0.1:8000",
+    "http://localhost:8000"
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000",  # Your React app URL
+    "http://127.0.0.1:3000"
+]
+
+
+# Secure cookie settings
+SESSION_COOKIE_SAMESITE = 'None' #
+SESSION_COOKIE_SECURE = True  # Ensure you use HTTPS in production
+CSRF_COOKIE_SAMESITE = 'None' # 
+CSRF_COOKIE_SECURE = True  # Ensure you use HTTPS in production
+SESSION_COOKIE_HTTPONLY = True
+
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_METHODS = [
+    "GET",
+    "POST",
+    "PUT",
+    "DELETE",
+    "OPTIONS",
 ]
 
 TEMPLATES = [
@@ -113,11 +139,6 @@ AUTH_USER_MODEL = 'api.User'
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend'
 ]
-
-# Secure cookie settings
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_HTTPONLY = True
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
