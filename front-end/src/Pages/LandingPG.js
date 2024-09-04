@@ -56,6 +56,8 @@ function LandingPG(props) {
                 setUser(userData);
             } else {
                 setUser(null);
+                document.cookie = `sessionid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+                document.cookie = `csrftoken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
                 document.cookie = `_dd_s=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
 
                 console.log("no user logged in")
@@ -125,6 +127,32 @@ function LandingPG(props) {
         }
     }
 
+    const handleLogout = async () => {
+        const csrfToken = getCookie('csrftoken');
+        try {
+            // Send a request to the backend to log the user out
+            const response = await fetch('http://127.0.0.1:8000/logout/', {
+                method: 'POST',
+                credentials: 'include',  // Include cookies (sessionid, csrftoken)
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+            });
+
+            if (response.ok) {
+                // If logout is successful, clear any stored user data on the frontend
+                setUser(null);
+                document.cookie = `sessionid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+                document.cookie = `csrftoken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+                document.cookie = `_dd_s=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+            } else {
+                console.error('Failed to log out');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
 
     if (loading) return <p>Loading...</p>;
 
@@ -149,7 +177,7 @@ function LandingPG(props) {
                             <img src="/logo192.png" style={{width:"100px", height:"100px"}} />
                             <div style={{display:"flex", width:"100%", marginTop:"10px", flexDirection:"column"}}>
                                 <button class="btn btn-primary" style={{width:"100%", marginTop:"10px"}} onClick={testCookie}>Continue as Jim</button>
-                                <button class="btn btn-outline-danger" style={{width:"100%", marginTop:"10px"}} onClick={testCookie}>Logout</button>
+                                <button class="btn btn-outline-danger" style={{width:"100%", marginTop:"10px"}} onClick={handleLogout}>Logout</button>
                             </div>
                         </div>
                     :

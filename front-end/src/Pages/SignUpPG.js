@@ -85,6 +85,21 @@ function SignUpPG(props) {
     };
     
     const validateForm = async () => {
+
+        try {
+            const response = await fetch("http://127.0.0.1:8000/logout", {
+                method: "POST",
+                credentials: "include",  // Include cookies in the request
+            });
+            if (response.ok) {
+                console.log("Logged out successfully");
+            } else {
+                console.error("Logout failed");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
+
         const errors = {};
         const registeredEmails = ['john@example.com', 'jane@example.com'];
         
@@ -142,6 +157,7 @@ function SignUpPG(props) {
                     headers: {
                       "Content-Type": "application/json",
                     },
+                    credentials:"include",
                     body: JSON.stringify({
                       email: formData0.email,
                       password: formData0.password,
@@ -248,13 +264,9 @@ function SignUpPG(props) {
         }
         return cookieValue;
     };
-    const handleSubmit1 = async () => {
-
+    const handleSubmit1 = async (e) => {
+        e.preventDefault()
         const csrfToken = getCookie('csrftoken');
-        const sessionId = getCookie('sessionid');
-        console.log(csrfToken)
-        console.log(sessionId)
-        
         
         try {
             const response = await fetch("http://127.0.0.1:8000/profile/own/update/", {
@@ -262,7 +274,6 @@ function SignUpPG(props) {
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRFToken': csrfToken,
-                'Cookie': `sessionid=${sessionId}; csrftoken=${csrfToken}`,  // Manually set the cookie
             },
             credentials: 'include', // Include cookies in the request
             body: JSON.stringify({
