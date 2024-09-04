@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 
 import Header from "../../Components/Header";
 import './homePGU.css';
@@ -6,7 +6,61 @@ import './homePGU.css';
 import ProfileSmall from "../../Components/Profile/ProfileSmall";
 import Postbox from "../../Components/Feed/Postbox";
 
+const getCookie = (name) => {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === `${name}=`) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+};
+
+
+
 function HomePGU(props) {
+    const [loading, setLoading] = useState(true);
+    const [posts, setPosts] = useState([]);
+    const [error, setError] = useState(null);
+    
+    useEffect(() => {
+        const fetchPosts = async () => {
+            const csrfToken = getCookie('csrftoken');
+            try {
+                const response = await fetch("http://127.0.0.1:8000/posts/fetch", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    credentials: "include",
+                    body: JSON.stringify({})
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setPosts(data);  
+                } else {
+                    throw new Error('Failed to fetch posts');
+                }
+            } catch (error) {
+                setError(error.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchPosts();
+    }, []);
+
+
+
+
     const links = 
     [
     {
@@ -55,6 +109,8 @@ function HomePGU(props) {
     imgURL: "/logo192.png",
     }
     ];
+    
+   
     
     return (
         <div>
@@ -134,9 +190,13 @@ function HomePGU(props) {
                 </div>
                 <hr style={{ border: "1px solid black", margin: "5px 0px" }} />
                 <div>
-                    <Postbox photolist ={[ "/testing-post1.png", "/testing-post.png"]}/>
-                    <Postbox photolist ={[ "/testing-post1.png"]}/>
-                    <Postbox />
+                {posts.length > 0 ? (
+                    posts.map(post => (
+                        <Postbox key={post.id} photolist={post.photolist} /> // Adjust according to your post structure
+                    ))
+                ) : (
+                    <p>No posts available</p>
+                )}
                 </div>
             </div>
         </div>

@@ -4,7 +4,7 @@
 POST http://127.0.0.1:8000/login
 Content-Type: application/json
 
-{"email": "ji", "password": "James"}
+{"email": "ah@ah.a", "password": "James"}
 
 ### Sign Up API
 
@@ -58,15 +58,22 @@ X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
 
 POST http://127.0.0.1:8000/posts/upload/
 Content-Type: application/json
-Cookie: sessionid=voxn1ekrdotdz1ksnuu88vq9zdgcf264; csrftoken=8A8wBzBfuuysMWdW3x4N85WllAXoglvJ;
-X-CSRFToken: 8A8wBzBfuuysMWdW3x4N85WllAXoglvJ
+Cookie: sessionid=roxsoy3o97lvbgnxzc4szubo151b2n35; csrftoken=r1i1WEoStxhR6skaVe6uBOU6yXOZYV03;
+X-CSRFToken: r1i1WEoStxhR6skaVe6uBOU6yXOZYV03
 
 {
-  "text": "This is a sample post.",
-  "media": {"images": ["image1.png", "image2.png"]},
-  "links": {"link1": "http://example.com"}
+  "text": "This is a sample post."
 }
+####
 
+POST http://127.0.0.1:8000/posts/fetch
+Content-Type: application/json
+Cookie: sessionid=roxsoy3o97lvbgnxzc4szubo151b2n35; csrftoken=r1i1WEoStxhR6skaVe6uBOU6yXOZYV03;
+X-CSRFToken: r1i1WEoStxhR6skaVe6uBOU6yXOZYV03
+
+{
+  "text": "This is a sample post."
+}
 
 ### Fetch Post API
 

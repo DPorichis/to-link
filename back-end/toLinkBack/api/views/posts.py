@@ -137,3 +137,10 @@ def get_comments_by_post(request):
     except Post.DoesNotExist:
         return Response({"error": "Post not found."}, status=status.HTTP_404_NOT_FOUND)
     
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def get_all_posts(request):
+    # Retrieve all posts
+    posts = Post.objects.all()
+    serializer = PostSerializer(posts, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
