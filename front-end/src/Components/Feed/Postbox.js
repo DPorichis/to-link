@@ -29,21 +29,21 @@ function Postbox(props) {
         <div className="postboxout">
             <div className="postboxin">
                 <ProfileTag name="Litsa Patera" relation="In your Network"/>
-                <p> «Αυτό που μου είπε η Λίτσα Πατέρα είναι ότι αυτα τα παιδια θα πάρουν 10 στην εργασία. Είναι οριστικό. Δεν υπάρχει επιστροφή εκεί. PLZ κυριε Χαμόδρακα PLZPLZPLZPLZPLZPLZPLZ</p>
-                {props.photolist === undefined ? 
+                <p> {props.post.text}</p>
+                {props.media === undefined ? 
                     <></>
                 : 
                 (props.photolist.length === 1 ?
-                    <img src={props.photolist[0]} style={{maxHeight: "100%"}} alt="" />
+                    <img src={props.post.media[0]} style={{maxHeight: "100%"}} alt="" />
                 :
                 <div id="carouselExample" class="carousel slide">
                     <div class="carousel-inner">
                         <div class="carousel-item active">
-                            <img src={props.photolist[0]} class="d-block w-100" alt="..."/>
+                            <img src={props.post.media[0]} class="d-block w-100" alt="..."/>
                         </div>
-                        {props.photolist.slice(1).map((photo) =>
+                        {props.post.media.slice(1).map((photo) =>
                             <div class="carousel-item">
-                                <img class="d-block w-100" src={photo} alt="photo"/>
+                                <img class="d-block w-100" src={props.post.media} alt="photo"/>
                             </div>
                         )}
                     </div>
@@ -74,7 +74,7 @@ function Postbox(props) {
                     <button>Post</button>
                 </div>          
             </div>
-            <p style={{textAlign: "left", justifyContent: "left", marginLeft: "2px", marginTop: "2px", marginBottom: "0"}}>{props.likecount}1234 liked this · {props.commentcount}5 comments</p>
+            <p style={{textAlign: "left", justifyContent: "left", marginLeft: "2px", marginTop: "2px", marginBottom: "0"}}>{props.likecount}{props.post.like_cnt} · {props.commentcount}{props.post.comment_cnt}</p>
             <button className="show-comments-button" onClick={togglecomments}> {commentsVisible ? <>Show Comments v</> : <>Show Comments {">"}</>}</button>
             {commentsVisible ? <><CommentsCONT /></> : <></>}
        </div>

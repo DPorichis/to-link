@@ -192,7 +192,7 @@ function HomePGU(props) {
                 <div>
                 {posts.length > 0 ? (
                     posts.map(post => (
-                        <Postbox key={post.id} photolist={post.photolist} /> // Adjust according to your post structure
+                        <Postbox post={post}/> 
                     ))
                 ) : (
                     <p>No posts available</p>
