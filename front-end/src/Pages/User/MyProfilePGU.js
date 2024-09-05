@@ -1,6 +1,6 @@
 import React from "react";
 import Header from "../../Components/Header";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Postbox from "../../Components/Feed/Postbox";
 import JobTile from "../../Components/Jobs/JobTile";
 
@@ -38,7 +38,7 @@ const sampleProfile =
 {
     name: "Lakis",
     surname: "Lalakis",
-    imgURL: "/logo192.png",
+    pfp: "/logo192.png",
     email: "",
     phone: "",
     website: "",
@@ -46,19 +46,84 @@ const sampleProfile =
     experience: ["Important", "Important", "Important"],
     education: ["Important", "Important"],
     listings: dammylistings,
-    visibleEdu: "Public",
-    visibleExp: "Public",
-    visibleAct: "Public",
-    visibleCont: "Public"
+    vis_edu: 0,
+    vis_exp: 0,
+    vis_act: 0,
+    vis_cont: 0,
+    link_cnt: 0,
+    post_cnt: 0,
+    listings_cnt: 0,
+    vis_cont: 0,
+    vis_edu: 0,
+    vis_exp: 0,
+    vis_act: 0
 }
 
 
-
+const getCookie = (name) => {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === `${name}=`) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+};
 
 function MyProfilePGU(props) {
 
     const [mode, setMode] = useState("info");
     const [edit, setEdit] = useState(false);
+    const [loading, setLoading] = useState(true);
+
+    const [savedProfile, setSavedProfile] = useState(sampleProfile);
+    const [editedProfile, setEditedProfile] = useState(sampleProfile);
+
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            const csrfToken = getCookie('csrftoken');
+            console.log(csrfToken)
+
+            console.log(document.cookie);
+            const response = await fetch("http://127.0.0.1:8000/profile/own/fetch", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                })
+            })
+            
+            if (response.ok) {
+                // Fetch user account details if authenticated
+                let userData = await response.json();
+                if (userData.profile_info.education === null) 
+                {
+                    userData.profile_info.education = []
+                }
+                if (userData.profile_info.experience === null) 
+                {
+                    userData.profile_info.experience = []
+                }
+                setSavedProfile(userData.profile_info);
+                setEditedProfile(userData.profile_info);
+            } else {
+                setSavedProfile(null);
+                console.log("no user logged in")
+            }
+            setLoading(false);
+        };
+
+        fetchUser();
+    }, []);
     
     const handleInfo = () => {
         setMode("info");
@@ -88,15 +153,43 @@ function MyProfilePGU(props) {
         setEdit(false);
     };
 
-    const [savedProfile, setSavedProfile] = useState(sampleProfile);
-    const [editedProfile, setEditedProfile] = useState(sampleProfile);
-
     const discardChanges = () => {
         setEditedProfile(savedProfile);
     };
 
-    const saveChanges = () => {
-        setSavedProfile(editedProfile);
+    const saveChanges = async() => {
+        const csrfToken = getCookie('csrftoken');
+
+
+        console.log(JSON.stringify({editedProfile}))
+
+
+        const response = await fetch("http://127.0.0.1:8000/profile/own/update/", {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+            credentials: "include",
+            body: JSON.stringify(editedProfile)
+        })
+        
+        if (response.ok) {
+            // Fetch user account details if authenticated
+            let userData = await response.json();
+            if (userData.education === null) 
+            {
+                userData.education = []
+            }
+            if (userData.experience === null) 
+            {
+                userData.experience = []
+            }
+            setSavedProfile(userData);
+            setEditedProfile(userData);
+        } else {
+            console.log("no user logged in")
+        }
     }
 
     const addEdu = () => {
@@ -260,8 +353,7 @@ function MyProfilePGU(props) {
                             <div class="mb-3">
                                 <label for="bio" class="form-label">Bio</label>
                                 <textarea class="form-control" name="bio"
-                                onChange={handleInputChange} value={editedProfile.bio}>
-                                this is a bio
+                                onChange={handleInputChange} value={editedProfile.bio} placeholder="Type your bio here">
                                 </textarea>
                             </div>
                             <div class="mb-3">
@@ -308,32 +400,32 @@ function MyProfilePGU(props) {
                         <div class="col-md-4">
                             <h5>Category Visibility</h5>
                             <label for="state" class="form-label">Activity Visibility</label>
-                            <select class="form-select" name="visibleAct" value={editedProfile.visibleAct}
+                            <select class="form-select" name="vis_act" value={editedProfile.vis_act}
                             onChange={handleInputChange}>
-                                <option value="Public">Public</option>
-                                <option value="Network Only">Network Only</option>
-                                <option value="Private">Private</option>
+                                <option value='1'>Public</option>
+                                <option value='2'>Network Only</option>
+                                <option value='3'>Private</option>
                             </select>
                             <label for="state" class="form-label">Education Visibility</label>
-                            <select class="form-select" name="visibleEdu" value={editedProfile.visibleEdu}
+                            <select class="form-select" name="vis_edu" value={editedProfile.vis_edu}
                             onChange={handleInputChange}>
-                                <option value="Public">Public</option>
-                                <option value="Network Only">Network Only</option>
-                                <option value="Private">Private</option>
+                                <option value='1'>Public</option>
+                                <option value='2'>Network Only</option>
+                                <option value='3'>Private</option>
                             </select>
                             <label for="state" class="form-label">Experience Visibility</label>
-                            <select class="form-select" name="visibleExp" value={editedProfile.visibleExp}
+                            <select class="form-select" name="vis_exp" value={editedProfile.vis_exp}
                             onChange={handleInputChange}>
-                                <option value="Public">Public</option>
-                                <option value="Network Only">Network Only</option>
-                                <option value="Private">Private</option>
+                                <option value='1'>Public</option>
+                                <option value='2'>Network Only</option>
+                                <option value='3'>Private</option>
                             </select>
                             <label for="state" class="form-label">Contact Info Visibility</label>
-                            <select class="form-select" name="visibleCont" value={editedProfile.visibleCont}
+                            <select class="form-select" name="vis_cont" value={editedProfile.vis_cont}
                             onChange={handleInputChange}>
-                                <option value="Public">Public</option>
-                                <option value="Network Only">Network Only</option>
-                                <option value="Private">Private</option>
+                                <option value='1'>Public</option>
+                                <option value='2'>Network Only</option>
+                                <option value='3'>Private</option>
                             </select>
                         </div>
                     </div>
@@ -355,12 +447,21 @@ function MyProfilePGU(props) {
                         </p>
                         </div>
                     </div>
+                    {savedProfile.email !== "" || savedProfile.phone !== "" || savedProfile.website !== "" ?
+                    <p style={{textAlign:"right", marginBottom:"0px", marginTop:"10px"}}>
+                        Contact information<br/>
+                        {savedProfile.email?<> Email: {savedProfile.email}<br/> </>:<></>}
+                        {savedProfile.phone?<> Phone: {savedProfile.phone}<br/> </>:<></>}
+                        {savedProfile.website?<> Website: {savedProfile.website}<br/> </>:<></>}
+                    </p>
+                    :
                     <p style={{textAlign:"right", marginBottom:"0px", marginTop:"10px"}}>
                         Contact information<br/>
                         Email: {savedProfile.email}<br/>
                         Phone: {savedProfile.phone}<br/>
                         Website: {savedProfile.website}
                     </p>
+                    }
                 </div>
                 <ul class="nav nav-tabs">
                     <li class="nav-item">
@@ -388,19 +489,28 @@ function MyProfilePGU(props) {
                     <h4 style={{marginBottom:"2px"}}>
                         Experience
                     </h4>
-                    <ul>
-                        {savedProfile.experience.map((exp) =>
-                            <li>{exp}</li>
-                        )}
-                    </ul>
+                    {savedProfile.experience? 
+                        <ul>
+                            {savedProfile.experience.map((exp) =>
+                                <li>{exp}</li>
+                            )}
+                        </ul>  
+                        :
+                        <p>No experience set</p>
+                    }
+                    
                     <h4 style={{marginBottom:"2px"}}>
                         Education
                     </h4>
-                    <ul>
-                        {savedProfile.education.map((edu) =>
-                            <li>{edu}</li>
-                        )}
-                    </ul>
+                    {savedProfile.education? 
+                        <ul>
+                            {savedProfile.education.map((exp) =>
+                                <li>{exp}</li>
+                            )}
+                        </ul>  
+                        :
+                        <p>No education set</p>
+                    }
                 </div>
                 :
                 (mode === "posts"

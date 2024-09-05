@@ -5,7 +5,7 @@ from api.models import Profile
 class ProfileUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        fields = ['pfp', 'name', 'surname', 'title', 'bio', 'phone', 'website', 'experience', 'education']
+        fields = ['pfp', 'name', 'surname', 'title', 'bio', 'phone', 'website', 'email', 'experience', 'education', "vis_cont", "vis_edu", "vis_exp", "vis_act"]
         # Add any other fields you want to be updatable
 
     def update(self, instance, validated_data):

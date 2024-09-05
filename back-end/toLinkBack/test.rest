@@ -15,7 +15,7 @@ Content-Type: application/json
 
 ### Profile Update API
 
-POST http://127.0.0.1:8000/profile/own/update/
+PUT http://127.0.0.1:8000/profile/own/update/
 Cookie: sessionid=mq3j63szyzdr0x6979ujql2ahdmxzcx9; csrftoken=WiokDNU9tbnSQttgOAw9BRQvyaZ6DIDa;
 X-CSRFToken: WiokDNU9tbnSQttgOAw9BRQvyaZ6DIDa
 Content-Type: application/json
@@ -28,8 +28,8 @@ Content-Type: application/json
 
 POST http://127.0.0.1:8000/profile/own/fetch
 Content-Type: application/json
-Cookie: sessionid=9b4jnvvzyiem8c8z0yah8g6fxllgetv1; csrftoken=HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9;
-X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
+Cookie: sessionid=fam6r9yw3iitzeribv919thzk18rmcpk; csrftoken=hJX3AKNOVBX9peYtGaelQ4SEP32j21HY;
+X-CSRFToken: hJX3AKNOVBX9peYtGaelQ4SEP32j21HY
 
 {
 }

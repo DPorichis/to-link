@@ -71,10 +71,10 @@ class Profile(models.Model):
     link_cnt = models.IntegerField(blank=True, default=0)  # Field name made lowercase.
     post_cnt = models.IntegerField(blank=True, default=0)  # Field name made lowercase.
     listings_cnt = models.IntegerField(blank=True, default=0)  # Field name made lowercase.
-    vis_exp = models.IntegerField(blank=True, default=0)
-    vis_edu = models.IntegerField(blank=True, default=0)
-    vis_act = models.IntegerField(blank=True, default=0)
-    vis_cont = models.IntegerField(blank=True, default=0)
+    vis_exp = models.IntegerField(blank=True, default=1)
+    vis_edu = models.IntegerField(blank=True, default=1)
+    vis_act = models.IntegerField(blank=True, default=1)
+    vis_cont = models.IntegerField(blank=True, default=1)
 
 
 

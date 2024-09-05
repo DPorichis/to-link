@@ -16,7 +16,7 @@ from rest_framework.permissions import IsAuthenticated
 def updateuser(request):
     return Response({})
 
-@api_view(['POST'])
+@api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def update_profile(request):
     # Get the authenticated user
@@ -30,7 +30,7 @@ def update_profile(request):
     
     # Create the serializer with the current profile and the request data
     serializer = ProfileUpdateSerializer(profile, data=request.data, partial=True)  # `partial=True` to allow for partial updates
-
+    print(request.data)
     if serializer.is_valid():
         # Save the updated profile information
         serializer.save()
