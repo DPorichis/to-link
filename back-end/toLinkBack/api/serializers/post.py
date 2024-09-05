@@ -21,10 +21,24 @@ class LikedBySerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
+    profile_info = serializers.SerializerMethodField()
     class Meta:
         model = Comment
-        fields = ['comment_id', 'post', 'user', 'text']
-        read_only_fields = ['comment_id', 'user']
+        fields = ['comment_id', 'post_id', 'user', 'text','profile_info']
+        read_only_fields = ['comment_id', 'user','profile_info']
+    
+    def get_profile_info(self, obj):
+        # Get the authenticated user from the context
+        other_user = obj.user
+
+        # Fetch the profile associated with the other user
+        profile = Profile.objects.get(user_id=other_user)
+
+        return {
+            'name': profile.name,
+            'surname': profile.surname,
+            'title': profile.title
+        }
     
     def create(self, validated_data):
         return Comment.objects.create(**validated_data)

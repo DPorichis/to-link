@@ -26,6 +26,7 @@ const getCookie = (name) => {
 function HomePGU(props) {
     const [loading, setLoading] = useState(true);
     const [posts, setPosts] = useState([]);
+    const [links, setLinks] = useState([]);
     const [error, setError] = useState(null);
     
     useEffect(() => {
@@ -58,58 +59,37 @@ function HomePGU(props) {
         fetchPosts();
     }, []);
 
+    useEffect(() => {
+        const fetchLinks = async () => {
+            const csrfToken = getCookie('csrftoken');
+            try {
+                const response = await fetch("http://127.0.0.1:8000/links/list", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    credentials: "include",
+                    body: JSON.stringify({})
+                });
 
-
-
-    const links = 
-    [
-    {
-    name: "Lakis Lalakis",
-    title:"CEO of DIT",
-    imgURL: "/logo192.png",
-    },
-    {
-    name: "Ioannic",
-    title: "CEO of TSILI" ,
-    imgURL: "/logo192.png",
-    },
-    {
-    name: "Lionel Messi",
-    title: "CEO of Real Madrid",
-    imgURL: "/logo192.png",
-    },
-    {
-    name: "Makis Kotsampasis",
-    title: "CEO of SYNERGEIO O MAKIS",
-    imgURL: "/logo192.png",
-    },
-    {
-    name: "Theopoula Tzini",
-    title: "CEO of IBIZA",
-    imgURL: "/logo192.png",
-    },
-    {
-    name: "Theopoula Tzini",
-    title: "CEO of IBIZA",
-    imgURL: "/logo192.png",
-    },
-    {
-    name: "Theopoula Tzini",
-    title: "CEO of IBIZA",
-    imgURL: "/logo192.png",
-    },
-    {
-    name: "Theopoula Tzini",
-    title: "CEO of IBIZA",
-    imgURL: "/logo192.png",
-    },
-    {
-    name: "Theopoula Tzini",
-    title: "CEO of IBIZA",
-    imgURL: "/logo192.png",
-    }
-    ];
-    
+                if (response.ok) {
+                    const data = await response.json();
+                    setLinks(data);  
+                    console.log("Fetched Links:", data);
+                } else {
+                    throw new Error('Failed to fetch Links');
+                    
+                }
+            } catch (error) {
+                setError(error.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+        
+        fetchLinks();
+    }, []);
    
     
     return (
@@ -144,8 +124,9 @@ function HomePGU(props) {
                     </div>
                     <h5>MY Links</h5>
                     <div className = "Links" style={{}}>
+                            
                             {links.map((link) =>
-                            <ProfileSmall name = {link.name} title = {link.title} imgURL ={link.imgURL}/>
+                            <ProfileSmall name = {links.name} title = {link.title} />
                         )}
                     </div>
                 </div>
