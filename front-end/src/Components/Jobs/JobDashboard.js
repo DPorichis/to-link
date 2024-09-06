@@ -253,7 +253,7 @@ function JobDashboard(props) {
                         
                     </div>
                     {applications.map((link) => (
-                        <ProfileBanner name={link.name} title={link.title} InNetwork={link.InNetwork} imgURL={link.imgURL} />
+                        <ProfileBanner name={link.user_info.name + " " + link.user_info.name} title={link.user_info.title} InNetwork={link.InNetwork} imgURL={link.imgURL} user={link.user}/>
                     ))}
                     
                 </>

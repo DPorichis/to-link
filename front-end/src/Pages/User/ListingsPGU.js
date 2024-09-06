@@ -236,6 +236,25 @@ function ListingsPGU(props) {
                 "location": "Not Filled"
             })
         })
+
+        const response0 = await fetch("http://127.0.0.1:8000/listings/list", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+            credentials: "include",
+            body: JSON.stringify({
+                "specify_user": "own"
+            })
+        })
+        
+        if (response0.ok) {
+            let answer = await response0.json();
+            setYourListings(answer);
+        } else {
+            console.log("Problems with fetching your listings info")
+        }
     }
 
     const updateListing = async (id, updatedListingData) => {
