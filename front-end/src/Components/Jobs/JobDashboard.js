@@ -2,6 +2,22 @@ import { useState, useEffect } from "react";
 import ProfileBanner from "../Profile/ProfileBanner";
 
 
+const getCookie = (name) => {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === `${name}=`) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+};
+
+
 function JobDashboard(props) {
 
     var startval = "preview";
@@ -11,12 +27,8 @@ function JobDashboard(props) {
     }
 
     const [editedListing, setEditedListing] = useState(props.listing);
-    useEffect(() => {
-        setEditedListing(props.listing);
-    }, [props.listing]);
-    
-    
     const [mode, setMode] = useState(startval);
+    const [applications, setApplications] = useState([]);
     
     const handleEdit = () => {
         setMode("edit");
@@ -40,12 +52,42 @@ function JobDashboard(props) {
     };
 
     const handleSave = () => {
-        props.update(editedListing.id, editedListing);
+        props.update(editedListing.listing_id, editedListing);
     };
 
     const handleDiscard = () => {
         setEditedListing(props.listing);
     };
+
+
+    useEffect(() => {
+        const fetchapplic = async () => {
+            const csrfToken = getCookie('csrftoken');
+
+            const response = await fetch("http://127.0.0.1:8000/listings/applied/fetch", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    "listing_id": props.listing.listing_id
+                })
+            })
+
+            if (response.ok) {
+                let answer = await response.json();
+                setApplications(answer);
+            } else {
+                console.log("Problems with fetching your listings applications")
+            }
+        };
+    
+        setEditedListing(props.listing);
+        fetchapplic();
+
+    }, [props.listing]);
 
     return (
             <>
@@ -57,7 +99,7 @@ function JobDashboard(props) {
                     <a class={mode === "edit" ? "nav-link active": "nav-link"} onClick={handleEdit}>Edit</a>
                 </li>
                 <li class="nav-item">
-                    <a class={mode === "responses" ? "nav-link active": "nav-link"} onClick={handleResponse}>Responses <span class="badge text-bg-success">{props.listing.responses.length}</span></a>
+                    <a class={mode === "responses" ? "nav-link active": "nav-link"} onClick={handleResponse}>Responses <span class="badge text-bg-success">{props.listing.apl_cnt}</span></a>
                 </li>
             </ul>
             <div style={{display:"flex", flexDirection:"column", justifyContent:"left", border: "1px #aaa solid",
@@ -100,10 +142,10 @@ function JobDashboard(props) {
                             </div>
                             <div class="col-md-6">
                                 <label for="state" class="form-label">Visibility</label>
-                                <select class="form-select" name="state" value={editedListing.state} onChange={handleInputChange}>
-                                    <option value="Public">Public</option>
-                                    <option value="Network Only">Network Only</option>
-                                    <option value="Private">Private</option>
+                                <select class="form-select" name="visible" value={editedListing.visible} onChange={handleInputChange}>
+                                    <option value="1">Public</option>
+                                    <option value="2">Network Only</option>
+                                    <option value="3">Private</option>
                                 </select>
                             </div>
                         </div>
@@ -156,10 +198,10 @@ function JobDashboard(props) {
                     <div>
                         <div style={{display: "flex", flexDirection:"row"}}>
                             <h3 style={{marginBottom: "0px"}}>{props.listing.title}</h3>
-                            <p style={{marginBottom: "0px", marginTop: "16px", marginLeft: "6px", color: "#888", fontSize:"10px"}}>Listing code: {props.listing.id}</p>
+                            <p style={{marginBottom: "0px", marginTop: "16px", marginLeft: "6px", color: "#888", fontSize:"10px"}}>Listing code: {props.listing.listing_id}</p>
                         </div>
                         <p style={{marginTop: "0px", marginBottom:"3px"}}>
-                            <span style={{color: "#444", fontSize:"16px"}}>listed by {props.listing.user} </span>
+                            <span style={{color: "#444", fontSize:"16px"}}>listed by {props.listing.user_info.name + " " +props.listing.user_info.name} </span>
                             <span style={{color: "#888", fontSize:"10px"}}>{props.listing.relation}</span>
                         </p>
                     </div>
@@ -198,19 +240,19 @@ function JobDashboard(props) {
                             <h4 style={{marginBottom: "0px"}}>Listing Responses</h4>
                             <p style={{marginBottom: "0px"}}>All the respondants are listed bellow</p>
                         </div>
-                        {props.listing.responses.length === 0 ?
+                        {props.listing.responses === 0 ?
                         <div>
                             <button type="button" class="btn btn-outline-secondary" onClick={handleSave}>Responses: 0</button>
                         </div>
                         :
                         <div>
-                            <button type="button" class="btn btn-success" onClick={handleSave}>Responses: {props.listing.responses.length}</button>
+                            <button type="button" class="btn btn-success" onClick={handleSave}>Responses: {props.listing.apl_cnt}</button>
                         </div>
                         }
                         
                         
                     </div>
-                    {props.listing.responses.map((link) => (
+                    {applications.map((link) => (
                         <ProfileBanner name={link.name} title={link.title} InNetwork={link.InNetwork} imgURL={link.imgURL} />
                     ))}
                     

@@ -216,27 +216,28 @@ X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
 
 POST http://127.0.0.1:8000/listings/new
 Content-Type: application/json
-Cookie: sessionid=9b4jnvvzyiem8c8z0yah8g6fxllgetv1; csrftoken=HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9;
-X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
+Cookie: sessionid=52bj1z1plqj7eqa9ki54853y3rhfupqb; csrftoken=7QUisgwhvX0Cs4vUGkJ4SqmAPNzLZcZD;
+X-CSRFToken: 7QUisgwhvX0Cs4vUGkJ4SqmAPNzLZcZD
 
 {
   "title": "Nothing Much",
-  "visible": 3,
+  "visible": 1,
   "spot": "Hybrid",
   "time": "Full-time",
   "level": "Entry-level",
-  "desc": "Kati poly symantiko"
+  "desc": "Kati poly symantiko",
+  "location": "Athens,Greece"
 }
 
 ###
 
 POST http://127.0.0.1:8000/listings/list
 Content-Type: application/json
-Cookie: sessionid=9b4jnvvzyiem8c8z0yah8g6fxllgetv1; csrftoken=HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9;
-X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
+Cookie: sessionid=52bj1z1plqj7eqa9ki54853y3rhfupqb; csrftoken=7QUisgwhvX0Cs4vUGkJ4SqmAPNzLZcZD;
+X-CSRFToken: 7QUisgwhvX0Cs4vUGkJ4SqmAPNzLZcZD
 
 {
-  "specify_user": 2
+  "specify_user": 19
 }
 
 ###
@@ -263,6 +264,16 @@ X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
 ###
 
 POST http://127.0.0.1:8000/listings/applied/new
+Content-Type: application/json
+Cookie: sessionid=voxn1ekrdotdz1ksnuu88vq9zdgcf264; csrftoken=8A8wBzBfuuysMWdW3x4N85WllAXoglvJ;
+X-CSRFToken: 8A8wBzBfuuysMWdW3x4N85WllAXoglvJ
+
+{
+  "listing_id": 1
+}
+
+
+POST http://127.0.0.1:8000/listings/applied/check
 Content-Type: application/json
 Cookie: sessionid=voxn1ekrdotdz1ksnuu88vq9zdgcf264; csrftoken=8A8wBzBfuuysMWdW3x4N85WllAXoglvJ;
 X-CSRFToken: 8A8wBzBfuuysMWdW3x4N85WllAXoglvJ

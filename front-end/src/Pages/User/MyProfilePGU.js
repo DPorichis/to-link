@@ -83,7 +83,7 @@ function MyProfilePGU(props) {
 
     const [savedProfile, setSavedProfile] = useState(sampleProfile);
     const [editedProfile, setEditedProfile] = useState(sampleProfile);
-
+    const [listings, setListings] = useState([]);
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -119,6 +119,28 @@ function MyProfilePGU(props) {
                 setSavedProfile(null);
                 console.log("no user logged in")
             }
+
+
+            const response1 = await fetch("http://127.0.0.1:8000/listings/list", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    "specify_user": "own"
+                })
+            })
+
+            if (response1.ok) {
+                let answer = await response1.json();
+                setListings(answer);
+            } else {
+                console.log("Problems with fetching your listings info")
+            }
+
+
             setLoading(false);
         };
 
@@ -524,9 +546,18 @@ function MyProfilePGU(props) {
                     (mode === "listings"
                     ?
                     <>
-                        {dammylistings.map((listi) =>
+                        {listings.length !== 0  ? 
+                        <>
+                        {listings.map((listi) =>
                             <JobTile listing={listi} handleSelect={goToJobListing} active={false} />
                         )}
+                        </>
+                        :
+                        <>
+                            No Listings found
+                        </>
+                        }
+                        
                     </>
 
                     :

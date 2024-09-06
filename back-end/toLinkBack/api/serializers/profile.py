@@ -35,7 +35,7 @@ class ProfileSerializer(serializers.ModelSerializer):
             return{
             "pfp": obj.pfp,
             "name": obj.name,
-            "surname": obj.name,
+            "surname": obj.surname,
             "title": obj.title,
             "bio": obj.bio,
             "email": obj.email,
@@ -77,7 +77,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         return{
             "pfp": obj.pfp,
             "name": obj.name,
-            "surname": obj.name,
+            "surname": obj.surname,
             "title": obj.title,
             "bio": obj.bio,
             "email": email,

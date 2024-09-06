@@ -16,13 +16,13 @@ from django.db.models import F, Q
 @permission_classes([IsAuthenticated])
 def update_listing(request):
     # Get the authenticated user
-    user = request.user
+    user = request.user.profile
     target_listing = request.data.get('listing_id') 
 
     
     # Attempt to get the profile associated with the authenticated user
     try:
-        listing = Profile.objects.get(user_id=user, listing_id=target_listing)
+        listing = Listing.objects.get(user_id=user, listing_id=target_listing)
     except Listing.DoesNotExist:
         return Response({"error": "Listing does not exist."}, status=status.HTTP_404_NOT_FOUND)
     
@@ -81,13 +81,38 @@ def apply_by_id(request):
         applied_by.delete()
         listing.apl_cnt = F('apl_cnt') - 1
         listing.save(update_fields=['apl_cnt'])
-        return Response({"message": "Application revoked successfully."}, status=status.HTTP_200_OK)
+        return Response({"applied": False}, status=status.HTTP_200_OK)
     except Applied.DoesNotExist:
         # If not exists, like the post
         Applied.objects.create(listing=listing, user=user)
         listing.apl_cnt = F('apl_cnt') + 1
         listing.save(update_fields=['apl_cnt'])
-        return Response({"message": "Applied successfully."}, status=status.HTTP_200_OK)
+        return Response({"applied": True}, status=status.HTTP_200_OK)
+    
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def check_if_applied(request):
+    # Get the authenticated user
+    user = request.user.profile
+    target_listing = request.data.get('listing_id') 
+
+    # Attempt to get the profile associated with the authenticated user
+    try:
+        listing = Listing.objects.get(listing_id=target_listing)
+    except Listing.DoesNotExist:
+        return Response({"error": "Listing does not exist."}, status=status.HTTP_404_NOT_FOUND)
+    
+    if listing.user == user:
+        return Response({"applied": "You can't apply to your own job"}, status=status.HTTP_200_OK)
+    # Check if the like already exists
+    user = request.user.profile
+    try:
+        applied_by = Applied.objects.get(listing=listing, user=user)
+        # If exists, unlike the post
+        return Response({"applied": "allowed"}, status=status.HTTP_200_OK)
+    except Applied.DoesNotExist:
+        return Response({"applied": "applied"}, status=status.HTTP_200_OK)
 
 
 
@@ -123,21 +148,23 @@ def show_listings(request):
     target_user = request.data.get('specify_user')
     print(target_user)
     
-    if target_user is not None:
+    if target_user == "own":
+        target_user = user
+    elif target_user is not None:
         try:
             target_user = Profile.objects.get(user_id=target_user)
         except Profile.DoesNotExist:
             return Response({"error": "Profile does not exist."}, status=status.HTTP_404_NOT_FOUND)
         
     if target_user is None:
-        listings = Listing.objects.filter(visible='3')
+        listings = Listing.objects.filter(visible='1')
     else:
         listings = Listing.objects.filter(user=target_user)
     if listings.exists():
         serializer = ListingSerializer(listings, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     else:
-        return Response({"message":"No listings ... :("}, status=status.HTTP_200_OK)
+        return Response([], status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])
@@ -157,7 +184,7 @@ def get_listing_by_id(request):
             vis = 2
         else:
             vis = 1
-        if (listing.visible > vis):
+        if (listing.visible <= vis):
             return Response(ListingSerializer(listing).data, status=status.HTTP_200_OK)
         else:
             return Response({"message":"You cannot see this listing because of the privacy settings set by the user"}, status=status.HTTP_400_BAD_REQUEST)

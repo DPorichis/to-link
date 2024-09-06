@@ -12,15 +12,20 @@ function JobPreview(props) {
                 <div>
                     <h3 style={{marginBottom: "0px"}}>{props.listing.title}</h3>
                     <p style={{marginTop: "0px", marginBottom:"3px"}}>
-                        <span style={{color: "#444", fontSize:"16px"}}>listed by {props.listing.user} </span>
+                        <span style={{color: "#444", fontSize:"16px"}}>listed by {props.listing.user_info.name + " " +props.listing.user_info.name} </span>
                         <span style={{color: "#888", fontSize:"10px"}}>{props.listing.relation}</span>
                     </p>
                 </div>
                 <div>
-                    {props.applied ?
+                    {props.applied === "applied"?
                         <button type="button" class="btn btn-outline-primary" onClick={props.handleApply}>You applied for this job</button>
                     :
+                    (props.applied === "allowed" ? 
                         <button type="button" class="btn btn-primary" onClick={props.handleApply}>Apply for this job</button>
+                        :
+                        <button type="button" class="btn btn-secondary">You can't apply to this job</button>
+                    )
+                        
                     }
                 </div>
             </div>

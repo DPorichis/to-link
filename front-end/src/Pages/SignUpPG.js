@@ -323,13 +323,13 @@ function SignUpPG(props) {
 
         try {
             const response = await fetch("http://127.0.0.1:8000/profile/own/update/", {
-            method: "POST",
+            method: "PUT",
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRFToken': csrfToken,
             },
             credentials: 'include', // Include cookies in the request
-            body: JSON.stringify({cleanedFormData1}),
+            body: JSON.stringify(cleanedFormData1),
         });
         console.log(response)
         } catch (error) {
@@ -356,7 +356,7 @@ function SignUpPG(props) {
                     <label htmlFor="firstName" className="form-label">First Name</label>
                     <input
                         type="text"
-                        className={`form-control ${formErrors0.lastName ? 'is-invalid' : ''}`}
+                        className={`form-control ${formErrors0.firstName ? 'is-invalid' : ''}`}
                         id="firstName"
                         name="firstName"
                         value={formData0.firstName}

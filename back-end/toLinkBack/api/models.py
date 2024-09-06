@@ -87,13 +87,14 @@ class Listing(models.Model):
     spot = models.CharField(max_length=45)  # Field name made lowercase.
     time = models.CharField(max_length=45)  # Field name made lowercase.
     level = models.CharField(max_length=45)  # Field name made lowercase.
+    location = models.CharField(max_length=45, default="No location provided")
     desc = models.TextField()  # Field name made lowercase.
     apl_cnt = models.IntegerField(blank=True, default=0)
     timestamp = models.DateTimeField(auto_now_add=True)  # Field name made lowercase.
 
 
 class Applied(models.Model):
-    user = models.OneToOneField(Profile, on_delete=models.CASCADE, db_column='User_ID', primary_key=True)  # Field name made lowercase. The composite primary key (User_ID, Listing_ID) found, that is not supported. The first column is selected.
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE, db_column='User_ID')  # Field name made lowercase. The composite primary key (User_ID, Listing_ID) found, that is not supported. The first column is selected.
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE, db_column='Listing_ID')  # Field name made lowercase.
 
     class Meta:

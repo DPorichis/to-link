@@ -5,7 +5,8 @@ from .views import login, signup, update_profile, logout, updateuser, get_post_b
     upload_listing, show_listings, get_applied_by_listing_id, make_request, response_request, \
     apply_by_id, fetch_request, fetch_connections, get_listing_by_id, admin_fetch_connections, \
     admin_fetch_applications, admin_fetch_profile, admin_fetch_personal, admin_fetch_listings, \
-    admin_fetch_posts, admin_fetch_comments, admin_fetch_likes, get_all_posts
+    admin_fetch_posts, admin_fetch_comments, admin_fetch_likes, get_all_posts, check_if_applied, \
+    update_listing
 
 urlpatterns = [
     re_path('login', login),
@@ -30,10 +31,13 @@ urlpatterns = [
     re_path('convo/find/', retrive_convo),
 
     re_path('listings/new', upload_listing),
+    re_path('listings/update', update_listing),
     re_path('listings/list', show_listings),
     re_path('listing/fetch', get_listing_by_id),
     re_path('listings/applied/fetch', get_applied_by_listing_id),
     re_path('listings/applied/new', apply_by_id),
+    re_path('listings/applied/check', check_if_applied),
+    
 
     re_path('request/new', make_request),
     re_path('request/list', fetch_request),
