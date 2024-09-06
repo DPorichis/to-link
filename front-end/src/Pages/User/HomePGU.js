@@ -56,10 +56,6 @@ function HomePGU(props) {
             }
         };
 
-        fetchPosts();
-    }, []);
-
-    useEffect(() => {
         const fetchLinks = async () => {
             const csrfToken = getCookie('csrftoken');
             try {
@@ -87,11 +83,11 @@ function HomePGU(props) {
                 setLoading(false);
             }
         };
-        
+
+        fetchPosts();
         fetchLinks();
     }, []);
-   
-    
+
     return (
         <div>
             <Header log="user" act="home"/>
@@ -124,9 +120,8 @@ function HomePGU(props) {
                     </div>
                     <h5>MY Links</h5>
                     <div className = "Links" style={{}}>
-                            
                             {links.map((link) =>
-                            <ProfileSmall name = {links.name} title = {link.title} />
+                            <ProfileSmall link={link}/>
                         )}
                     </div>
                 </div>
