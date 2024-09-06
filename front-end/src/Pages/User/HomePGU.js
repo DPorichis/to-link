@@ -28,6 +28,7 @@ function HomePGU(props) {
     const [posts, setPosts] = useState([]);
     const [links, setLinks] = useState([]);
     const [error, setError] = useState(null);
+    const [profile, setProfile] = useState({});
     
     useEffect(() => {
         const fetchPosts = async () => {
@@ -51,8 +52,6 @@ function HomePGU(props) {
                 }
             } catch (error) {
                 setError(error.message);
-            } finally {
-                setLoading(false);
             }
         };
 
@@ -79,14 +78,42 @@ function HomePGU(props) {
                 }
             } catch (error) {
                 setError(error.message);
-            } finally {
-                setLoading(false);
             }
         };
 
+        const fetchProfile = async () => {
+            const csrfToken = getCookie('csrftoken');
+            try {
+                const response = await fetch("http://127.0.0.1:8000/profile/own/fetch", {  
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    credentials: "include",
+                    body: JSON.stringify({})
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log()
+                    setProfile(data.profile_info);  
+                } else {
+                    throw new Error('Failed to fetch profile');
+                }
+            } catch (error) {
+                setError(error.message);
+            }
+        };
+
+        fetchProfile();
+        console.log(profile)
         fetchPosts();
         fetchLinks();
+        setLoading(false);
     }, []);
+
+    if (loading) return <>Loading</>
 
     return (
         <div>
@@ -99,21 +126,21 @@ function HomePGU(props) {
                         <div style={{display:"flex",flexDirection:"row"}}>
                                 <img src="/logo192.png" alt="Avatar" style={{width :"50px",height:"50px"}} className="link-image" />
                                 <div style={{display:"flex",flexDirection:"column",marginBottom:"0px",marginTop:"0px",marginLeft:"5px"}}>
-                                    <p style={{marginBottom:"0px",marginTop:"0px"}}>NAME NAME</p>
-                                    <p>TITLE</p>
+                                    <p style={{marginBottom:"0px",marginTop:"0px"}}>{profile.name} {profile.surname}</p>
+                                    <p>{profile.title}</p>
                                 </div>
                         </div>
                         <div style={{display:"flex",flexDirection:"row",justifyContent:"space-between",textAlign:"center"}}>
                             <div style={{display:"flex",flexDirection:"column"}}>
-                            <h5 style={{marginBottom:"0px"}}>YYY</h5>
+                            <h5 style={{marginBottom:"0px"}}>{profile.post_cnt}</h5>
                             <p style={{marginBottom:"0px"}}>posts</p>
                             </div>
                             <div style={{display:"flex",flexDirection:"column"}}>
-                            <h5 style={{marginBottom:"0px"}}>YYY</h5>
+                            <h5 style={{marginBottom:"0px"}}>{profile.link_cnt}</h5>
                             <p style={{marginBottom:"0px"}}>Links</p>
                             </div>
                             <div style={{display:"flex",flexDirection:"column"}}>
-                            <h5 style={{marginBottom:"0px"}}>YYY</h5>
+                            <h5 style={{marginBottom:"0px"}}>{profile.listings_cnt}</h5>
                             <p style={{marginBottom:"0px"}}>listings</p>
                             </div>
                         </div>

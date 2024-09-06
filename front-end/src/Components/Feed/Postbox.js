@@ -7,59 +7,12 @@ import CommentsCONT from "./Comment";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
-const getCookie = (name) => {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-      const cookies = document.cookie.split(';');
-      for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i].trim();
-        if (cookie.substring(0, name.length + 1) === `${name}=`) {
-          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-          break;
-        }
-      }
-    }
-    return cookieValue;
-};
+
 
 
 function Postbox(props) {
 
-    const [loading, setLoading] = useState(true);
-    const [comments, setComments] = useState([]);
-    const [error, setError] = useState(null);
     
-    useEffect(() => {
-        const fetchComments = async () => {
-            const csrfToken = getCookie('csrftoken');
-            console.log("Props: ", props);
-            try {
-                const response = await fetch("http://127.0.0.1:8000/posts/comment/show", {
-                    method: "POST",
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': csrfToken
-                    },
-                    credentials: "include",
-                    
-                    body: JSON.stringify({"post":props.post.post_id})
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    setComments(data);  
-                } else {
-                    throw new Error('Failed to fetch posts');
-                }
-            } catch (error) {
-                setError(error.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchComments();
-    }, []);
     const [commentsVisible, setCommentsVisible] = useState(false);
 
     function togglecomments()
@@ -122,7 +75,7 @@ function Postbox(props) {
             </div>
             <p style={{textAlign: "left", justifyContent: "left", marginLeft: "2px", marginTop: "2px", marginBottom: "0"}}>{props.post.like_cnt} Likes ·{props.post.comment_cnt} Comments3</p>
             <button className="show-comments-button" onClick={togglecomments}> {commentsVisible ? <>Show Comments v</> : <>Show Comments {">"}</>}</button>
-            {commentsVisible ? <><CommentsCONT comments={comments} /></> : <></>}
+            {commentsVisible ? <><CommentsCONT post_id = {props.post.post_id} /></> : <></>}
        </div>
     );
 }
