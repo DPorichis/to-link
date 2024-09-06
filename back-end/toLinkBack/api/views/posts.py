@@ -144,3 +144,20 @@ def get_all_posts(request):
     posts = Post.objects.all()
     serializer = PostSerializer(posts, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def check_if_like_exist(request):
+    user = request.user.profile
+    post_id = request.data.get('post_id')
+    if not post_id:
+        return Response({"error": "Post ID is required."}, status=status.HTTP_400_BAD_REQUEST)
+    try:
+        post = Post.objects.get(post_id=post_id)
+    except Post.DoesNotExist:
+        return Response({"error": "Post does not exist."}, status=status.HTTP_404_NOT_FOUND)
+    
+    if LikedBy.objects.filter(post=post, user=user).exists():
+        return Response({"liked": True}, status=status.HTTP_200_OK)
+    else:
+        return Response({"liked": False}, status=status.HTTP_200_OK)
