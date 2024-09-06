@@ -33,7 +33,8 @@ class ConvoSerializer(serializers.ModelSerializer):
         return {
             'name': other_user_profile.name,
             'surname': other_user_profile.surname,
-            'title': other_user_profile.title
+            'title': other_user_profile.title,
+            'user': other_user_profile.user.user_id
         }
     
 class ConvoCreatSerializer(serializers.ModelSerializer):

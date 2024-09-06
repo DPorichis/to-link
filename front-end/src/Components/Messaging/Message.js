@@ -3,58 +3,54 @@ import MessagesPGU from "../../Pages/User/MessagesPGU";
 import MessageCont from "./MessageCONT";
 
 function Message(props){
-    const isCurrentUserYou = props.message.user === "0";
-    
     return(
         <div >
         <div style={{marginBottom:"0px"}} >
-           {isCurrentUserYou ? (
+           {props.your_message ? (
                <div style={{display:"flex", flexDirection:"row"}}  >
                {props.same ? 
-               <> 
-               <div style={{display:"flex", flexDirection:"column",textAlign:"left",marginTop:"0px",marginBottom:"5px"}}>
-               {props.message.media  ? (
-                    <img src={props.message.media} alt="Message content" style={{maxWidth:"200px", marginLeft:"50px"}} />
-                ) : (
-                    <p style={{marginTop:"0px",marginLeft:"50px",marginBottom:"0px"}}>{props.message.message}</p>
-                )}
-               </div>
-               </>
+                <> 
+                    <div style={{display:"flex", flexDirection:"column",textAlign:"left",marginTop:"0px",marginBottom:"5px"}}>
+                        {props.message.media? (
+                            <img src={props.message.media} alt="Message content" style={{maxWidth:"200px", marginLeft:"50px"}} />
+                        ) : (
+                            <p style={{marginTop:"0px",marginLeft:"50px",marginBottom:"0px"}}>{props.message.text}</p>
+                        )}
+                    </div>
+                </>
                :
                <>
-               <img src={props.imgURL} alt="Avatar" style={{width :"50px",height:"50px"}} className="link-image" />
-               <div style={{display:"flex", flexDirection:"column",textAlign:"left",marginBottom:"0px"}}>
-               <p style={{marginBottom:"3px",marginTop:"3px"}}>YOU · {props.message.time}</p>
-               {props.message.media ? (
-                    <img src={props.message.media} alt="Message content" style={{maxWidth:"200px", marginLeft:"50px"}} />
-                ) : (
-               <p style={{marginTop:"0px",marginBottom:"3px"}}>{props.message.message}</p>
-                )}
-               </div>                    
+                    <img src={props.your_pfp} alt="Avatar" style={{width :"50px",height:"50px"}} className="link-image" />
+                    <div style={{display:"flex", flexDirection:"column",textAlign:"left",marginBottom:"0px"}}>
+                    <p style={{marginBottom:"3px",marginTop:"3px"}}>You · {props.message.timestamp}</p>
+                    {props.message.media? (
+                        <img src={props.message.media} alt="Message content" style={{maxWidth:"200px", marginLeft:"50px"}} />
+                    ) : (
+                        <p style={{marginTop:"0px",marginBottom:"3px"}}>{props.message.text}</p>
+                    )}
+                    </div>                    
                </>
            }
            </div>
             ) : (
                 <div style={{display:"flex", flexDirection:"row"}}  >
                     {props.same ? 
-                    <> 
                     <div style={{display:"flex", flexDirection:"column",textAlign:"left",marginTop:"0px",marginBottom:"5px"}}>
-                    {props.message.media ? (
-                    <img src={props.message.media} alt="Message content" style={{maxWidth:"200px", marginLeft:"50px"}} />
-                ) : (
-                    <p style={{marginTop:"0px",marginLeft:"50px",marginBottom:"0px"}}>{props.message.message}</p>
-                )}
+                        {props.message.media ? (
+                            <img src={props.message.media} alt="Message content" style={{maxWidth:"200px", marginLeft:"50px"}} />
+                        ) : (
+                            <p style={{marginTop:"0px",marginLeft:"50px",marginBottom:"0px"}}>{props.message.text}</p>
+                        )}
                     </div>
-                    </>
                     :
                     <>
-                    <img src={props.imgURL} alt="Avatar" style={{width :"50px",height:"50px"}} className="link-image" />
+                    <img src={props.other_pfp} alt="Avatar" style={{width :"50px",height:"50px"}} className="link-image" />
                     <div style={{display:"flex", flexDirection:"column",textAlign:"left",marginBottom:"0px"}}>
-                    <p style={{marginBottom:"3px",marginTop:"3px"}}>{props.name} · {props.message.time}</p>
+                    <p style={{marginBottom:"3px",marginTop:"3px"}}>{props.other_name} · {props.message.timestamp}</p>
                     {props.message.media ? (
                     <img src={props.message.media} alt="Message content" style={{maxWidth:"200px", marginLeft:"50px"}} />
                 ) : (
-                    <p style={{marginTop:"0px",marginBottom:"3px"}}>{props.message.message}</p>
+                    <p style={{marginTop:"0px",marginBottom:"3px"}}>{props.message.text}</p>
                 )}
                     </div>                    
                     </>

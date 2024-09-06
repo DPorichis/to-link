@@ -4,7 +4,7 @@
 POST http://127.0.0.1:8000/login
 Content-Type: application/json
 
-{"email": "ah@ah.a", "password": "James"}
+{"email": "a@a.a", "password": "1"}
 
 ### Sign Up API
 
@@ -119,22 +119,22 @@ X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
 ### Testing Requests
 POST http://127.0.0.1:8000/request/new
 Content-Type: application/json
-Cookie: sessionid=2d1a1eqthjh8v5s3m441ylewtz1v7yj8; csrftoken=XX01jp3DMMsu0TU6ENfWLHkJDOTTNkKK;
-X-CSRFToken: XX01jp3DMMsu0TU6ENfWLHkJDOTTNkKK
+Cookie: sessionid=7kww7g4ugmt88931v9e5r150bq97rwla; csrftoken=vqh7hynFn3QtW7MY7VKN89NU03yeAvvZ;
+X-CSRFToken: vqh7hynFn3QtW7MY7VKN89NU03yeAvvZ
 
 {
-  "request_id": 30
+  "request_id": 1
 }
 
 
 ### Testing Requests
 POST http://127.0.0.1:8000/request/respond
 Content-Type: application/json
-Cookie: sessionid=p8j5gp4sad5cmdnok0mjt2om7oryqrqh; csrftoken=uBQszOcg5agfIwgmmab27b8D5uodjxLE;
-X-CSRFToken: uBQszOcg5agfIwgmmab27b8D5uodjxLE
+Cookie: sessionid=98nqm3g4monogu1m22ud2nu7lppdf5is; csrftoken=0QkRW9Nqv9QBvlvhpliyeXCcUSAxVk0f;
+X-CSRFToken: 0QkRW9Nqv9QBvlvhpliyeXCcUSAxVk0f
 
 {
-  "request_id": 6,
+  "request_id": 2,
   "request_response": "accept"
 }
 
