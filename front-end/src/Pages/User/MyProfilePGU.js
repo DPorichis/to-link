@@ -84,6 +84,11 @@ function MyProfilePGU(props) {
     const [savedProfile, setSavedProfile] = useState(sampleProfile);
     const [editedProfile, setEditedProfile] = useState(sampleProfile);
     const [listings, setListings] = useState([]);
+    const [image, setImages] = useState(null);
+
+    const handleImageChange = (e) => {
+        setImages(e.target.files[0]);
+    };
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -183,17 +188,31 @@ function MyProfilePGU(props) {
         const csrfToken = getCookie('csrftoken');
 
 
-        console.log(JSON.stringify({editedProfile}))
+        // Create a FormData object
+        const formData = new FormData();
 
+        // Append all fields from editedProfile to the FormData
+        for (let key in editedProfile) {
+            if(key === "education" || key === "experience")
+            {
+                formData.append(key, JSON.stringify(editedProfile[key]))
+            }
+            else if(key!== "pfp" && editedProfile[key] !== null){
+                formData.append(key, editedProfile[key]);
+            }
+        }
+
+        if (image) {
+            formData.append('pfp', image);
+        }
 
         const response = await fetch("http://127.0.0.1:8000/profile/own/update/", {
             method: "PUT",
             headers: {
-                'Content-Type': 'application/json',
                 'X-CSRFToken': csrfToken
             },
             credentials: "include",
-            body: JSON.stringify(editedProfile)
+            body: formData
         })
         
         if (response.ok) {
@@ -279,6 +298,7 @@ function MyProfilePGU(props) {
           ...prevProfile,
           [name]: value,
         }));
+        
     };
 
     return (
@@ -309,7 +329,7 @@ function MyProfilePGU(props) {
                         <h3 style={{marginBottom: "0px"}}>Profile Editing</h3>
                         <p style={{marginBottom: "0px"}}>Changes won't be saved, untill save button is pressed</p>
                     </div>
-                    {savedProfile === editedProfile ?
+                    {savedProfile === editedProfile && image === null?
                             <div>
                                 <button type="button" class="btn btn-outline-secondary">No Changes Detected</button>
                             </div>
@@ -328,8 +348,8 @@ function MyProfilePGU(props) {
                         <div class="col-md-8">
                             <h5>Profile Banner</h5>
                             <label for="pfp" class="form-label">Profile Picture</label>
-                            <input type="file" class="form-control" name="imgURL" accept="image/*" 
-                            onChange={handleInputChange} />
+                            <input type="file" class="form-control" name="pfp" accept="image/*" 
+                            onChange={handleImageChange} />
                             <div class="row">
                                 <div class="col-md-6">
                                     <label for="name" class="form-label">Name</label>
@@ -459,7 +479,7 @@ function MyProfilePGU(props) {
                     marginBottom:"5px",  borderTop: "solid #ddd 1px", padding: "5px 5px"
                 }}>
                     <div style={{display:"flex", flexDirection:"row", justifyContent:"flex-start"}}>
-                        <img src="/logo192.png" alt="Avatar" style={{width:"110px", height:"110px"}} className="link-image" />
+                        <img src={savedProfile.pfp} alt="Avatar" style={{width:"110px", height:"110px"}} className="link-image" />
                         <div style={{textAlign:"left", marginLeft:"15px", alignContent:"center", height:"100%"}}>
                         <h3 style={{marginBottom: "0px", fontSize:"32px"}}>
                             {savedProfile.name + " " + savedProfile.surname}

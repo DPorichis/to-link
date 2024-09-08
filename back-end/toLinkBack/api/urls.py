@@ -1,4 +1,6 @@
 from django.urls import re_path
+from django.conf import settings
+from django.conf.urls.static import static
 from .views import login, signup, update_profile, logout, updateuser, get_post_by_id, \
     upload_post, like_post, comment_post, get_comments_by_post, get_dms_of_convo, \
     send_dm, fetch_convo_menu, retrive_convo, retrive_own_profile, retrive_profile, \
@@ -55,4 +57,4 @@ urlpatterns = [
     re_path('admin/fetch/comments', admin_fetch_comments),
     re_path('admin/fetch/likes', admin_fetch_likes),
     re_path('admin/fetch/connections', admin_fetch_connections)    
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

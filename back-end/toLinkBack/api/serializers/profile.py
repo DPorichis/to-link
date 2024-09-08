@@ -9,9 +9,14 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
         # Add any other fields you want to be updatable
 
     def update(self, instance, validated_data):
-        # Loop through the validated data and set it to the instance
+        # Check if a new profile picture (pfp) is provided
+        if 'pfp' in validated_data:
+            instance.pfp = validated_data['pfp']  # Save the new profile picture
+
+        # Loop through the other validated data fields and update the instance
         for attr, value in validated_data.items():
-            setattr(instance, attr, value)
+            if attr != 'pfp':  # pfp is already handled, skip it here
+                setattr(instance, attr, value)
         instance.save()
         return instance
     
@@ -31,9 +36,16 @@ class ProfileSerializer(serializers.ModelSerializer):
         authenticated_user = self.context.get('authenticated_user')
 
         # Determine which user is not the authenticated user
+
+        if obj.pfp:
+            # Access the file if it exists
+            file_url = "http://127.0.0.1:8000" + obj.pfp.url
+        else:
+            # Handle the case where no file is uploaded
+            file_url = "/default.png"  # or set a default image
         if obj.user_id == authenticated_user.user_id:
             return{
-            "pfp": obj.pfp,
+            "pfp": file_url,
             "name": obj.name,
             "surname": obj.surname,
             "title": obj.title,
@@ -75,7 +87,7 @@ class ProfileSerializer(serializers.ModelSerializer):
             website = ""
 
         return{
-            "pfp": obj.pfp,
+            "pfp": file_url,
             "name": obj.name,
             "surname": obj.surname,
             "title": obj.title,

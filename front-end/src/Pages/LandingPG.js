@@ -177,7 +177,7 @@ function LandingPG(props) {
                             <h5>
                                 Welcome back {userLoggedIn.profile_info.name}!
                             </h5>
-                            <img src="/logo192.png" style={{width:"100px", height:"100px"}} />
+                            <img src={userLoggedIn.profile_info.pfp} style={{width:"100px", height:"100px", borderRadius:"50%"}} />
                             <div style={{display:"flex", width:"100%", marginTop:"10px", flexDirection:"column"}}>
                                 <a class="btn btn-primary" style={{width:"100%", marginTop:"10px"}} href="/user">Continue as {userLoggedIn.profile_info.name}</a>
                                 <button class="btn btn-outline-danger" style={{width:"100%", marginTop:"10px"}} onClick={handleLogout}>Logout</button>
@@ -211,7 +211,7 @@ function LandingPG(props) {
                     
 
                     <div style={{borderTop: "solid 1px #aaa", display:"flex", width:"100%", marginTop:"10px", paddingTop:"10px"}}>
-                        <button class="btn btn-primary" style={{width:"100%"}} onClick={testCookie}>Sign up</button>
+                        <a class="btn btn-primary" style={{width:"100%"}} href="/signup">Sign up</a>
                     </div>
                     </div>
  

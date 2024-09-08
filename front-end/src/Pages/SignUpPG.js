@@ -20,6 +20,12 @@ const emptyAccount =
 
 function SignUpPG(props) {
 
+    const [image, setImages] = useState(null);
+
+    const handleImageChange = (e) => {
+        setImages(e.target.files[0]);
+    };
+
     const [prog, setProg] = useState(0)
  
     const [formData0, setFormData0] = useState({
@@ -298,43 +304,38 @@ function SignUpPG(props) {
 
         const csrfToken = getCookie('csrftoken');
         
-        const replaceEmptyStringsWithNull = (obj) => {
-            const cleanedObj = {};
-            for (const [key, value] of Object.entries(obj)) {
-                if (value !== '')
-                {
-                    cleanedObj[key] = value;
-                }
-                
+        // Create a FormData object
+        const readyForm = new FormData();
+
+        // Append all fields from editedProfile to the FormData
+        for (let key in formData1) {
+            if(key === "education" || key === "experience")
+            {
+                readyForm.append(key, JSON.stringify(formData1[key]))
             }
-            return cleanedObj;
-        };
+            else if(key!== "pfp" && formData1[key] !== null){
+                readyForm.append(key, formData1[key]);
+            }
+        }
 
-        const cleanedFormData1 = replaceEmptyStringsWithNull({
-            name: formData1.pfFirstName,
-            surname: formData1.pfLastName,
-            title: formData1.pfTitle,
-            bio: formData1.pfBio,
-            phone: formData1.pfPhone,
-            website: formData1.pfWebsite,
-            experience: formData1.pfExperience,
-            education: formData1.pfEducation
-        });
+        if (image) {
+            readyForm.append('pfp', image);
+        }
 
-        try {
-            const response = await fetch("http://127.0.0.1:8000/profile/own/update/", {
+        const response = await fetch("http://127.0.0.1:8000/profile/own/update/", {
             method: "PUT",
             headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken,
+                'X-CSRFToken': csrfToken
             },
-            credentials: 'include', // Include cookies in the request
-            body: JSON.stringify(cleanedFormData1),
-        });
-        console.log(response)
-        } catch (error) {
-            console.error("Error:", error);
-            return
+            credentials: "include",
+            body: readyForm
+        })
+
+
+        if (response.ok) {
+            console.log("skibidi yes")
+        } else {
+            console.log("no user logged in")
         }
         setProg(2);
     };
@@ -498,7 +499,7 @@ function SignUpPG(props) {
                         <h5>Profile Banner</h5>
                         <label for="pfp" class="form-label" style={{marginBottom:"2px"}}>Profile Picture</label>
                         <input type="file" class="form-control" name="imgURL" accept="image/*" 
-                        onChange={handleChange1} />
+                        onChange={handleImageChange} />
                         <div class="row">
                             <div class="col-md-6" style={{marginBottom:"5px"}}>
                                 <label htmlFor="lastName" className="form-label">First Name</label>

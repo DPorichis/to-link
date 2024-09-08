@@ -2,7 +2,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-from api.models import Post, LikedBy, Profile, Comment
+from api.models import Post, LikedBy, Profile, Comment, PostMedia
 from api.serializers import PostSerializer, CommentSerializer, LikedBySerializer
 from django.db.models import F
 
@@ -29,8 +29,6 @@ def get_post_by_id(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def upload_post(request):
-    
-    serializer = PostSerializer(data=request.data)
 
     user = request.user
     
@@ -40,10 +38,21 @@ def upload_post(request):
     except Profile.DoesNotExist:
         return Response({"error": "Profile does not exist."}, status=status.HTTP_404_NOT_FOUND)
 
+    serializer = PostSerializer(data=request.data)
+
     # Validate the serializer data
     if serializer.is_valid():
         # Save the serializer to create a new post with the uploaded file
         post = serializer.save(user=profile)
+
+        # Handle the images
+        images = request.FILES.getlist('image_uploads')  # 'image_uploads' is the field name for multiple images
+
+        # Create a PostImage instance for each uploaded image
+        for image in images:
+            PostMedia.objects.create(post=post, image=image, user=profile)
+
+
         return Response(PostSerializer(post).data, status=status.HTTP_201_CREATED)
     else:
         # Return an error response if the data is invalid

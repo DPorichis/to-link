@@ -9,6 +9,22 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+import os
+import uuid
+from django.utils.timezone import now
+
+
+def user_directory_path(instance, filename):
+    """
+    Custom path for storing user profile pictures.
+    """
+    # Get the file extension of the uploaded file
+    ext = filename.split('.')[-1]
+    
+    # Create a unique filename with user ID, timestamp, and UUID
+    filename = f"{instance.user.user_id}_{uuid.uuid4().hex[:8]}.{ext}"
+    return os.path.join('pfps', str(instance.user.user_id), filename)
+
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -58,7 +74,7 @@ class User(AbstractBaseUser):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)  # Field name made lowercase.
-    pfp = models.CharField(max_length=45, blank=True, null=True)  # Field name made lowercase.
+    pfp = models.ImageField(upload_to=user_directory_path, null=True, blank=True)
     name = models.CharField(max_length=45)  # Field name made lowercase.
     surname = models.CharField(max_length=45)  # Field name made lowercase.
     title = models.CharField(max_length=45, blank=True, null=True)  # Field name made lowercase.
@@ -105,7 +121,7 @@ class Post(models.Model):
     post_id = models.AutoField(db_column='Post_ID', primary_key=True)  # Field name made lowercase.
     user = models.ForeignKey('Profile', on_delete=models.CASCADE, db_column='User_ID')  # Field name made lowercase.
     text = models.TextField()  # Field name made lowercase.
-    media = models.JSONField(blank=True, null=True)  # Field name made lowercase.
+    media = models.BooleanField(default=False)
     links = models.JSONField(blank=True, null=True)  # Field name made lowercase.
     like_cnt = models.IntegerField(default=0)  # Field name made lowercase.
     comment_cnt = models.IntegerField(default=0)  # Field name made lowercase.
@@ -133,31 +149,19 @@ class Convo(models.Model):
     user_id2 = models.ForeignKey(Profile, on_delete=models.CASCADE, db_column='User_ID2', related_name='convo_user_id2_set')  # Field name made lowercase.
     timestamp = models.DateTimeField(auto_now_add=True)
 
-class ConvoMedia(models.Model):
-    convo_media_id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(Profile, on_delete=models.CASCADE)  # Link the picture to a user
-    convo = models.ForeignKey(Convo, on_delete=models.CASCADE)  # Link the picture to a user
-    image = models.ImageField(upload_to='covomedia/')  # Store the uploaded image
-
 class PostMedia(models.Model):
     post_media_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(Profile, on_delete=models.CASCADE)  # Link the picture to a user
     post = models.ForeignKey(Post, on_delete=models.CASCADE)  # Link the picture to a user
-    image = models.ImageField(upload_to='postmedia/')  # Store the uploaded image
-
-class ProfileMedia(models.Model):
-    profile_media_id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(Profile, on_delete=models.CASCADE)  # Link the picture to a user
-    image = models.ImageField(upload_to='profilemedia/')  # Store the uploaded image
+    image = models.ImageField(upload_to='post-media/')  # Store the uploaded image
 
 class Dm(models.Model):
     dm_id = models.AutoField(db_column='DM_ID', primary_key=True)  # Field name made lowercase.
     convo = models.ForeignKey(Convo, on_delete=models.CASCADE, db_column='Convo_ID')  # Field name made lowercase.
-    media = models.ForeignKey(ConvoMedia, on_delete=models.CASCADE, db_column='Media_ID', blank=True, null=True)  # Field name made lowercase.
+    media = models.ImageField(upload_to='dm-media/', null=True, blank=True)
     user = models.ForeignKey(Profile, on_delete=models.CASCADE, db_column='User_ID')  # Field name made lowercase.
     timestamp = models.DateTimeField(auto_now_add=True)  # Field name made lowercase.
     text = models.TextField( blank=True, null=True)  # Field name made lowercase.
-
 
 class Link(models.Model):
     user_id_to = models.OneToOneField(Profile, on_delete=models.CASCADE, primary_key=True)  # Field name made lowercase. The composite primary key (User_ID_To, User_ID_From) found, that is not supported. The first column is selected.
@@ -165,7 +169,6 @@ class Link(models.Model):
 
     class Meta:
         unique_together = (('user_id_to', 'user_id_from'),)
-
 
 class Notification(models.Model):
     user = models.OneToOneField('Profile', on_delete=models.CASCADE, primary_key=True)  # Field name made lowercase.

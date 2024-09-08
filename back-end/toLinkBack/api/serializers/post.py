@@ -1,11 +1,20 @@
 from rest_framework import serializers
-from api.models import Profile, Post, LikedBy, Comment
+from api.models import Profile, Post, LikedBy, Comment, PostMedia
+
+
+class PostMediaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PostMedia
+        fields = ['post_media_id', 'image']
 
 class PostSerializer(serializers.ModelSerializer):
+
+    images = PostMediaSerializer(many=True, read_only=True)
+
     class Meta:
         model = Post
-        fields = ['post_id', 'text', 'media', 'links', 'like_cnt', 'comment_cnt', 'user']
-        read_only_fields = ['post_id', 'like_cnt', 'comment_cnt', 'user']
+        fields = ['post_id', 'text', 'media', 'links', 'like_cnt', 'comment_cnt', 'user', 'images']
+        read_only_fields = ['post_id', 'like_cnt', 'comment_cnt', 'user', 'images']
         # Add any other fields you want to be updatable
     
     def create(self, validated_data):
