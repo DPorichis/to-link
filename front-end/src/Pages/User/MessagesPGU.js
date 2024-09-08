@@ -248,7 +248,6 @@ function MessagesPGU(props) {
     
     // Reset the file input so it can detect the same file selection
     event.target.value = '';
-        console.log("New image selected bronks")
     }
 
     const handleUploadClick = async () => {

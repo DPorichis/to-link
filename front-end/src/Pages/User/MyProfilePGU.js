@@ -186,8 +186,6 @@ function MyProfilePGU(props) {
 
     const saveChanges = async() => {
         const csrfToken = getCookie('csrftoken');
-
-
         // Create a FormData object
         const formData = new FormData();
 

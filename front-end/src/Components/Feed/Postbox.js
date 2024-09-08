@@ -92,22 +92,20 @@ function Postbox(props) {
     return (
         <div className="postboxout">
             <div className="postboxin">
-                <ProfileTag name="Litsa Patera" relation="In your Network"/>
+                <ProfileTag name={props.post.user_info.name + " " + props.post.user_info.surname} relation={props.post.user_info.title} pfp={props.post.user_info.pfp}/>
                 <p>{props.post.text}</p>
-                {props.media === undefined ? 
-                    <></>
-                : 
-                (props.photolist.length === 1 ?
-                    <img src={props.post.media[0]} style={{maxHeight: "100%"}} alt="" />
+                {props.post.media?
+                (props.post.images.length === 1 ?
+                    <img src={"http://127.0.0.1:8000" + props.post.images[0].image} style={{maxHeight: "100%"}} alt="" />
                 :
                 <div id="carouselExample" className="carousel slide">
                     <div className="carousel-inner">
                         <div className="carousel-item active">
-                            <img src={props.post.media[0]} className="d-block w-100" alt="..."/>
+                            <img src={"http://127.0.0.1:8000" + props.post.images[0].image} className="d-block w-100" alt="..."/>
                         </div>
-                        {props.post.media.slice(1).map((photo, index) =>
+                        {props.post.images.slice(1).map((photo, index) =>
                             <div className="carousel-item" key={index}>
-                                <img className="d-block w-100" src={photo} alt="photo"/>
+                                <img className="d-block w-100" src={"http://127.0.0.1:8000" + photo.image} alt="photo"/>
                             </div>
                         )}
                     </div>
@@ -120,7 +118,10 @@ function Postbox(props) {
                         <span className="visually-hidden">Next</span>
                     </button>
                 </div>
-            )}
+                ) 
+                :
+                <></> 
+                }
             </div>
             <div></div>
             <div className="actions">

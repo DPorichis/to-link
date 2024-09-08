@@ -59,9 +59,7 @@ def send_dm(request):
     conv =  Convo.objects.get(convo_id=convo_id)
     if conv.user_id1 != profile and conv.user_id2 != profile:
         return Response({"message": "You are not authorized to sent this message"}, status=status.HTTP_400_BAD_REQUEST)
-        
-
-
+    
     serializer = DMSerializer(data=request.data)
 
     # Validate the serializer data
