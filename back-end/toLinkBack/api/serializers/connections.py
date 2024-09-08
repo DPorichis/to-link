@@ -13,10 +13,19 @@ class RequestSerializer(serializers.ModelSerializer):
         # Fetch the profile associated with the other user
         other_user_profile = Profile.objects.get(user=obj.user_id_from)
 
+        if other_user_profile.pfp:
+            # Access the file if it exists
+            file_url = "http://127.0.0.1:8000" + obj.pfp.url
+        else:
+            # Handle the case where no file is uploaded
+            file_url = "/default.png"
+
+
         return {
             'name': other_user_profile.name,
             'surname': other_user_profile.surname,
-            'title': other_user_profile.title
+            'title': other_user_profile.title,
+            'pfp': file_url
         }
 
 
@@ -42,9 +51,18 @@ class LinkSerializer(serializers.ModelSerializer):
         # Fetch the profile associated with the other user
         other_user_profile = Profile.objects.get(user_id=other_user)
 
+        if other_user_profile.pfp:
+            # Access the file if it exists
+            file_url = "http://127.0.0.1:8000" + obj.pfp.url
+        else:
+            # Handle the case where no file is uploaded
+            file_url = "/default.png"
+
+
         return {
             'name': other_user_profile.name,
             'surname': other_user_profile.surname,
-            'title': other_user_profile.title
+            'title': other_user_profile.title,
+            'pfp': file_url
         }
         
