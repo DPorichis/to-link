@@ -8,12 +8,12 @@ function ProfileCard(props){
         { props.InNetwork ? 
         <div className="Box" style={{backgroundColor: "#96b9e459", border:"1px solid #ccc", borderRadius:"10px", width:"23%", minHeight:"100%",flexDirection:"column",padding:"5px 10px", display:"flex", justifyContent:"flex-start",flexWrap: "wrap",marginTop:"9px",marginBottom:"9px",justifyContent:"space-between",maxWidth:"23%",maxHeight:"100%",overflow:"hidden"}}>
             <div style={{flexDirection:"row",display:"flex",justifyContent:"flex-start"}}>
-                <img src={props.imgURL} alt="Avatar" style={{width :"64px",height:"64px"}} className="link-image" />
+                <img src={props.link.user_info.pfp} alt="Avatar" style={{width :"64px",height:"64px"}} className="link-image" />
                 <div className="Name" style={{position:"top", textAlign: "left",justifyContent: "center",marginLeft: "20px", width:"75%",wordBreak:"break-all"}}>
-                    {props.name}
+                    {props.link.user_info.name} {props.link.user_info.surname}
                     <br/>
                     <span style={{color:"#777"}}>
-                    {props.title }
+                    {props.link.user_info.title }
                     </span>
                     <br/>
                 </div>

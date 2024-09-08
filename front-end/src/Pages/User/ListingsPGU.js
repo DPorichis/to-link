@@ -200,7 +200,14 @@ function ListingsPGU(props) {
             
             if (response.ok) {
                 let answer = await response.json();
-                setYouApplied(answer.applied);
+                if(answer.applied)
+                {
+                    setYouApplied("applied")
+                }
+                else
+                {
+                    setYouApplied("allowed")
+                }
             } else {
                 console.log("Problems with fetching your application info")
             }

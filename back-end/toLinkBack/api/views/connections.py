@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from api.models import Request, Profile,Link, Convo
-from api.serializers import RequestSerializer,LinkSerializer
+from api.serializers import RequestSerializer,LinkSerializer,ProfileSerializer
 
 from django.db.models import F,Q
 
@@ -97,11 +97,31 @@ def fetch_connections(request):
 
     # Check if any links are found
     if links.exists():
-        serializer = LinkSerializer(links, many=True)
+        serializer = LinkSerializer(links, many=True, context={'authenticated_user': user_profile})
         print(serializer.data)
         return Response(serializer.data, status=status.HTTP_200_OK)
     else:
         return Response({"error": "Links not found."}, status=status.HTTP_404_NOT_FOUND)
+    
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def fetch_searching(request):
+
+    search_term = request.data.get('search', '').strip()
+
+    if not search_term:
+        return Response({"error": "No search term provided"}, status=status.HTTP_400_BAD_REQUEST)
+    
+    matching_users = Profile.objects.filter(
+            name__icontains=search_term  
+    )
+
+    if matching_users.exists():
+        serializer = ProfileSerializer(matching_users, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    else:
+        return Response({"error": "Users not found."}, status=status.HTTP_404_NOT_FOUND)
 
 
 

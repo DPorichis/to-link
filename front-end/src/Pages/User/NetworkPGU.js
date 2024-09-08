@@ -1,210 +1,85 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
+
 import Header from "../../Components/Header";
 import ProfileCard from "../../Components/Profile/ProfileCard";
 import ProfileBanner from "../../Components/Profile/ProfileBanner";
-import { useState } from "react";
-
-const links = 
-[
-{
-name: "Theopoula Tziniiiiiiiiiiiiiiiiii",
-title:"CEO of Ibizaaaaaaaaaaaaaaaaaa",
-imgURL: "/logo192.png",
-InNetwork: false,
-},
-{
-    name: "Theopoula Tzini",
-    title:"CEO of Ibizaaaaaaaaaaaaaaaa",
-    imgURL: "/logo192.png",
-    InNetwork: false,
-    },
-{
-name: "ANitsaaaaaaaaaaaaaa",
-title:"CEO of Koup Skoup",
-imgURL: "/logo192.png",
-InNetwork: false,
-},
-{
-name: "SpongeBobbbbbbbbbbbbbbbbbbb",
-title:"CEO of Bikiniiiiiiiiiiiiiiiii",
-imgURL: "/logo192.png",
-InNetwork: false,
-},
-{
-    name: "SpongeBob",
-    title:"CEO of Bikini",
-    imgURL: "/logo192.png",
-    InNetwork: false,
-    },
-    {
-        name: "SpongeBob",
-        title:"CEO of Bikini",
-        imgURL: "/logo192.png",
-        InNetwork: true,
-        },
-        {
-            name: "SpongeBob",
-            title:"CEO of Bikini",
-            imgURL: "/logo192.png",
-            InNetwork: true,
-            },
-            {
-                name: "SpongeBob",
-                title:"CEO of Bikini",
-                imgURL: "/logo192.png",
-                InNetwork: true,
-                },
-                {
-                    name: "SpongeBob",
-                    title:"CEO of Bikini",
-                    imgURL: "/logo192.png",
-                    InNetwork: true,
-                    },
-                    {
-                        name: "SpongeBob",
-                        title:"CEO of Bikini",
-                        imgURL: "/logo192.png",
-                        InNetwork: true,
-                        },
-                        {
-                            name: "SpongeBob",
-                            title:"CEO of Bikini",
-                            imgURL: "/logo192.png",
-                            InNetwork: true,
-                            },
-                            {
-                                name: "SpongeBob",
-                                title:"CEO of Bikini",
-                                imgURL: "/logo192.png",
-                                InNetwork: true,
-                                },
-                                {
-                                    name: "SpongeBob",
-                                    title:"CEO of Bikini",
-                                    imgURL: "/logo192.png",
-                                    InNetwork: true,
-                                    },
-                                    {
-                                        name: "SpongeBob",
-                                        title:"CEO of Bikini",
-                                        imgURL: "/logo192.png",
-                                        InNetwork: false,
-                                        },
-                                        {
-                                            name: "SpongeBob",
-                                            title:"CEO of Bikini",
-                                            imgURL: "/logo192.png",
-                                            InNetwork: false,
-                                            },
-                                            {
-                                                name: "SpongeBob",
-                                                title:"CEO of Bikini",
-                                                imgURL: "/logo192.png",
-                                                InNetwork: false,
-                                                },
-                                                {
-                                                    name: "SpongeBob",
-                                                    title:"CEO of Bikini",
-                                                    imgURL: "/logo192.png",
-                                                    InNetwork: false,
-                                                    },
-                                                    {
-                                                        name: "SpongeBob",
-                                                        title:"CEO of Bikini",
-                                                        imgURL: "/logo192.png",
-                                                        InNetwork: true,
-                                                        },
-                                                        {
-                                                            name: "SpongeBob",
-                                                            title:"CEO of Bikini",
-                                                            imgURL: "/logo192.png",
-                                                            InNetwork: true,
-                                                            },
-                                                            {
-                                                                name: "SpongeBob",
-                                                                title:"CEO of Bikini",
-                                                                imgURL: "/logo192.png",
-                                                                InNetwork: true,
-                                                                },
-                                                                {
-                                                                    name: "SpongeBob",
-                                                                    title:"CEO of Bikini",
-                                                                    imgURL: "/logo192.png",
-                                                                    InNetwork: true,
-                                                                    },
-                                                                    {
-                                                                        name: "Theopoula Tziniiiiiiiiiiiiiiiiii",
-                                                                        title:"CEO of Ibizaaaaaaaaaaaaaaaaaa",
-                                                                        imgURL: "/logo192.png",
-                                                                        InNetwork: false,
-                                                                        },
-                                                                        {
-                                                                            name: "Theopoula Tziniiiiiiiiiiiiiiiiii",
-                                                                            title:"CEO of Ibizaaaaaaaaaaaaaaaaaa",
-                                                                            imgURL: "/logo192.png",
-                                                                            InNetwork: false,
-                                                                            },
-                                                                            {
-                                                                                name: "Theopoula Tziniiiiiiiiiiiiiiiiii",
-                                                                                title:"CEO of Ibizaaaaaaaaaaaaaaaaaa",
-                                                                                imgURL: "/logo192.png",
-                                                                                InNetwork: false,
-                                                                                },
-                                                                                {
-                                                                                    name: "Theopoula Tziniiiiiiiiiiiiiiiiii",
-                                                                                    title:"CEO of Ibizaaaaaaaaaaaaaaaaaa",
-                                                                                    imgURL: "/logo192.png",
-                                                                                    InNetwork: false,
-                                                                                    },
-                                                                                    {
-                                                                                        name: "Theopoula Tziniiiiiiiiiiiiiiiiii",
-                                                                                        title:"CEO of Ibizaaaaaaaaaaaaaaaaaa",
-                                                                                        imgURL: "/logo192.png",
-                                                                                        InNetwork: false,
-                                                                                        },
-                                                                                        {
-                                                                                            name: "Theopoula Tziniiiiiiiiiiiiiiiiii",
-                                                                                            title:"CEO of Ibizaaaaaaaaaaaaaaaaaa",
-                                                                                            imgURL: "/logo192.png",
-                                                                                            InNetwork: false,
-                                                                                            },
-                                                                                            {
-                                                                                                name: "Theopoula Tziniiiiiiiiiiiiiiiiii",
-                                                                                                title:"CEO of Ibizaaaaaaaaaaaaaaaaaa",
-                                                                                                imgURL: "/logo192.png",
-                                                                                                InNetwork: false,
-                                                                                                },
 
 
-
-]; 
-
+const getCookie = (name) => {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.substring(0, name.length + 1) === `${name}=`) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+};
 
 function NetworkPGU(props) {
-    const [searchTerm, setSearchTerm] = useState("");
-    const sortedInNetworkCards = [...links.filter(link => link.InNetwork)].sort((a, b) => a.name.localeCompare(b.name));
-    const sortedOutOfNetworkCards = [...links.filter(link => !link.InNetwork)].sort((a, b) => a.name.localeCompare(b.name));
-    const [filter, setFilter] = useState("all"); 
-    const [searching, setSearching] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [links, setLinks] = useState([]);
+  const [filter, setFilter] = useState("all");
+  const [searching, setSearching] = useState(false);
+  const [error, setError] = useState(null);
 
-    
+  const sortedInNetworkCards = [...links.filter((link) => link.InNetwork)].sort((a, b) =>
+    a.name.localeCompare(b.name)
+  );
+  const sortedOutOfNetworkCards = [...links.filter((link) => !link.InNetwork)].sort((a, b) =>
+    a.name.localeCompare(b.name)
+  );
+
+    useEffect(() => {
+    const fetchLinks = async () => {
+            const csrfToken = getCookie('csrftoken');
+            try {
+                const response = await fetch("http://127.0.0.1:8000/links/list", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    credentials: "include",
+                    body: JSON.stringify({})
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setLinks(data);  
+                    console.log("Fetched Links:", data);
+                } else {
+                    throw new Error('Failed to fetch Links');
+                    
+                }
+            } catch (error) {
+                setError(error.message);
+            }
+        };
+        
+        fetchLinks();
+      }, []);
 
     const cardsPerRow = 4;
     
-
     const handleSearchChange = (event) => {
         const newSearchTerm = event.target.value;
         setSearchTerm(newSearchTerm);
         setSearching(newSearchTerm.trim() !== "");
     };
 
-    const filteredInNetworkCards = sortedInNetworkCards.filter(card =>
-        card.name.toLowerCase().includes(searchTerm.toLowerCase())
+    const filteredInNetworkCards = sortedInNetworkCards.filter((card) =>
+      (card.name || "").toLowerCase().includes(searchTerm.toLowerCase())
     );
-
-    const filteredOutOfNetworkCards = sortedOutOfNetworkCards.filter(card =>
-        card.name.toLowerCase().includes(searchTerm.toLowerCase())
+  
+    const filteredOutOfNetworkCards = sortedOutOfNetworkCards.filter((card) =>
+      (card.name || "").toLowerCase().includes(searchTerm.toLowerCase())
     );
+  
 
 
     const handleFilterChange = (event) => {
@@ -244,18 +119,18 @@ function NetworkPGU(props) {
             <>
               {filter === "all" && (
                 <>
-                  <h5>Your Network</h5>
+                  <h5>Your Network {links.length}</h5>
                   <div style={{ maxHeight: "57vh", overflowY: "auto", marginBottom: "10px" }}>
                     <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
-                      {filteredInNetworkCards.map((link, index) => (
-                        <ProfileBanner key={index} name={link.name} title={link.title} InNetwork={link.InNetwork} imgURL={link.imgURL} />
-                      ))}
+                    {links.map((link) =>
+                        <ProfileBanner link={link} InNetwork={true} />
+                      )}
                     </div>
                   </div>
                   <h5>People you may know</h5>
                   <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px", overflowY: "scroll" }}>
                     {filteredOutOfNetworkCards.slice(0, cardsPerRow).map((link, index) => (
-                      <ProfileBanner key={index} name={link.name} title={link.title} InNetwork={link.InNetwork} imgURL={link.imgURL} />
+                      <ProfileBanner  />
                     ))}
                   </div>
                 </>
@@ -266,7 +141,7 @@ function NetworkPGU(props) {
                   <div style={{ maxHeight: "65vh", overflowY: "auto", marginBottom: "10px" }}>
                     <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
                       {filteredInNetworkCards.map((link, index) => (
-                        <ProfileBanner key={index} name={link.name} title={link.title} InNetwork={link.InNetwork} imgURL={link.imgURL} />
+                        <ProfileBanner key={index} link={link} />
                       ))}
                     </div>
                   </div>
@@ -278,7 +153,7 @@ function NetworkPGU(props) {
                   <div style={{ maxHeight: "65vh", overflowY: "auto", marginBottom: "10px" }}>
                     <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
                       {filteredOutOfNetworkCards.map((link, index) => (
-                        <ProfileBanner key={index} name={link.name} title={link.title} InNetwork={link.InNetwork} imgURL={link.imgURL} />
+                        <ProfileBanner  />
                       ))}
                     </div>
                   </div>
@@ -292,15 +167,15 @@ function NetworkPGU(props) {
                   <h5>Your Network</h5>
                   <div style={{ maxHeight: "57vh", overflowY: "auto", marginBottom: "10px" }}>
                     <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
-                      {filteredInNetworkCards.map((link, index) => (
-                        <ProfileCard key={index} name={link.name} title={link.title} InNetwork={link.InNetwork} imgURL={link.imgURL} />
-                      ))}
+                    {links.map((link) =>
+                        <ProfileCard link={link} InNetwork={true} /> 
+                      )}
                     </div>
                   </div>
                   <h5>People you may know</h5>
                   <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px", overflowY: "scroll" }}>
                     {filteredOutOfNetworkCards.slice(0, cardsPerRow).map((link, index) => (
-                      <ProfileCard key={index} name={link.name} title={link.title} InNetwork={link.InNetwork} imgURL={link.imgURL} />
+                      <ProfileCard />
                     ))}
                   </div>
                 </>
@@ -310,9 +185,9 @@ function NetworkPGU(props) {
                   <h5>Your Network</h5>
                   <div style={{ maxHeight: "65vh", overflowY: "auto", marginBottom: "10px" }}>
                     <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
-                      {filteredInNetworkCards.map((link, index) => (
-                        <ProfileCard key={index} name={link.name} title={link.title} InNetwork={link.InNetwork} imgURL={link.imgURL} />
-                      ))}
+                    {links.map((link) =>
+                      <ProfileCard link={link} InNetwork={true} /> 
+                    )}
                     </div>
                   </div>
                 </>
@@ -323,7 +198,7 @@ function NetworkPGU(props) {
                   <div style={{ maxHeight: "65vh", overflowY: "auto", marginBottom: "10px" }}>
                     <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
                       {filteredOutOfNetworkCards.map((link, index) => (
-                        <ProfileCard key={index} name={link.name} title={link.title} InNetwork={link.InNetwork} imgURL={link.imgURL} />
+                        <ProfileCard />
                       ))}
                     </div>
                   </div>

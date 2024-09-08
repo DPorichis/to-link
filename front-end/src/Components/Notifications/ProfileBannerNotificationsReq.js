@@ -102,9 +102,7 @@ function ProfileBannerNotificationsReq(props){
                 >
                     {loading ? 'Accepting...' : 'Accept'}
                 </button>
-                <button type="button" class="btn btn-primary" style={{marginLeft:"4px"}}>
-                            View Profile
-                </button>
+                <a class="btn btn-primary" style={{marginLeft:"4px"}} href={`/user/viewprofile?${props.user_id_from}`}>View Profile</a>
             </div>
     </div>
     );
