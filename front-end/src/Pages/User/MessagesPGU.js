@@ -6,7 +6,6 @@ import Message from "../../Components/Messaging/Message";
 import MessageCont from "../../Components/Messaging/MessageCONT";
 import { useState, useEffect } from "react";
 
-
 const convo= [
     {
         user:"1",
@@ -201,7 +200,7 @@ function MessagesPGU(props) {
         setLoading(false);
     }, []);
 
-
+    const [image, setImage] = useState(null);
 
     const handleTextChange = (event) => {
         const {value} = event.target
@@ -211,6 +210,10 @@ function MessagesPGU(props) {
     const handleDmClick = (cnv) => {
         setSelected_dm(cnv); 
     };
+
+    const handleMediaSelection = (event) => {
+        setImage(event.target.files[0])
+    }
 
     const handleUploadClick = async () => {
         if (textboxContent.trim() !== "") {
@@ -297,11 +300,29 @@ function MessagesPGU(props) {
                         <div className="ChatBox" style={{display:"flex",flexDirection:"row",width:"100%",height:"45px",borderRadius:"18px",backgroundColor: "#fff", 
                             borderRadius:"10px", border: "#ccc 1px solid", marginTop:"15px"
                         }}>
-                            <button style={{width:"40px",backgroundColor: "transparent", border:"none"}}>
-                                <img src="/plus-circle.svg" width={"25px"} height={"25px"}/>
-                            </button>
-                            <input style={{flex:"1",backgroundColor: "transparent",height:"100%",border:"none",
-                            borderLeft:"1px solid", borderRight:"1px solid"}} placeholder="Type a message..." type="text" onChange={handleTextChange} value={textboxContent}/> 
+                            <label className="custom-file-upload" style={{ display: 'inline-block', width:"40px",backgroundColor: "transparent",
+                            border:"none", textAlign: 'center'}}>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    style={{ display: 'none' }}  // Hide the input
+                                    onChange={handleMediaSelection}
+                                />
+                                <img src="/plus-circle.svg" style={{width:"25px", height:"25px", marginTop:"10px"}}/>
+                            </label>
+                            {image == null ? 
+                                <input style={{flex:"1",backgroundColor: "transparent",height:"100%",border:"none",
+                                borderLeft:"1px solid", borderRight:"1px solid"}} placeholder="Type a message..." type="text" onChange={handleTextChange} value={textboxContent}/>
+                                :
+                                <>
+                                <input style={{flex:"1",backgroundColor: "transparent",height:"100%",border:"none",
+                                borderLeft:"1px solid", borderRight:"1px solid"}} value={`Image selected: ${image.name}`} type="text" disabled/>
+                                <button onClick={()=>{setImage(null)}}>
+                                    Cancel selection
+                                </button>
+                                </>
+                            }
+                             
                             <button style={{width:"40px",backgroundColor: "transparent",border:"none"}} onClick={handleUploadClick}>
                                 <img src="/upload.svg" width={"25px"} height={"25px"} />
                             </button>
