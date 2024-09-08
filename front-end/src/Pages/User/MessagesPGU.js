@@ -153,6 +153,7 @@ function MessagesPGU(props) {
     const [loading, setLoading] = useState(true);
     const [textboxContent, setTextBoxContent] = useState("");
     const [rerend, setRerend] = useState(true);
+    const [userPFP, setUserPFP] = useState("")
 
     const getCookie = (name) => {
         let cookieValue = null;
@@ -196,7 +197,35 @@ function MessagesPGU(props) {
             }
         };
 
+        const fetchprofilepic = async () => {
+            const csrfToken = getCookie('csrftoken');
+            console.log(csrfToken)
+
+            console.log(document.cookie);
+            const response = await fetch("http://127.0.0.1:8000/profile/own/fetch", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                })
+            })
+            
+            if (response.ok) {
+                // Fetch user account details if authenticated
+                const user = await response.json();
+                setUserPFP(user.profile_info.pfp);
+                console.log(storedLinks);
+            } else {
+                console.log("couldn't fetch convos")
+            }
+        };
+
+
         fetchconvos();
+        fetchprofilepic();
         setLoading(false);
     }, []);
 
@@ -212,40 +241,52 @@ function MessagesPGU(props) {
     };
 
     const handleMediaSelection = (event) => {
-        setImage(event.target.files[0])
+        const file = event.target.files[0];
+    if (file) {
+        setImage(file);
+    }
+    
+    // Reset the file input so it can detect the same file selection
+    event.target.value = '';
+        console.log("New image selected bronks")
     }
 
     const handleUploadClick = async () => {
-        if (textboxContent.trim() !== "") {
-            const newMessage = {
-                "text": textboxContent,
-                "convo": selected_dm.convo_id
-            };
+        if(selected_dm.convo_id !== undefined)
+        {
+            const messageData = new FormData();
 
+            if (image) {
+                messageData.append('media', image);
+            }
+            else {
+                messageData.append('text', textboxContent)
+            }
+
+            messageData.append('convo', selected_dm.convo_id)
+        
             const csrfToken = getCookie('csrftoken');
             console.log(csrfToken)
 
             const response = await fetch("http://127.0.0.1:8000/convo/dm/new/", {
                 method: "POST",
                 headers: {
-                    'Content-Type': 'application/json',
                     'X-CSRFToken': csrfToken
                 },
                 credentials: "include",
-                body: JSON.stringify(newMessage)
+                body: messageData
             });
             
             if (response.ok) 
             {
                 console.log("storedLinks");
                 const cnv = selected_dm
-                setSelected_dm({});
-                setRerend(!rerend);
             }
             else{
                 console.log("wrong");
             }
             setTextBoxContent("");
+            setImage(null);
         }
     };
 
@@ -288,7 +329,7 @@ function MessagesPGU(props) {
                             </div>
                             <p style={{marginTop:"0px"}}>online</p>
                         </div>
-                        <MessageCont convo={selected_dm} rer={rerend}/>
+                        <MessageCont convo={selected_dm} rer={rerend} me={userPFP}/>
                         </>
                         :
                         <div style={{"textAlign": "center"}}>
@@ -305,22 +346,25 @@ function MessagesPGU(props) {
                                 <input
                                     type="file"
                                     accept="image/*"
-                                    style={{ display: 'none' }}  // Hide the input
+                                    style={{ display:'none'}}  // Hide the input
                                     onChange={handleMediaSelection}
                                 />
                                 <img src="/plus-circle.svg" style={{width:"25px", height:"25px", marginTop:"10px"}}/>
                             </label>
-                            {image == null ? 
-                                <input style={{flex:"1",backgroundColor: "transparent",height:"100%",border:"none",
+                            {image === null ? 
+                                <input key="text-input" style={{flex:"1",backgroundColor: "transparent",height:"100%",border:"none",
                                 borderLeft:"1px solid", borderRight:"1px solid"}} placeholder="Type a message..." type="text" onChange={handleTextChange} value={textboxContent}/>
                                 :
-                                <>
-                                <input style={{flex:"1",backgroundColor: "transparent",height:"100%",border:"none",
-                                borderLeft:"1px solid", borderRight:"1px solid"}} value={`Image selected: ${image.name}`} type="text" disabled/>
-                                <button onClick={()=>{setImage(null)}}>
-                                    Cancel selection
-                                </button>
-                                </>
+                                <div key="image-selected" style={{display:"flex",flexDirection:"row", flex:"1", borderLeft:"1px solid"}}>
+                                    <button type="button" class="btn btn-danger btn-sm"
+                                    style={{borderRadius:"50%", alignSelf: "center", padding:"3px 10px", margin: "2px"}}
+                                    onClick={()=>{setImage(null)}}>
+                                            X
+                                    </button>
+                                    <input style={{flex:"1",backgroundColor: "transparent",height:"100%",border:"none",
+                                    borderLeft:"none", borderRight:"1px solid"}} value={`Image selected: ${image.name}`} type="text" disabled/>
+                                        
+                                </div>
                             }
                              
                             <button style={{width:"40px",backgroundColor: "transparent",border:"none"}} onClick={handleUploadClick}>

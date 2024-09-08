@@ -7,7 +7,7 @@ import './ProfileDms.css';
 function ProfileDms(props){
 return(
     <li className = {props.isSelected ? "linkdms-selected" : "linkdms" } key={props.name} onClick={() => props.changesel(props.link) } >
-        <img src={props.link.imgURL} alt="Avatar" style={{width :"54px",flexDirection: "column",height: "54px"}} className="link-image" />
+        <img src={props.link.user_info.pfp} alt="Avatar" style={{width :"54px",flexDirection: "column",height: "54px"}} className="link-image" />
         <div>
             <p style={{margin: "0"}}>
                 <span className="linkdms-name" style={{possition:"top",textAlign: "start", fontWeight: "bold",flexDirection: "column",margin: "3px" }}>

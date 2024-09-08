@@ -68,8 +68,8 @@ function MessageCont(props) {
                                 your_message={props.convo.user_info.user !== message.user}
                                 other_name={props.convo.user_info.name + " " + props.convo.user_info.surname}
                                 other_title={props.convo.user_info.title}
-                                other_pfp={props.convo.pfp}
-                                your_pfp={props.convo.pfp} // FIX
+                                other_pfp={props.convo.user_info.pfp}
+                                your_pfp={props.me} // FIX
                                 message={message}
                                 same={index > 0 && dms[index - 1].user === message.user}
                             />
