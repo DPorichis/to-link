@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from api.models import Profile
+from api.models import Profile, User
 
 
 class ProfileUpdateSerializer(serializers.ModelSerializer):
@@ -104,7 +104,19 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 
 class AdminProfileSerializer(serializers.ModelSerializer):
+        user_info = serializers.SerializerMethodField()
         class Meta:
             model = Profile
-            fields = ['pfp', 'name', 'surname', 'title', 'bio', 'phone', 'website', 'experience', 'education']
+            fields = ['user_id', 'pfp', 'name', 'surname', 'title', 'bio', 'phone', 'website', 'experience', 'education', 'listings_cnt', "post_cnt", "user_info"]
             # Add any other fields you want to be updatable
+
+
+        def get_user_info(self, obj):
+
+            user = User.objects.get(user_id=obj.user_id)
+
+            return {
+                "name": user.name,
+                "surname": user.surname,
+                "email": user.email,
+            }

@@ -28,7 +28,7 @@ def admin_fetch_connections(request):
         serializer = LinkSerializer(links, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     else:
-        return Response({"error": "Links not found."}, status=status.HTTP_404_NOT_FOUND)
+        return Response([], status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -62,7 +62,8 @@ def admin_fetch_listings(request):
         serializer = ListingSerializer(listings, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     else:
-        return Response({"message":"No listings ... :("}, status=status.HTTP_200_OK)
+        return Response([], status=status.HTTP_200_OK)
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -79,7 +80,8 @@ def admin_fetch_applications(request):
         serializer = AppliedSerializer(applications, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     else:
-        return Response({"message":"No applications"}, status=status.HTTP_200_OK)
+        return Response([], status=status.HTTP_200_OK)
+
 
 
 @api_view(['POST'])
@@ -117,13 +119,10 @@ def admin_fetch_comments(request):
     try:
         # Retrieve all comments for the post
         comments = Comment.objects.filter(user=user)
+        serializer = CommentSerializer(comments, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     except Comment.DoesNotExist:
-        return Response({"error": "Comments not found."}, status=status.HTTP_404_NOT_FOUND)
-    
-    
-    serializer = CommentSerializer(comments, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
-
+        return Response([], status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -143,12 +142,13 @@ def admin_fetch_likes(request):
     try:
         # Retrieve all comments for the post
         likes = LikedBy.objects.filter(user=user)
+        serializer = LikedBySerializer(likes, many = True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     except LikedBy.DoesNotExist:
-        return Response({"error": "Likes not found."}, status=status.HTTP_404_NOT_FOUND)
+        return Response([], status=status.HTTP_200_OK)
     
     
-    serializer = LikedBySerializer(likes, many = True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
+    
 
 
 @api_view(['POST'])
@@ -160,8 +160,6 @@ def admin_fetch_posts(request):
 
     if not user_id:
         return Response({"error": "User ID is required."}, status=status.HTTP_400_BAD_REQUEST)
-
-
     try:
         # Retrieve the post
         user = Profile.objects.get(user_id=user_id)
@@ -172,7 +170,21 @@ def admin_fetch_posts(request):
         # Retrieve all comments for the post
         posts = Post.objects.filter(user=user)
     except Post.DoesNotExist:
-        return Response({"error": "Posts not found."}, status=status.HTTP_404_NOT_FOUND)
+        return Response([], status=status.HTTP_200_OK)
 
     serializer = PostSerializer(posts, many = True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def admin_fetch_users(request):
+
+    try:
+        # Retrieve the post
+        users = Profile.objects.filter()
+    except Profile.DoesNotExist:
+        return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+
+    serializer = AdminProfileSerializer(users, many = True)
     return Response(serializer.data, status=status.HTTP_200_OK)

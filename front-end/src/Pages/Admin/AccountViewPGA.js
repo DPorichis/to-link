@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, {useState, useEffect} from "react";
 import Header from "../../Components/Header";
+import { useSearchParams } from 'react-router-dom';
+
 
 let dammylistings =
     [
@@ -88,6 +90,21 @@ const dummyprofile =
 }
 
 
+const getCookie = (name) => {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === `${name}=`) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+};
+
 function AccountViewPGA(props) {
 
     const [activePosts, setActivePosts] = useState(false);
@@ -98,6 +115,205 @@ function AccountViewPGA(props) {
         format: "JSON",
         selectedArtifacts: []
     });
+
+    const [searchParams] = useSearchParams();
+
+    const id = searchParams.get('user_id');
+
+
+    const [profile, setProfile] = useState({});
+    const [personal, setPersonal] = useState({});
+    const [loading, setLoading] = useState(true);
+    const [posts, setPosts] = useState([]);
+    const [listings, setListings] = useState([]);
+    const [likes, setLikes] = useState([]);
+    const [comments, setComments] = useState([]);
+    const [applications, setApplications] = useState([]);
+    const [connections, setConnections] = useState([]);
+
+    
+    useEffect(() => {
+
+        const fetchProfile = async () => {
+
+            const csrfToken = getCookie('csrftoken');
+            const response = await fetch("http://127.0.0.1:8000/admin/fetch/profile", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                credentials: "include",
+                body: JSON.stringify({"user_id": id})
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setProfile(data);  
+            } else {
+                throw new Error('Failed to fetch posts');
+            }
+        };
+
+        const fetchPersonal = async () => {
+
+            const csrfToken = getCookie('csrftoken');
+            const response = await fetch("http://127.0.0.1:8000/admin/fetch/personal", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                credentials: "include",
+                body: JSON.stringify({"user_id": id})
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setPersonal(data);  
+            } else {
+                throw new Error('Failed to fetch posts');
+            }
+        };
+
+        const fetchListings = async () => {
+
+            const csrfToken = getCookie('csrftoken');
+            const response = await fetch("http://127.0.0.1:8000/admin/fetch/listings", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                credentials: "include",
+                body: JSON.stringify({"user_id": id})
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setListings(data);  
+            } else {
+                throw new Error('Failed to fetch posts');
+            }
+        };
+
+        const fetchApplications = async () => {
+
+            const csrfToken = getCookie('csrftoken');
+            const response = await fetch("http://127.0.0.1:8000/admin/fetch/applications", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                credentials: "include",
+                body: JSON.stringify({"user_id": id})
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setApplications(data);  
+            } else {
+                throw new Error('Failed to fetch posts');
+            }
+        };
+
+        const fetchPosts = async () => {
+
+            const csrfToken = getCookie('csrftoken');
+            const response = await fetch("http://127.0.0.1:8000/admin/fetch/posts", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                credentials: "include",
+                body: JSON.stringify({"user_id": id})
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setPosts(data);  
+            } else {
+                throw new Error('Failed to fetch posts');
+            }
+        };
+
+        const fetchComments = async () => {
+
+            const csrfToken = getCookie('csrftoken');
+            const response = await fetch("http://127.0.0.1:8000/admin/fetch/comments", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                credentials: "include",
+                body: JSON.stringify({"user_id": id})
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setComments(data);  
+            } else {
+                throw new Error('Failed to fetch posts');
+            }
+        };
+
+        const fetchLikes = async () => {
+
+            const csrfToken = getCookie('csrftoken');
+            const response = await fetch("http://127.0.0.1:8000/admin/fetch/likes", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                credentials: "include",
+                body: JSON.stringify({"user_id": id})
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setLikes(data);  
+            } else {
+                throw new Error('Failed to fetch posts');
+            }
+        };
+
+        const fetchConnections = async () => {
+
+            const csrfToken = getCookie('csrftoken');
+            const response = await fetch("http://127.0.0.1:8000/admin/fetch/connections", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                credentials: "include",
+                body: JSON.stringify({"user_id": id})
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setConnections(data);  
+            } else {
+                throw new Error('Failed to fetch posts');
+            }
+        };
+
+
+        fetchProfile();
+        fetchPersonal();
+        fetchPosts();
+        fetchComments();
+        fetchLikes();
+        fetchApplications();
+        fetchListings();
+        fetchConnections();
+        setLoading(false);
+    }, []);
+
 
     const handleArtifactsChange = (e) => {
         const {id} = e.target;
@@ -116,6 +332,8 @@ function AccountViewPGA(props) {
             });
         }
     }
+
+    if (loading) return <>Loading...</>
 
     return (
         <div>
@@ -257,28 +475,28 @@ function AccountViewPGA(props) {
                         <div class="col-md-8">
                             <div class="row">
                                 <div class="col-md-4" style={{display:"flex", justifyContent:"center"}}>
-                                    <img src={dummyprofile.pfimgURL} width={"120px"} height={"120px"}/>
+                                    <img src={"http://127.0.0.1:8000" + profile.pfp} width={"125px"} height={"125px"} style={{borderRadius:"25%", marginTop:"10px"}}/>
                                 </div>
                                 <div class="col-md-8" style={{marginBottom:"5px"}}>
                                     <div class="row">
                                         <div class="col-md-6" style={{marginBottom:"5px"}}>
                                             <label class="form-label" style={{marginBottom:"2px"}}>Name</label>
-                                            <input type="text" class="form-control" value={dummyprofile.pfname} disabled/>
+                                            <input type="text" class="form-control" value={profile.name} placeholder="Not filled" disabled/>
                                         </div>
                                         <div class="col-md-6" style={{marginBottom:"5px"}}>
                                             <label class="form-label" style={{marginBottom:"2px"}}>Surname</label>
-                                            <input type="text" class="form-control" value={dummyprofile.pfsurname} disabled/>
+                                            <input type="text" class="form-control" value={profile.surname} placeholder="Not filled" disabled/>
                                         </div>
                                     </div>
                                     <div class="col-md-12" style={{marginBottom:"5px"}}>
                                         <label class="form-label" style={{marginBottom:"2px"}}>Title</label>
-                                        <input type="text" class="form-control" value={dummyprofile.pftitle} disabled/>
+                                        <input type="text" class="form-control" value={profile.title} placeholder="Not filled" disabled/>
                                     </div>
                                 </div>
                                 <div class="col-md-12" style={{marginBottom:"5px"}}>
                                     <label class="form-label" style={{marginBottom:"2px"}}>Bio</label>
                                     <textarea class="form-control" name="pfBio"
-                                    value={dummyprofile.pfbio} disabled>
+                                    value={profile.bio} disabled placeholder="Not filled">
                                     </textarea>
                                 </div>
                             </div>
@@ -286,18 +504,18 @@ function AccountViewPGA(props) {
                         <div class="col-md-4">
                             <div class="col-md-12" style={{marginBottom:"5px"}}>
                                 <label class="form-label" style={{marginBottom:"2px"}}>Email</label>
-                                <input type="email" class="form-control" name="pfEmail" value={dummyprofile.pfemail}
-                                disabled/>
+                                <input type="email" class="form-control" name="pfEmail" value={profile.email}
+                                disabled placeholder="Not filled"/>
                             </div>
                             <div class="col-md-12" style={{marginBottom:"5px"}}>
                                 <label class="form-label" style={{marginBottom:"2px"}}>Phone</label>
-                                <input type="tel" class="form-control" value={dummyprofile.pfphone} 
-                                disabled/>
+                                <input type="tel" class="form-control" value={profile.phone} 
+                                disabled placeholder="Not filled"/>
                             </div>
                             <div class="col-md-12" style={{marginBottom:"5px"}}>
                                 <label class="form-label" style={{marginBottom:"2px"}}>Website</label>
-                                <input type="link" class="form-control" value={dummyprofile.pfwebsite}
-                                disabled/>
+                                <input type="link" class="form-control" value={profile.website}
+                                disabled placeholder="Not filled"/>
                             </div>
                         </div>
                                             
@@ -305,21 +523,37 @@ function AccountViewPGA(props) {
                             <div class="col-md-6" style={{marginBottom:"3px"}}>
                                 <label class="form-label" style={{marginBottom:"2px"}}>Experience</label>
                                 <ul id="experienceList" class="list-group">
-                                    {dummyprofile.pfexperience.map((_, index) =>
+                                    {profile.experience
+                                    ?
+                                    (profile.experience.map((_, index) =>
                                         <li class="list-group-item">
-                                            {dummyprofile.pfexperience[index]}
-                                        </li>                                    
-                                    )}
+                                            {profile.experience[index]}
+                                        </li>                                
+                                    ))
+                                    :
+                                        <li class="list-group-item">
+                                            Not filled
+                                        </li>                                
+                                    }
+                                    
+                                    
                                 </ul>
                             </div>
                             <div class="col-md-6" style={{marginBottom:"3px"}}>
                                 <label class="form-label" style={{marginBottom:"2px"}}>Education</label>
                                 <ul id="educationList" class="list-group">
-                                    {dummyprofile.pfeducation.map((_, index) =>
+                                    {profile.education
+                                        ?
+                                        (profile.education.map((_, index) =>
+                                            <li class="list-group-item">
+                                                {profile.education[index]}
+                                            </li>                                
+                                        ))
+                                        :
                                         <li class="list-group-item">
-                                            {dummyprofile.pfeducation[index]}
+                                            Not filled
                                         </li>                                    
-                                    )}
+                                    }
                                 </ul>
                             </div>
                         </div>                
@@ -332,19 +566,23 @@ function AccountViewPGA(props) {
                         <div class="row">
                             <div class="col-md-3" style={{marginBottom:"5px"}}>
                                 <label class="form-label" style={{marginBottom:"2px"}}>Name</label>
-                                <input type="text" class="form-control" value={dummyprofile.name} disabled/>
+                                <input type="text" class="form-control" value={personal.name} disabled 
+                                placeholder="Not filled"/>
                             </div>
                             <div class="col-md-3" style={{marginBottom:"5px"}}>
                                 <label class="form-label" style={{marginBottom:"2px"}}>Email</label>
-                                <input type="text" class="form-control" value={dummyprofile.email} disabled/>
+                                <input type="text" class="form-control" value={personal.email} disabled 
+                                placeholder="Not filled"/>
                             </div>
                             <div class="col-md-3" style={{marginBottom:"5px"}}>
                                 <label class="form-label" style={{marginBottom:"2px"}}>Country</label>
-                                <input type="text" class="form-control" value={dummyprofile.country} disabled/>
+                                <input type="text" class="form-control" value={personal.country} disabled
+                                placeholder="Not filled"/>
                             </div>
                             <div class="col-md-3" style={{marginBottom:"5px"}}>
                                 <label class="form-label" style={{marginBottom:"2px"}}>Birthdate</label>
-                                <input type="text" class="form-control" value={dummyprofile.birthdate} disabled/>
+                                <input type="text" class="form-control" value={personal.birthdate} disabled
+                                placeholder="Not filled"/>
                             </div>
                         </div>
                     </div>
@@ -352,15 +590,18 @@ function AccountViewPGA(props) {
                         <div class="row">
                             <div class="col-md-3" style={{marginBottom:"5px"}}>
                                 <label class="form-label" style={{marginBottom:"2px"}}>Surname</label>
-                                <input type="text" class="form-control" value={dummyprofile.surname} disabled/>
+                                <input type="text" class="form-control" value={personal.surname} disabled
+                                placeholder="Not filled"/>
                             </div>
                             <div class="col-md-3" style={{marginBottom:"5px"}}>
                                 <label class="form-label" style={{marginBottom:"2px"}}>Phone</label>
-                                <input type="text" class="form-control" value={dummyprofile.phone} disabled/>
+                                <input type="text" class="form-control" value={personal.phone} disabled
+                                placeholder="Not filled"/>
                             </div>
                             <div class="col-md-3" style={{marginBottom:"5px"}}>
                                 <label class="form-label" style={{marginBottom:"2px"}}>City</label>
-                                <input type="text" class="form-control" value={dummyprofile.city} disabled/>
+                                <input type="text" class="form-control" value={personal.city} disabled
+                                placeholder="Not filled"/>
                             </div>
                         </div>
                     </div>
@@ -392,15 +633,26 @@ function AccountViewPGA(props) {
                             </tr>
                             </thead>
                             <tbody>
-                                {dummyprofile.posts.length !== 0 
+                                {posts.length !== 0 
                                 ?
-                                (dummyprofile.posts.map((post) =>
-                                <tr data-id={post.id}>
-                                    <th scope="row">{post.id}</th>
+                                (posts.map((post) =>
+                                <tr data-id={post.post_id}>
+                                    <th scope="row">{post.post_id}</th>
                                     <td>{post.text}</td>
-                                    <td>{post.images}</td>
-                                    <td>{post.likeCount}</td>
-                                    <td>{post.commentCount}</td>
+                                    <td>{post.media?
+                                        <>
+                                        {post.images.map((image, index) => (
+                                        <a key={index} href={"http://127.0.0.1:8000" + image.image}>image #{index}</a>
+                                        ))
+                                        }
+                                        </>
+                                        :
+                                        <>none</>
+                                        
+                                        
+                                        }</td>
+                                    <td>{post.like_cnt}</td>
+                                    <td>{post.comment_cnt}</td>
                                 </tr>
                                 ))
                                 :
@@ -416,7 +668,7 @@ function AccountViewPGA(props) {
                             <thead>
                             <tr>
                                 <th scope="col">LID</th>
-                                <th scope="col">State</th>
+                                <th scope="col">Visibility</th>
                                 <th scope="col">Title</th>
                                 <th scope="col">Level</th>
                                 <th scope="col">Spot</th>
@@ -427,11 +679,12 @@ function AccountViewPGA(props) {
                             </tr>
                             </thead>
                             <tbody>
-                                {dummyprofile.listings.length !== 0 ?
-                                (dummyprofile.listings.map((listi) =>
-                                    <tr data-id={listi.id}>
-                                        <th scope="row">{listi.id}</th>
-                                        <td>{listi.state}</td>
+                                {listings.length !== 0 ?
+                                (listings.map((listi) =>
+                                    <tr data-id={listi.listing_id}>
+                                        <th scope="row">{listi.listing_id}</th>
+                                        <td>{listi.visible === 3?
+                                        "Private" : (listi.visible === 2 ? "Network" : "Public")}</td>
                                         <td>{listi.title}</td>
                                         <td>{listi.level}</td>
                                         <td>{listi.spot}</td>
@@ -482,10 +735,10 @@ function AccountViewPGA(props) {
                             </tr>
                             </thead>
                             <tbody>
-                                {dummyprofile.network.length ? 
-                                (dummyprofile.network.map((usr) =>
+                                {connections.length ? 
+                                (connections.map((usr) =>
                                 <tr data-id={usr.uid}>
-                                    <th scope="row">{usr.uid}</th>
+                                    <th scope="row">{usr.user_id}</th>
                                     <td>{usr.name + " " + usr.surname}</td>
                                     <td>{usr.title}</td>
                                 </tr>
@@ -503,17 +756,15 @@ function AccountViewPGA(props) {
                         <>
                             <thead>
                             <tr>
-                                <th scope="col">PID</th>
-                                <th scope="col">Poster's UID</th>
+                                <th scope="col">Post ID</th>
                             </tr>
                             </thead>
                             <tbody>
-                                {dummyprofile.posts.length !== 0
+                                {likes.length !== 0
                                 ?
-                                (dummyprofile.posts.map((post) =>
-                                    <tr data-id={post.id}>
-                                        <th scope="row">{post.id}</th>
-                                        <td>{post.uid}</td>
+                                (likes.map((post) =>
+                                    <tr data-id={post.post}>
+                                        <th scope="row">{post.post}</th>
                                     </tr>
                                 ))
                                 :
@@ -529,19 +780,19 @@ function AccountViewPGA(props) {
                         <>
                             <thead>
                             <tr>
-                                <th scope="col">LID</th>
-                                <th scope="col">Poster's UID</th>
+                                <th scope="col">Comment ID</th>
+                                <th scope="col">Post ID</th>
                                 <th scope="col">Comment</th>
                             </tr>
                             </thead>
                             <tbody>
-                                {dummyprofile.comments.length !== 0 ?
+                                {comments.length !== 0 ?
 
-                                (dummyprofile.comments.map((post) =>
-                                    <tr data-id={post.id}>
-                                        <th scope="row">{post.id}</th>
-                                        <td>{post.uid}</td>
-                                        <td>{post.comment}</td>
+                                (comments.map((post) =>
+                                    <tr data-id={post.comment_id}>
+                                        <th scope="row">{post.comment_id}</th>
+                                        <td>{post.post_id}</td>
+                                        <td>{post.text}</td>
                                     </tr>
                                 ))
                                 :
@@ -556,21 +807,18 @@ function AccountViewPGA(props) {
                         <>
                             <thead>
                             <tr>
-                                <th scope="col">PID</th>
-                                <th scope="col">Poster's UID</th>
+                                <th scope="col">Listing ID</th>
                             </tr>
                             </thead>
                             <tbody>
-                                {dummyprofile.applications.length !== 0?
-                                (dummyprofile.applications.map((post) =>
+                                {applications.length !== 0?
+                                (applications.map((post) =>
                                     <tr data-id={post.id}>
-                                        <th scope="row">{post.id}</th>
-                                        <td>{post.uid}</td>
+                                        <th scope="row">{post.listing}</th>
                                     </tr>
                                 ))
                                 :
                                 <tr style={{textAlign:"center"}}>
-                                    <th scope="row">#</th>
                                     <td colspan="2">No applications found</td>
                                 </tr>
                                 }

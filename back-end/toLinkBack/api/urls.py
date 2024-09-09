@@ -8,7 +8,7 @@ from .views import login, signup, update_profile, logout, fetch_user_info, updat
     apply_by_id, fetch_request, fetch_connections, get_listing_by_id, admin_fetch_connections, \
     admin_fetch_applications, admin_fetch_profile, admin_fetch_personal, admin_fetch_listings, \
     admin_fetch_posts, admin_fetch_comments, admin_fetch_likes, get_all_posts, check_if_applied, \
-    update_listing, check_if_like_exist, get_post_by_user_id,fetch_searching_links
+    update_listing, check_if_like_exist, get_post_by_user_id, fetch_searching_links, admin_fetch_users
 
 urlpatterns = [
     re_path('login', login),
@@ -45,13 +45,10 @@ urlpatterns = [
     re_path('listings/applied/new', apply_by_id),
     re_path('listings/applied/check', check_if_applied),
     
-
     re_path('request/new', make_request),
     re_path('request/list', fetch_request),
     re_path('request/respond', response_request),
     re_path('links/list', fetch_connections),
-
-
 
     re_path('admin/fetch/listings', admin_fetch_listings),
     re_path('admin/fetch/personal', admin_fetch_personal),
@@ -60,5 +57,6 @@ urlpatterns = [
     re_path('admin/fetch/posts', admin_fetch_posts),
     re_path('admin/fetch/comments', admin_fetch_comments),
     re_path('admin/fetch/likes', admin_fetch_likes),
-    re_path('admin/fetch/connections', admin_fetch_connections)    
+    re_path('admin/fetch/connections', admin_fetch_connections),
+    re_path('admin/fetch/allusers', admin_fetch_users)    
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -307,17 +307,18 @@ function SignUpPG(props) {
         // Create a FormData object
         const readyForm = new FormData();
 
-        // Append all fields from editedProfile to the FormData
-        for (let key in formData1) {
-            if(key === "education" || key === "experience")
-            {
-                readyForm.append(key, JSON.stringify(formData1[key]))
-            }
-            else if(key!== "pfp" && formData1[key] !== null){
-                readyForm.append(key, formData1[key]);
-            }
-        }
+        readyForm.append("name", formData1.pfFirstName);      // 'name' in serializer
+        readyForm.append("surname", formData1.pfLastName);    // 'surname' in serializer
+        readyForm.append("title", formData1.pfTitle);         // 'title' in serializer
+        readyForm.append("bio", formData1.pfBio);             // 'bio' in serializer
+        readyForm.append("phone", formData1.pfPhone);         // 'phone' in serializer
+        readyForm.append("website", formData1.pfWebsite);     // 'website' in serializer
+        readyForm.append("email", formData1.pfEmail);         // 'email' in serializer
 
+        // Experience and Education are likely arrays, so you need to stringify them
+        readyForm.append("experience", JSON.stringify(formData1.pfExperience));
+        readyForm.append("education", JSON.stringify(formData1.pfEducation));
+        
         if (image) {
             readyForm.append('pfp', image);
         }
@@ -332,6 +333,27 @@ function SignUpPG(props) {
         })
 
 
+        if (response.ok) {
+            console.log("skibidi yes")
+        } else {
+            console.log("no user logged in")
+        }
+        
+        const response1 = await fetch("http://127.0.0.1:8000/user/update", {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+            credentials: "include",
+            body: JSON.stringify({
+                "country": formData1.country, 
+                "city": formData1.city, 
+                "phone": formData1.phoneNumber, 
+                "birthdate": formData1.birthdate
+            })
+        })
+        
         if (response.ok) {
             console.log("skibidi yes")
         } else {
