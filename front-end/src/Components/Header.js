@@ -42,10 +42,13 @@ function Header(props) {
                 const data = await response.json();
                 setPfp(data.profile_info.pfp);  
             };
+            console.log(`user pfp is: ${pfp}`)
 
-        fetchProfile();
-        setLoading(false);
-    }}, []);
+    }
+
+    fetchProfile();
+    setLoading(false);
+}, []);
 
 
 
@@ -73,7 +76,7 @@ function Header(props) {
                     </div>
                     </div>
                     <a class="nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src={pfp} width="40" height="40" class="d-inline-block align-top" alt="" />
+                        <img src={pfp} width="40" height="40" style={{borderRadius:"25%"}} class="d-inline-block align-top" alt="" />
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li><a class="dropdown-item" href="/admin/settings">Settings</a></li>
@@ -126,7 +129,7 @@ function Header(props) {
                         </div>
                     </div>
                     <a class="nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src={pfp} width="40" height="40" class="d-inline-block align-top" alt="" />
+                        <img src={pfp} width="40" height="40" style={{borderRadius:"25%"}} class="d-inline-block align-top" alt="" />
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li><a class="dropdown-item" href="/user/settings">Settings</a></li>

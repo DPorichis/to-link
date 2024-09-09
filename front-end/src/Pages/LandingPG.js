@@ -17,8 +17,8 @@ function LandingPG(props) {
     });
 
     const [userLoggedIn, setUser] = useState({})
-
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false);
 
     const getCookie = (name) => {
         let cookieValue = null;
@@ -74,25 +74,27 @@ function LandingPG(props) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            const response = await fetch("http://127.0.0.1:8000/login", {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            credentials: "include",
-            body: JSON.stringify({
-                "email": formData.email,
-                "password": formData.password
-            }),
-        });
-        console.log(response)
-        console.log(document.cookie);
-        } catch (error) {
-            console.error("Error:", error);
-            return
+        setError(false);
+        const response = await fetch("http://127.0.0.1:8000/login", {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        credentials: "include",
+        body: JSON.stringify({
+            "email": formData.email,
+            "password": formData.password
+        })});
+        if(response.ok)
+        {
+            navigate(`/user`);
         }
-        navigate(`/user`);
+        else
+        {
+            console.log("NAHHHHHHHHHH!")
+            setError(true);
+        }
+        
     };
 
     const handleChange = (e) => {
@@ -186,12 +188,19 @@ function LandingPG(props) {
                     :
                         <div style={{textAlign:"left", background: "#e2d9d0", padding: "20px 10px", borderRadius: "5px",
                             border: "solid 1px", borderColor:"#ccc", height:"fit-content"}}>
+                            
+                            {error ?
+                            <button class="btn btn-danger" style={{width:"100%"}}>This account either doesn't exist, or the credentials are wrong...</button>
+                            :
+                            <></>
+                            }
+                            
                             <form onSubmit={handleSubmit}>
                                 <div class="mb-3">
                                     <label for="email" class="form-label">Email address</label>
                                     <input type="email" class="form-control" id="email" aria-describedby="emailHelp" 
                                     value={formData.email} name="email" onChange={handleChange}/>
-                                    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                                    <div id="emailHelp" class="form-text">Use your account's email (can differ from your contact email)</div>
                                 </div>
                                 <div class="mb-3">
                                     <label for="password" class="form-label">Password</label>

@@ -54,11 +54,6 @@ function SettingsPGU(props) {
         setLoading(false);
     }, []);
 
-
-
-
-
-
     const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
     const appendAlert = (message, type) => {
       const wrapper = document.createElement('div')
@@ -73,9 +68,8 @@ function SettingsPGU(props) {
     }
     
 
-    const validateForm = () =>
+    const validateForm = async () =>
         {
-    
         const errors = {};  
     
         if(editedProfile.name === "")
@@ -91,12 +85,11 @@ function SettingsPGU(props) {
         // Regular expression for validating an email
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-
         if (editedProfile.email === "" || !re.test(editedProfile.email))
         {
             errors.email = 'You must enter a valid email address'
         }
-    
+
         return errors;
     
     };
@@ -116,23 +109,44 @@ function SettingsPGU(props) {
         });
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const errors = validateForm();
+        const errors = await validateForm();
         setFormErrors(errors);
         if (Object.keys(errors).length === 0) {
-            console.log('Form submitted successfully:', passwordForm);
-            appendAlert("Personal Info have been successfully changed", 'success');
-            setSavedProfile({
-                ...editedProfile,
-                password: savedProfile.password
-            });
-            setPersonalEdit(false);
+            const csrfToken = getCookie('csrftoken');
+            const response = await fetch("http://127.0.0.1:8000/user/update", {
+                method: "PUT",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                credentials: "include",
+                body: JSON.stringify(editedProfile)
+            })
             
-        } else {
+            if (response.ok) {
+                let userData = await response.json();
+                setSavedProfile(userData);
+                setEditedProfile(userData);
+                console.log('Form submitted successfully:', passwordForm);
+                appendAlert("Personal Info have been successfully changed", 'success');
+                setSavedProfile({
+                    ...editedProfile,
+                });
+                setPersonalEdit(false);
+            } else {
+                setFormErrors(prevErrors => ({
+                    ...prevErrors,
+                    email: "This email can't be used because it is associated with another account"
+                }));
+            }
+        }
+        else{
             setFormErrors(errors);
         }
-    };
+        
+        };
 
 
     const [passwordFormErrors, setPasswordFormErrors] = useState({
@@ -156,19 +170,37 @@ function SettingsPGU(props) {
         });
     }
 
-    const handlePasswordChange = (e) => {
+    const handlePasswordChange = async (e) => {
         e.preventDefault();
         const errors = validatePasswordForm();
         setPasswordFormErrors(errors);
         if (Object.keys(errors).length === 0) {
-            console.log('Form submitted successfully:', passwordForm);
-            setSavedProfile({
-                ...savedProfile,
-                password: passwordForm.password
-            });
-            setPersonalEdit(false);
-            appendAlert("Password has been successfully changed", 'success');
-        } else {
+            const csrfToken = getCookie('csrftoken');
+            const response = await fetch("http://127.0.0.1:8000/user/newPassword", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    current_password: passwordForm.oldPassoword,
+                    new_password: passwordForm.password
+                })
+            })
+            
+            if (response.ok) {
+                let userData = await response.json();
+                console.log('Form submitted successfully:', passwordForm);
+                appendAlert("Password Changed successfully", 'success');
+            } else {
+                setPasswordFormErrors(prevErrors => ({
+                    ...prevErrors,
+                    oldPassoword: "Incorrect Password"
+                }));
+            }
+        }
+        else{
             setPasswordFormErrors(errors);
         }
     };
@@ -177,11 +209,6 @@ function SettingsPGU(props) {
     {
 
     const errors = {};  
-
-    if(passwordForm.oldPassoword !== savedProfile.password)
-    {
-        errors.oldPassoword = 'Wrong Password';
-    }
 
     if (passwordForm.password !== passwordForm.passwordVal) {
         errors.passwordVal = 'Passwords do not match';
@@ -263,7 +290,7 @@ function SettingsPGU(props) {
                             </div>
                             <div class="col-md-3" style={{marginBottom:"5px"}}>
                                 <label class="form-label" style={{marginBottom:"2px"}}>Birthdate</label>
-                                <input type="text" class="form-control" value={editedProfile.birthdate} disabled={!personalEdit}
+                                <input type="date" class="form-control" value={editedProfile.birthdate} disabled={!personalEdit}
                                 onChange={handleFormChange} name="birthdate"/>
                             </div>
                         </div>
@@ -287,7 +314,7 @@ function SettingsPGU(props) {
                             </div>
                             <div class="col-md-3" style={{marginBottom:"5px"}}>
                                 <label class="form-label" style={{marginBottom:"2px"}}>Phone</label>
-                                <input type="text" class="form-control" value={editedProfile.phone} disabled={!personalEdit}
+                                <input type="number" class="form-control" value={editedProfile.phone} disabled={!personalEdit}
                                 onChange={handleFormChange} name="phone"/>
                             </div>
                             <div class="col-md-3" style={{marginBottom:"5px"}}>

@@ -46,8 +46,4 @@ def fetch_user_info(request):
 
     return Response({})
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def update_user_password(request):
-    return Response({})
 

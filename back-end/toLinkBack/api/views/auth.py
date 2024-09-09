@@ -6,8 +6,10 @@ from rest_framework import status
 from api.serializers import UserSerializer
 from api.models import User, Profile
 
+from django.contrib.auth.hashers import check_password, make_password
+from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import authenticate, login as django_login, logout as django_logout
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 
 @api_view(['POST'])
 def login(request):
@@ -55,3 +57,31 @@ def signup(request):
 def logout(request):
     django_logout(request)
     return Response({"message": "Logged out successfully."}, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def update_user_password(request):
+    user = request.user  # Authenticated user
+    current_password = request.data.get("current_password")
+    new_password = request.data.get("new_password")
+
+    # Check if current password and new password are provided
+    if not current_password or not new_password:
+        return Response({"error": "Current password and new password are required."}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Validate current password
+    if not check_password(current_password, user.password):
+        return Response({"error": "Current password is incorrect."}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Update the password and save the user object
+    user.password = make_password(new_password)
+    user.save()
+
+    # Re-authenticate the user after password change
+    user = authenticate(email=user.email, password=new_password)
+
+    # Log the user back in with the new password
+    django_login(request, user)
+
+    return Response({"message": "Password updated successfully."}, status=status.HTTP_200_OK)
