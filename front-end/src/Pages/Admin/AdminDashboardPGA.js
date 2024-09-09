@@ -3,47 +3,58 @@ import Header from "../../Components/Header";
 import { useNavigate } from 'react-router-dom';
 
 import "./AdminDashboardPGA.css"
+import { useFormState } from "react-dom";
+
+
+const getCookie = (name) => {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === `${name}=`) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+};
 
 function AdminDashboardPGA(props) {
 
+    const [users, setUsers] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchUsers = async () => {
+            const csrfToken = getCookie('csrftoken');
+                const response = await fetch("http://127.0.0.1:8000/admin/fetch/allusers", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    credentials: "include",
+                    body: JSON.stringify({})
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setUsers(data);  
+                } else {
+                    throw new Error('Failed to fetch posts');
+                }
+        };
+
+        fetchUsers();
+        setLoading(false);
+    }, []);
+
     const navigate = useNavigate();
 
-    const dummydata = 
-    [
-        {
-            uid:"0",
-            name:"Lakis",
-            surname:"Lalakis",
-            email:"slet@slet.gr",
-            postCount: 4,
-            listingsCount: 4
-        },
-        {
-            uid:"1",
-            name:"Makis",
-            surname:"Mamakis",
-            email:"slot@slet.gr",
-            postCount: 4,
-            listingsCount: 4
-        },
-        {
-            uid:"2",
-            name:"Takis",
-            surname:"Tatakis",
-            email:"slit@slet.gr",
-            postCount: 4,
-            listingsCount: 4
-        },        {
-            uid:"3",
-            name:"Pakis",
-            surname:"Papakis",
-            email:"slat@slet.gr",
-            postCount: 4,
-            listingsCount: 4
-        }
-    ]
 
-    const [filteredData, setFilterdData] = useState(dummydata);
+    const [filteredData, setFilterdData] = useState(users);
     
     const [filterParams, setFilterParams] = useState(
     {
@@ -56,10 +67,10 @@ function AdminDashboardPGA(props) {
 
         if(filterParams.text === '')
         {
-            setFilterdData(dummydata);
+            setFilterdData(users);
             return;
         }
-        const data = dummydata;
+        const data = users;
         var filtereditems;
 
         if(filterParams.for === 'name')
@@ -157,6 +168,7 @@ function AdminDashboardPGA(props) {
         
     };
 
+    if (loading) return <>Loading</>
 
     return (
         <div>
@@ -332,12 +344,12 @@ function AdminDashboardPGA(props) {
                     </thead>
                     <tbody className="admin-table-element">
                         {filteredData.map((usr) =>
-                        <tr data-id={usr.uid}>
-                            <th scope="row">{usr.uid}</th>
-                            <td>{usr.name + " " + usr.surname}</td>
-                            <td>{usr.email}</td>
-                            <td>{usr.postCount}</td>
-                            <td>{usr.listingsCount}</td>
+                        <tr data-id={usr.user_id}>
+                            <th scope="row">{usr.user_id}</th>
+                            <td>{usr.user_info.name + " " + usr.user_info.surname + " (AKA:"+ usr.name + " " + usr.surname + ")"}</td>
+                            <td>{usr.user_info.email}</td>
+                            <td>{usr.post_cnt}</td>
+                            <td>{usr.listings_cnt}</td>
                             <td><input type="checkbox" id={usr.uid} onChange={handleSelectionChange} 
                             checked={exportSelection.selectedUsers.includes(usr.uid)}/></td>
                         </tr>
@@ -358,12 +370,12 @@ function AdminDashboardPGA(props) {
                     </thead>
                     <tbody className="admin-table-element">
                         {filteredData.map((usr) =>
-                        <tr data-id={usr.uid} onClick={handleRowClick} style={{cursor:"pointer"}}>
-                            <th scope="row">{usr.uid}</th>
-                            <td>{usr.name + " " + usr.surname}</td>
-                            <td>{usr.email}</td>
-                            <td>{usr.postCount}</td>
-                            <td>{usr.listingsCount}</td>
+                        <tr data-id={usr.user_id} onClick={handleRowClick} style={{cursor:"pointer"}}>
+                            <th scope="row">{usr.user_id}</th>
+                            <td>{usr.user_info.name + " " + usr.user_info.surname + " (AKA:"+ usr.name + " " + usr.surname + ")"}</td>
+                            <td>{usr.user_info.email}</td>
+                            <td>{usr.post_cnt}</td>
+                            <td>{usr.listings_cnt}</td>
                         </tr>
                         )}
                     </tbody>
