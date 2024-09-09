@@ -2,8 +2,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from api.models import Request, Profile,Link, Convo
-from api.serializers import RequestSerializer,LinkSerializer,ProfileSerializer
+from api.models import Request, Profile,Link, Convo,User
+from api.serializers import RequestSerializer,LinkSerializer,ProfileSerializer,UserSerializer
 
 from django.db.models import F,Q
 
@@ -113,40 +113,45 @@ def fetch_connections(request):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def fetch_searching(request):
-
+def fetch_searching_links(request):
     search_term = request.data.get('search', '').strip()
 
     if not search_term:
         return Response({"error": "No search term provided"}, status=status.HTTP_400_BAD_REQUEST)
-    
-    matching_users = Profile.objects.filter(
-            name__icontains=search_term  
+
+    # Split the search term into possible first name and surname parts
+    search_terms = search_term.split()
+
+    # Get the user's profile
+    user_profile = request.user.profile
+
+    # Fetch the connections (links where the user is either the sender or receiver)
+    links = Link.objects.filter(
+        Q(user_id_to=user_profile) | Q(user_id_from=user_profile)
     )
 
-    if matching_users.exists():
-        serializer = ProfileSerializer(matching_users, many=True)
+    # Get the IDs of users who are connected
+    connected_profiles_ids = links.values_list('user_id_to', 'user_id_from')
+    connected_profiles_ids = set([user_id for sublist in connected_profiles_ids for user_id in sublist])
+
+    # Fetch the profiles of connected users
+    connected_profiles = Profile.objects.filter(user_id__in=connected_profiles_ids)
+
+    # Apply the search filter based on the number of search terms
+    if len(search_terms) == 2:
+        first_name, last_name = search_terms
+        filtered_profiles = connected_profiles.filter(
+            Q(name__icontains=first_name) & Q(surname__icontains=last_name)
+        )
+    else:
+        # If only one term is provided, search by either name or surname
+        filtered_profiles = connected_profiles.filter(
+            Q(name__icontains=search_term) | 
+            Q(surname__icontains=search_term)
+        )
+
+    if filtered_profiles.exists():
+        serializer = ProfileSerializer(filtered_profiles, many=True, context={'authenticated_user': user_profile})
         return Response(serializer.data, status=status.HTTP_200_OK)
     else:
-        return Response({"error": "Users not found."}, status=status.HTTP_404_NOT_FOUND)
-
-
-
-
-        
-
-
-    
-
-    
-
-    
-
-    
-
-
-
-
-
-
-    
+        return Response({"error": "No connections found matching the search term."}, status=status.HTTP_404_NOT_FOUND)

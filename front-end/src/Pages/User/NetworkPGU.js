@@ -26,6 +26,7 @@ function NetworkPGU(props) {
   const [filter, setFilter] = useState("all");
   const [searching, setSearching] = useState(false);
   const [error, setError] = useState(null);
+  const [searchResults, setSearchResults] = useState([]);
 
   const sortedInNetworkCards = [...links.filter((link) => link.InNetwork)].sort((a, b) =>
     a.name.localeCompare(b.name)
@@ -60,33 +61,58 @@ function NetworkPGU(props) {
                 setError(error.message);
             }
         };
-        
+
+        const fetchsearchedLinks = async () => {
+          const csrfToken = getCookie('csrftoken');
+          try {
+              const response = await fetch("http://127.0.0.1:8000/profile/fetch_searching_link", {
+                  method: "POST",
+                  headers: {
+                      'Content-Type': 'application/json',
+                      'X-CSRFToken': csrfToken
+                  },
+                  credentials: "include",
+                  body: JSON.stringify({})
+              });
+
+              if (response.ok) {
+                  const data = await response.json();
+                  setSearchResults(data);  
+                  console.log("Fetched Links:", data);
+              } else {
+                  throw new Error('Failed to fetch Links');
+                  
+              }
+          } catch (error) {
+              setError(error.message);
+          }
+      };
+        fetchsearchedLinks();
         fetchLinks();
       }, []);
 
-    const cardsPerRow = 4;
-    
-    const handleSearchChange = (event) => {
-        const newSearchTerm = event.target.value;
-        setSearchTerm(newSearchTerm);
-        setSearching(newSearchTerm.trim() !== "");
-    };
+      
+  const cardsPerRow = 4;
 
-    const filteredInNetworkCards = sortedInNetworkCards.filter((card) =>
-      (card.name || "").toLowerCase().includes(searchTerm.toLowerCase())
-    );
+  const handleSearchChange = (event) => {
+    const newSearchTerm = event.target.value;
+    setSearchTerm(newSearchTerm);
+    setSearching(newSearchTerm.trim() !== "");
+  };
+
+  const filteredInNetworkCards = sortedInNetworkCards.filter((card) =>
+    (card.name || "").toLowerCase().includes(searchTerm.toLowerCase())
+  );
   
-    const filteredOutOfNetworkCards = sortedOutOfNetworkCards.filter((card) =>
-      (card.name || "").toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  
+  const filteredOutOfNetworkCards = sortedOutOfNetworkCards.filter((card) =>
+    (card.name || "").toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-
-    const handleFilterChange = (event) => {
-        setFilter(event.target.value);
-        setSearchTerm(""); // Clear search term when changing filter
-        setSearching(false);
-    };
+  const handleFilterChange = (event) => {
+    setFilter(event.target.value);
+    setSearchTerm(""); // Clear search term when changing filter
+    setSearching(false);
+  };
     
   return (
     <div>
@@ -122,9 +148,9 @@ function NetworkPGU(props) {
                   <h5>Your Network {links.length}</h5>
                   <div style={{ maxHeight: "57vh", overflowY: "auto", marginBottom: "10px" }}>
                     <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
-                    {links.map((link) =>
-                        <ProfileBanner link={link} InNetwork={true} />
-                      )}
+                    {searchResults.map((link) =>
+                      <ProfileBanner link={link} InNetwork={true} />
+                    )}
                     </div>
                   </div>
                   <h5>People you may know</h5>
