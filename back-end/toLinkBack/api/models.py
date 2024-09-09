@@ -200,7 +200,7 @@ class Notification(models.Model):
     just_text = models.CharField(max_length=45, null=True, blank=True)
 
 class Request(models.Model):
-    user_id_from = models.OneToOneField(Profile, on_delete=models.CASCADE, primary_key=True)  # Field name made lowercase. The composite primary key (User_ID_From, User_ID_To) found, that is not supported. The first column is selected.
+    user_id_from = models.ForeignKey(Profile, on_delete=models.CASCADE, primary_key=True)  # Field name made lowercase. The composite primary key (User_ID_From, User_ID_To) found, that is not supported. The first column is selected.
     user_id_to = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='request_user_id_to_set')  # Field name made lowercase.
 
     class Meta:

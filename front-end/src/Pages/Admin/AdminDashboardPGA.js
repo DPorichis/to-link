@@ -102,7 +102,7 @@ function AdminDashboardPGA(props) {
 
     const handleRowClick = (event) => {
         const { id } = event.currentTarget.dataset;
-        navigate(`/admin/view?${id}`);
+        navigate(`/admin/view?user_id=${id}`);
     };
 
     const handleChange = (e) => {

@@ -25,7 +25,8 @@ class RequestSerializer(serializers.ModelSerializer):
             'name': other_user_profile.name,
             'surname': other_user_profile.surname,
             'title': other_user_profile.title,
-            'pfp': file_url
+            'pfp': file_url,
+            'user_id': other_user_profile.user.user_id
         }
 
 
@@ -63,6 +64,7 @@ class LinkSerializer(serializers.ModelSerializer):
             'name': other_user_profile.name,
             'surname': other_user_profile.surname,
             'title': other_user_profile.title,
-            'pfp': file_url
+            'pfp': file_url,
+            'user_id': other_user_profile.user.user_id
         }
         
