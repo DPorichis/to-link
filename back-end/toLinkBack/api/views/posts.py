@@ -51,7 +51,9 @@ def upload_post(request):
         # Create a PostImage instance for each uploaded image
         for image in images:
             PostMedia.objects.create(post=post, image=image, user=profile)
-
+        
+        profile.post_cnt = F('post_cnt') + 1
+        profile.save(update_fields=['post_cnt'])
 
         return Response(PostSerializer(post).data, status=status.HTTP_201_CREATED)
     else:
@@ -118,7 +120,8 @@ def comment_post(request):
     serializer = CommentSerializer(data=request.data)
     if serializer.is_valid():
         comment = serializer.save(user=request.user.profile, post=post)
-        post.like_cnt = F('comment_cnt') + 1
+        post.comment_cnt = F('comment_cnt') + 1
+        post.save(update_fields=['comment_cnt'])
         return Response(CommentSerializer(comment).data, status=status.HTTP_201_CREATED)
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -170,3 +173,25 @@ def check_if_like_exist(request):
         return Response({"liked": True}, status=status.HTTP_200_OK)
     else:
         return Response({"liked": False}, status=status.HTTP_200_OK)
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def get_post_by_user_id(request):
+    # Retrieve post ID from the request data
+    user_id = request.data.get('user_id')
+
+    if user_id=="own":
+        user_id = request.user.profile
+
+    # Validate input data
+    if not user_id:
+        return Response({"error": "Post ID is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        # Try to find the post by ID
+        posts = Post.objects.filter(user_id=user_id)
+        serializer = PostSerializer(posts, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Post.DoesNotExist:
+        # Return an error if the post does not exist
+        return Response([], status=status.HTTP_200_OK)

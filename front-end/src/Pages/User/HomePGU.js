@@ -95,7 +95,7 @@ function HomePGU(props) {
         const fetchPosts = async () => {
             const csrfToken = getCookie('csrftoken');
             try {
-                const response = await fetch("http://127.0.0.1:8000/posts/fetch", {
+                const response = await fetch("http://127.0.0.1:8000/posts/fetch/all", {
                     method: "POST",
                     headers: {
                         'Content-Type': 'application/json',
@@ -178,7 +178,7 @@ function HomePGU(props) {
 
     return (
         <div>
-            <Header log="user" act="home"/>
+            <Header log="user" act="home" pfp={profile.pfp}/>
             <div style={{display: "flex", flexDirection: "row", justifyContent:"space-around"}}>
             <div className="sidebar" style={{maxHeight:"90vh", overflow:"auto",width: "20%",alignItems:"left",textAlign:"left",padding:"5px 10px",borderRadius:"10px"}}>
                 <div>   

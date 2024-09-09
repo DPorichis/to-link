@@ -9,6 +9,7 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.utils.deconstruct import deconstructible
 import os
 import uuid
 from django.utils.timezone import now
@@ -149,16 +150,32 @@ class Convo(models.Model):
     user_id2 = models.ForeignKey(Profile, on_delete=models.CASCADE, db_column='User_ID2', related_name='convo_user_id2_set')  # Field name made lowercase.
     timestamp = models.DateTimeField(auto_now_add=True)
 
+# Files are public, creating huge naming scemes to prevent easy access
+# THIS IS NOT SECURE, THIS VIOLATES THE SECURITY PRINCIPLE DONT DO SECURITY WITH OBSCURITY
+@deconstructible
+class PathAndRename:
+    def __init__(self, sub_path):
+        self.path = sub_path
+
+    def __call__(self, instance, filename):
+        ext = filename.split('.')[-1]
+        # Create a new unique filename using UUID
+        new_filename = f"{uuid.uuid4()}.{ext}"
+        # Return the full path to the media folder
+        return os.path.join(self.path, new_filename)
+
+
+
 class PostMedia(models.Model):
     post_media_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(Profile, on_delete=models.CASCADE)  # Link the picture to a user
     post = models.ForeignKey(Post, on_delete=models.CASCADE)  # Link the picture to a user
-    image = models.ImageField(upload_to='post-media/')  # Store the uploaded image
+    image = models.ImageField(upload_to=PathAndRename('post-media/'))  # Store the uploaded image
 
 class Dm(models.Model):
     dm_id = models.AutoField(db_column='DM_ID', primary_key=True)  # Field name made lowercase.
     convo = models.ForeignKey(Convo, on_delete=models.CASCADE, db_column='Convo_ID')  # Field name made lowercase.
-    media = models.ImageField(upload_to='dm-media/', null=True, blank=True)
+    media = models.ImageField(upload_to=PathAndRename('dm-media/'), null=True, blank=True)
     user = models.ForeignKey(Profile, on_delete=models.CASCADE, db_column='User_ID')  # Field name made lowercase.
     timestamp = models.DateTimeField(auto_now_add=True)  # Field name made lowercase.
     text = models.TextField( blank=True, null=True)  # Field name made lowercase.

@@ -24,6 +24,7 @@ function Postbox(props) {
     const [liked, setLiked] = useState(false);
     const [commentsVisible, setCommentsVisible] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [commentText, setCommentText] = useState("");
     const [error, setError] = useState(null);
     const [likeCount, setLikeCount] = useState(props.post.like_cnt); // Initialize likeCount
 
@@ -89,6 +90,32 @@ function Postbox(props) {
         setCommentsVisible(!commentsVisible);
     }
 
+    const handleTextChange = (e) => {
+        setCommentText(e.target.value)
+    }
+
+    const handleCommentUpload = async () => {
+        const csrfToken = getCookie('csrftoken');
+        const response = await fetch("http://127.0.0.1:8000/posts/comment/new", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+            credentials: "include",
+            body: JSON.stringify({ 
+                "post": props.post.post_id, 
+                "text": commentText
+            })
+        });
+
+        if (response.ok)
+        {
+            setCommentText("")
+        }
+
+    }
+
     return (
         <div className="postboxout">
             <div className="postboxin">
@@ -130,8 +157,8 @@ function Postbox(props) {
                 </button>
                 <div className="comment-input">
                     <img src="/comment.svg"/>
-                    <input type="text" placeholder={"Type a comment"} className="inv-text-box" style={{width:"300px"}}/>
-                    <button>Post</button>
+                    <input type="text" placeholder={"Type a comment"} className="inv-text-box" style={{width:"300px"}} value={commentText} onChange={handleTextChange}/>
+                    <button onClick={handleCommentUpload}>Post</button>
                 </div>          
             </div>
             <p style={{textAlign: "left", justifyContent: "left", marginLeft: "2px", marginTop: "2px", marginBottom: "0"}}>

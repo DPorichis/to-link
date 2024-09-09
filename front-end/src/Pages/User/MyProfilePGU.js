@@ -84,6 +84,7 @@ function MyProfilePGU(props) {
     const [savedProfile, setSavedProfile] = useState(sampleProfile);
     const [editedProfile, setEditedProfile] = useState(sampleProfile);
     const [listings, setListings] = useState([]);
+    const [posts, setPosts] = useState([]);
     const [image, setImages] = useState(null);
 
     const handleImageChange = (e) => {
@@ -141,6 +142,25 @@ function MyProfilePGU(props) {
             if (response1.ok) {
                 let answer = await response1.json();
                 setListings(answer);
+            } else {
+                console.log("Problems with fetching your listings info")
+            }
+
+            const response2 = await fetch("http://127.0.0.1:8000/posts/fetch/user", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    "user_id": "own"
+                })
+            })
+
+            if (response2.ok) {
+                let answer = await response2.json();
+                setPosts(answer);
             } else {
                 console.log("Problems with fetching your listings info")
             }
@@ -523,13 +543,19 @@ function MyProfilePGU(props) {
                     <h4 style={{marginBottom:"2px"}}>
                         About {savedProfile.name}
                     </h4>
+                    {savedProfile.bio ? 
                     <p>
-                    {savedProfile.bio}
+                        {savedProfile.bio}
                     </p>
+                    :
+                    <p>
+                        No bio set
+                    </p>
+                    }
                     <h4 style={{marginBottom:"2px"}}>
                         Experience
                     </h4>
-                    {savedProfile.experience? 
+                    {savedProfile.experience.length !== 0? 
                         <ul>
                             {savedProfile.experience.map((exp) =>
                                 <li>{exp}</li>
@@ -542,7 +568,7 @@ function MyProfilePGU(props) {
                     <h4 style={{marginBottom:"2px"}}>
                         Education
                     </h4>
-                    {savedProfile.education? 
+                    {savedProfile.education.length !== 0? 
                         <ul>
                             {savedProfile.education.map((exp) =>
                                 <li>{exp}</li>
@@ -555,11 +581,17 @@ function MyProfilePGU(props) {
                 :
                 (mode === "posts"
                     ?
-                    <>
-                        <Postbox photolist ={[ "/testing-post1.png", "/testing-post.png"]}/>
-                        <Postbox photolist ={[ "/testing-post1.png"]}/>
-                        <Postbox />
-                    </>
+                    (posts.length !== 0 ?
+                        <>
+                        {
+                        posts.map(post => (
+                            <Postbox post={post}/> 
+                        ))
+                        }
+                        </> 
+                    :
+                        <>No posts</>
+                    )
                     :
                     (mode === "listings"
                     ?

@@ -73,10 +73,18 @@ class CommentSerializer(serializers.ModelSerializer):
         # Fetch the profile associated with the other user
         profile = Profile.objects.get(user_id=other_user)
 
+        if profile.pfp:
+            # Access the file if it exists
+            file_url = "http://127.0.0.1:8000" + profile.pfp.url
+        else:
+            # Handle the case where no file is uploaded
+            file_url = "/default.png"
+
         return {
             'name': profile.name,
             'surname': profile.surname,
-            'title': profile.title
+            'title': profile.title,
+            'pfp': file_url
         }
     
     def create(self, validated_data):

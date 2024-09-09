@@ -8,7 +8,7 @@ from .views import login, signup, update_profile, logout, updateuser, get_post_b
     apply_by_id, fetch_request, fetch_connections, get_listing_by_id, admin_fetch_connections, \
     admin_fetch_applications, admin_fetch_profile, admin_fetch_personal, admin_fetch_listings, \
     admin_fetch_posts, admin_fetch_comments, admin_fetch_likes, get_all_posts, check_if_applied, \
-    update_listing, check_if_like_exist
+    update_listing, check_if_like_exist, get_post_by_user_id
 
 urlpatterns = [
     re_path('login', login),
@@ -21,7 +21,8 @@ urlpatterns = [
     re_path('profile/view/', retrive_profile),
 
     re_path('posts/view/', get_post_by_id),
-    re_path('posts/fetch', get_all_posts),
+    re_path('posts/fetch/all', get_all_posts),
+    re_path('posts/fetch/user', get_post_by_user_id),
     re_path('posts/upload/', upload_post),
     re_path('posts/like/new', like_post),
     re_path('posts/like/exists', check_if_like_exist),

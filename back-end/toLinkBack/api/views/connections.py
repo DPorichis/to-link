@@ -65,6 +65,13 @@ def response_request(request):
         Link.objects.create(user_id_from=user_req, user_id_to=user_id_to)
         Convo.objects.create(user_id1=user_req, user_id2=user_id_to)
         request.delete()
+
+        user_id_to.link_cnt = F('link_cnt') + 1
+        user_id_to.save(update_fields=['link_cnt'])
+
+        user_req.link_cnt = F('link_cnt') + 1
+        user_req.save(update_fields=['link_cnt'])
+
         return Response({"message": "Request accepted successfully."})
     else:
         request.delete()

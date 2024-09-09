@@ -134,6 +134,8 @@ def upload_listing(request):
     if serializer.is_valid():
         # Save the serializer to create a new post with the uploaded file
         listing = serializer.save(user=profile)
+        profile.listings_cnt = F('listings_cnt') + 1
+        profile.save(update_fields=['listings_cnt'])
         return Response(ListingSerializer(listing).data, status=status.HTTP_201_CREATED)
     else:
         # Return an error response if the data is invalid

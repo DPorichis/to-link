@@ -1,10 +1,55 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 import "./Header.css"
 
+const getCookie = (name) => {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === `${name}=`) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+};
+
 function Header(props) {
+
+    const [pfp, setPfp] = useState("/default.png")
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        const fetchProfile = async () => {
+            const csrfToken = getCookie('csrftoken');
+
+            const response = await fetch("http://127.0.0.1:8000/profile/own/fetch", {  
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                credentials: "include",
+                body: JSON.stringify({})
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setPfp(data.profile_info.pfp);  
+            };
+
+        fetchProfile();
+        setLoading(false);
+    }}, []);
+
+
+
+
     if(props.log === 'admin')
     {
         return (
@@ -28,7 +73,7 @@ function Header(props) {
                     </div>
                     </div>
                     <a class="nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="/user.png" width="40" height="40" class="d-inline-block align-top" alt="" />
+                        <img src={pfp} width="40" height="40" class="d-inline-block align-top" alt="" />
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li><a class="dropdown-item" href="/admin/settings">Settings</a></li>
@@ -81,7 +126,7 @@ function Header(props) {
                         </div>
                     </div>
                     <a class="nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="/user.png" width="40" height="40" class="d-inline-block align-top" alt="" />
+                        <img src={pfp} width="40" height="40" class="d-inline-block align-top" alt="" />
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li><a class="dropdown-item" href="/user/settings">Settings</a></li>
@@ -103,8 +148,8 @@ function Header(props) {
                 <a class="navbar-brand" href="/" style={{font:"Raleway Semi bold italic", margin: "0px 0px"}}>To Link</a>
                 
                 <div>
-                    <a type="button" class="btn btn-primary" style={{marginRight: 7}} href="/user">Sign In</a>
-                    <a type="button" class="btn btn-outline-primary" href="/signup" >Sign Up</a>
+                    <a type="button" class="btn btn-primary" style={{marginRight: 7}} href="/">Sign In</a>
+                    <a type="button" class="btn btn-outline-primary" href="/signup">Sign Up</a>
                 </div>
             </div>
             </nav>
