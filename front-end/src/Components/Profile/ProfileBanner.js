@@ -8,13 +8,13 @@ function ProfileBanner(props){
         { props.InNetwork ? 
         <div className="Box" style={{backgroundColor: "#96b9e459", border:"1px solid #ccc",width:"100%",flexDirection:"row",padding:"5px 10px", display:"flex", justifyContent:"space-between", marginTop:"1px",marginBottom:"1px",borderRadius:"10px"}}>
             <div style={{flexDirection:"row",display:"flex",justifyContent:"flex-start"}}>
-                <img src={props.link.user_info.pfp} alt="Avatar" style={{width :"64px",height:"64px"}} className="link-image" />
+                <img src={props.link.profile_info.pfp} alt="Avatar" style={{width :"64px",height:"64px"}} className="link-image" />
                 <div style={{display: 'flex',flexDirection: 'column',justifyContent: 'center',}}>
                     <div className="Name" style={{position:"center", textAlign: "left",justifyContent: "left",marginLeft: "20px",aligncontent:"center"}}>
-                        {props.link.user_info.name} {props.link.user_info.surname}
+                        {props.link.profile_info.name} {props.link.profile_info.surname}
                         <br/>
                         <span style={{color:"#777"}}>
-                        {props.link.user_info.title}
+                        {props.link.profile_info.title}
                         </span>
                         <br/>
                     </div>
@@ -31,13 +31,13 @@ function ProfileBanner(props){
         </div> :
         <div className="Box" style={{backgroundColor: "#96b9e459", border:"1px solid #ccc", width:"100%",flexDirection:"row",padding:"5px 10px", display:"flex", justifyContent:"space-between", marginTop:"1px",marginBottom:"1px",borderRadius:"10px",textAlign: "center"}}>
             <div style={{flexDirection:"row",display:"flex",justifyContent:"flex-start",textAlign: "center"}}>
-                <img src={props.link.user_info.pfp} alt="Avatar" style={{width :"64px",height:"64px"}} className="link-image" />
+                <img src={props.link.profile_info.pfp} alt="Avatar" style={{width :"64px",height:"64px"}} className="link-image" />
                 <div style={{display: 'flex',flexDirection: 'column',justifyContent: 'center',}}>
                     <div className="Name" style={{position:"center", textAlign: "left",justifyContent: "left",marginLeft: "20px"}}>
-                        {props.link.user_info.name}
+                        {props.link.profile_info.name} {props.link.profile_info.surname}
                         <br/>
                         <span style={{color:"#777"}}>
-                        {props.title }
+                        {props.link.profile_info.title }
                         </span>
                         <br/>
                     </div>

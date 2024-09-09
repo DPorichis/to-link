@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from api.models import Profile, User
+from api.models import Profile, User,Link,Request
+from django.db.models import Q  
 
 
 class ProfileUpdateSerializer(serializers.ModelSerializer):
@@ -120,3 +121,61 @@ class AdminProfileSerializer(serializers.ModelSerializer):
                 "surname": user.surname,
                 "email": user.email,
             }
+
+class ProfileBannerSerializer(serializers.ModelSerializer):
+    
+    profile_info = serializers.SerializerMethodField()
+    relationship = serializers.SerializerMethodField()
+    class Meta:
+        model = Profile
+        fields = ["user_id", 'profile_info','relationship']
+        read_only_fields = ['user_id']
+        
+    def get_profile_info(self, obj):
+        authenticated_user = self.context.get('authenticated_user')
+        
+        if obj.pfp:
+            # Access the file if it exists
+            file_url = "http://127.0.0.1:8000" + obj.pfp.url
+        else:
+            # Handle the case where no file is uploaded
+            file_url = "/default.png"  # or set a default image
+        
+        return{
+        "pfp": file_url,
+        "name": obj.name,
+        "surname": obj.surname,
+        "title": obj.title,
+        }
+    
+    def get_relationship(self, obj):
+        authenticated_user = self.context.get('authenticated_user')
+
+        if authenticated_user is None:
+            return "No Authentication"
+
+        # Check if the authenticated user is the same as the object user
+        if obj.user_id == authenticated_user.user_id:
+            return "Self"
+
+        # Check for an established link (friendship)
+        if Link.objects.filter(
+            Q(user_id_to=obj) & Q(user_id_from=authenticated_user) |
+            Q(user_id_to=authenticated_user) & Q(user_id_from=obj)
+        ).exists():
+            return "Friends"
+
+        # Check for a pending friend request from the authenticated user to the obj
+        if Request.objects.filter(
+            Q(user_id_from=authenticated_user) & Q(user_id_to=obj)
+        ).exists():
+            return "Pending Request Sent"
+
+        # Check for a pending friend request from the obj to the authenticated user
+        if Request.objects.filter(
+            Q(user_id_from=obj) & Q(user_id_to=authenticated_user)
+        ).exists():
+            return "Pending Request Received"
+
+        # If no link or pending request exists
+        return "No Connection"

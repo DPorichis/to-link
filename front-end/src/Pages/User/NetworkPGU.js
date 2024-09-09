@@ -1,9 +1,7 @@
-import React, {useState, useEffect} from "react";
-
+import React, { useState, useEffect } from "react";
 import Header from "../../Components/Header";
 import ProfileCard from "../../Components/Profile/ProfileCard";
 import ProfileBanner from "../../Components/Profile/ProfileBanner";
-
 
 const getCookie = (name) => {
   let cookieValue = null;
@@ -27,6 +25,9 @@ function NetworkPGU(props) {
   const [searching, setSearching] = useState(false);
   const [error, setError] = useState(null);
   const [searchResults, setSearchResults] = useState([]);
+  const [loading, setLoading] = useState(true); // Set loading to true initially
+
+  const cardsPerRow = 4; // Declare cardsPerRow here
 
   const sortedInNetworkCards = [...links.filter((link) => link.InNetwork)].sort((a, b) =>
     a.name.localeCompare(b.name)
@@ -35,69 +36,78 @@ function NetworkPGU(props) {
     a.name.localeCompare(b.name)
   );
 
-    useEffect(() => {
-    const fetchLinks = async () => {
-            const csrfToken = getCookie('csrftoken');
-            try {
-                const response = await fetch("http://127.0.0.1:8000/links/list", {
-                    method: "POST",
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': csrfToken
-                    },
-                    credentials: "include",
-                    body: JSON.stringify({})
-                });
+  const fetchLinks = async () => {
+    const csrfToken = getCookie('csrftoken');
+    setLoading(true); // Set loading to true before fetching data
+    try {
+      const response = await fetch("http://127.0.0.1:8000/links/list", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrfToken
+        },
+        credentials: "include",
+        body: JSON.stringify({})
+      });
 
-                if (response.ok) {
-                    const data = await response.json();
-                    setLinks(data);  
-                    console.log("Fetched Links:", data);
-                } else {
-                    throw new Error('Failed to fetch Links');
-                    
-                }
-            } catch (error) {
-                setError(error.message);
-            }
-        };
+      if (response.ok) {
+        const data = await response.json();
+        setLinks(data);
+        console.log("Fetched Links:", data);
+      } else {
+        throw new Error('Failed to fetch Links');
+      }
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false); // Set loading to false after fetching data
+    }
+  };
 
-        const fetchsearchedLinks = async () => {
-          const csrfToken = getCookie('csrftoken');
-          try {
-              const response = await fetch("http://127.0.0.1:8000/profile/fetch_searching_link", {
-                  method: "POST",
-                  headers: {
-                      'Content-Type': 'application/json',
-                      'X-CSRFToken': csrfToken
-                  },
-                  credentials: "include",
-                  body: JSON.stringify({})
-              });
+  const fetchSearchedLinks = async (searchTerm) => {
+    const csrfToken = getCookie('csrftoken');
+    setLoading(true); // Set loading to true before fetching data
+    try {
+      const response = await fetch("http://127.0.0.1:8000/profile/fetch_searching_link", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrfToken
+        },
+        credentials: "include",
+        body: JSON.stringify({ 'search': searchTerm }) // Include searchTerm in the request body
+      });
 
-              if (response.ok) {
-                  const data = await response.json();
-                  setSearchResults(data);  
-                  console.log("Fetched Links:", data);
-              } else {
-                  throw new Error('Failed to fetch Links');
-                  
-              }
-          } catch (error) {
-              setError(error.message);
-          }
-      };
-        fetchsearchedLinks();
-        fetchLinks();
-      }, []);
+      if (response.ok) {
+        const data = await response.json();
+        setSearchResults(data);
+        console.log("Fetched Search Results:", data);
+      } else {
+        throw new Error('Failed to fetch search results');
+      }
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false); // Set loading to false after fetching data
+    }
+  };
 
-      
-  const cardsPerRow = 4;
+  useEffect(() => {
+    fetchLinks();
+    fetchSearchedLinks();
+  }, []);
 
   const handleSearchChange = (event) => {
     const newSearchTerm = event.target.value;
     setSearchTerm(newSearchTerm);
     setSearching(newSearchTerm.trim() !== "");
+    
+    // Call the search function whenever the search term changes
+    if (newSearchTerm.trim()) {
+      fetchSearchedLinks(newSearchTerm);
+    } else {
+      setSearchResults([]);
+    }
   };
 
   const filteredInNetworkCards = sortedInNetworkCards.filter((card) =>
@@ -112,8 +122,11 @@ function NetworkPGU(props) {
     setFilter(event.target.value);
     setSearchTerm(""); // Clear search term when changing filter
     setSearching(false);
+    setSearchResults([]); // Clear search results when changing filter
   };
-    
+
+  
+
   return (
     <div>
       <Header log="user" act="network" />
@@ -145,43 +158,63 @@ function NetworkPGU(props) {
             <>
               {filter === "all" && (
                 <>
-                  <h5>Your Network {links.length}</h5>
+                  <h5>Your Network {searchResults.length}</h5>
                   <div style={{ maxHeight: "57vh", overflowY: "auto", marginBottom: "10px" }}>
-                    <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
-                    {searchResults.map((link) =>
-                      <ProfileBanner link={link} InNetwork={true} />
+                    {loading ? (
+                      <div>Loading Search Results...</div> // Loading indicator for search results
+                    ) : (
+                      <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
+                          {searchResults
+                            .filter((link) => link.relationship === "Friends")  // Filter to only include "Friends"
+                            .map((link) => (
+                              <ProfileBanner key={link.user_id} link={link} InNetwork={true} />
+                            ))}
+                        </div>
                     )}
-                    </div>
                   </div>
                   <h5>People you may know</h5>
-                  <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px", overflowY: "scroll" }}>
-                    {filteredOutOfNetworkCards.slice(0, cardsPerRow).map((link, index) => (
-                      <ProfileBanner  />
-                    ))}
-                  </div>
+                  <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
+                          {searchResults
+                            .filter((link) => link.relationship === "No Connection")  // Filter to only include "Friends"
+                            .map((link) => (
+                              <ProfileBanner key={link.user_id} link={link} InNetwork={false} />
+                            ))}
+                        </div>
                 </>
               )}
               {filter === "net" && (
                 <>
                   <h5>Your Network</h5>
-                  <div style={{ maxHeight: "65vh", overflowY: "auto", marginBottom: "10px" }}>
-                    <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
-                      {filteredInNetworkCards.map((link, index) => (
-                        <ProfileBanner key={index} link={link} />
-                      ))}
-                    </div>
+                  <div style={{ maxHeight: "57vh", overflowY: "auto", marginBottom: "10px" }}>
+                    {loading ? (
+                      <div>Loading Search Results...</div> // Loading indicator for search results
+                    ) : (
+                      <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
+                          {searchResults
+                            .filter((link) => link.relationship === "Friends")  // Filter to only include "Friends"
+                            .map((link) => (
+                              <ProfileBanner key={link.user_id} link={link} InNetwork={true} />
+                            ))}
+                        </div>
+                    )}
                   </div>
                 </>
               )}
               {filter === "outnet" && (
                 <>
                   <h5>People you may know</h5>
-                  <div style={{ maxHeight: "65vh", overflowY: "auto", marginBottom: "10px" }}>
-                    <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
-                      {filteredOutOfNetworkCards.map((link, index) => (
-                        <ProfileBanner  />
-                      ))}
-                    </div>
+                  <div style={{ maxHeight: "57vh", overflowY: "auto", marginBottom: "10px" }}>
+                    {loading ? (
+                      <div>Loading Search Results...</div> // Loading indicator for search results
+                    ) : (
+                      <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
+                          {searchResults
+                            .filter((link) => link.relationship === "No Connection")  // Filter to only include "Friends"
+                            .map((link) => (
+                              <ProfileBanner key={link.user_id} link={link} InNetwork={false} />
+                            ))}
+                        </div>
+                    )}
                   </div>
                 </>
               )}
@@ -190,18 +223,20 @@ function NetworkPGU(props) {
             <>
               {filter === "all" && (
                 <>
-                  <h5>Your Network</h5>
+                  <h5>Your Network {links.length}</h5>
                   <div style={{ maxHeight: "57vh", overflowY: "auto", marginBottom: "10px" }}>
-                    <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
-                    {links.map((link) =>
-                        <ProfileCard link={link} InNetwork={true} /> 
-                      )}
-                    </div>
+                  <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
+                    {searchResults
+                      .filter((link) => link.relationship === "Friends")  // Filter to only include "Friends"
+                      .map((link) => (
+                        <ProfileCard key={link.user_id} link={link} InNetwork={true} />
+                      ))}
+                </div>
                   </div>
                   <h5>People you may know</h5>
                   <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px", overflowY: "scroll" }}>
                     {filteredOutOfNetworkCards.slice(0, cardsPerRow).map((link, index) => (
-                      <ProfileCard />
+                      <ProfileCard key={index} link={link} />
                     ))}
                   </div>
                 </>
@@ -211,9 +246,9 @@ function NetworkPGU(props) {
                   <h5>Your Network</h5>
                   <div style={{ maxHeight: "65vh", overflowY: "auto", marginBottom: "10px" }}>
                     <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
-                    {links.map((link) =>
-                      <ProfileCard link={link} InNetwork={true} /> 
-                    )}
+                      {links.map((link) =>
+                        <ProfileCard key={link.id} link={link} InNetwork={true} /> 
+                      )}
                     </div>
                   </div>
                 </>
@@ -224,7 +259,7 @@ function NetworkPGU(props) {
                   <div style={{ maxHeight: "65vh", overflowY: "auto", marginBottom: "10px" }}>
                     <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
                       {filteredOutOfNetworkCards.map((link, index) => (
-                        <ProfileCard />
+                        <ProfileCard key={index} link={link} />
                       ))}
                     </div>
                   </div>
