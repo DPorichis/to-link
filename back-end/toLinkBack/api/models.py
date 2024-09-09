@@ -188,9 +188,16 @@ class Link(models.Model):
         unique_together = (('user_id_to', 'user_id_from'),)
 
 class Notification(models.Model):
-    user = models.OneToOneField('Profile', on_delete=models.CASCADE, primary_key=True)  # Field name made lowercase.
-    type = models.IntegerField()  # Field name made lowercase.
-    about = models.CharField(max_length=45)  # Field name made lowercase.
+    notification_id = models.AutoField(primary_key=True)
+    user_to = models.ForeignKey('Profile', related_name='notifications_received', on_delete=models.CASCADE)  # Field name made lowercase.
+    user_from = models.ForeignKey('Profile', related_name='notifications_sent', on_delete=models.CASCADE)  # Field name made lowercase.
+    type = models.CharField(max_length=45)  # Field name made lowercase.
+    dm_id = models.ForeignKey('Dm', null=True, blank=True, on_delete=models.CASCADE)  # Field name made lowercase.
+    like = models.ForeignKey('LikedBy', null=True, blank=True, on_delete=models.CASCADE)
+    comment_id = models.ForeignKey('Comment', null=True, blank=True, on_delete=models.CASCADE)
+    application = models.ForeignKey('Applied', null=True, blank=True, on_delete=models.CASCADE)
+    request = models.ForeignKey('Request', null=True, blank=True, on_delete=models.CASCADE)
+    just_text = models.CharField(max_length=45, null=True, blank=True)
 
 class Request(models.Model):
     user_id_from = models.OneToOneField(Profile, on_delete=models.CASCADE, primary_key=True)  # Field name made lowercase. The composite primary key (User_ID_From, User_ID_To) found, that is not supported. The first column is selected.
@@ -198,7 +205,3 @@ class Request(models.Model):
 
     class Meta:
         unique_together = (('user_id_from', 'user_id_to'),)
-
-class Sessions(models.Model):
-    session = models.IntegerField(primary_key=True)  # Field name made lowercase.
-    user = models.ForeignKey(User, on_delete=models.CASCADE)  # Field name made lowercase.

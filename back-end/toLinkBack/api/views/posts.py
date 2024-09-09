@@ -2,7 +2,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-from api.models import Post, LikedBy, Profile, Comment, PostMedia
+from api.models import Post, LikedBy, Profile, Comment, PostMedia, Notification
 from api.serializers import PostSerializer, CommentSerializer, LikedBySerializer
 from django.db.models import F
 
@@ -88,7 +88,9 @@ def like_post(request):
         return Response({"message": "Post unliked successfully."}, status=status.HTTP_200_OK)
     except LikedBy.DoesNotExist:
         # If not exists, like the post
-        LikedBy.objects.create(post=post, user=user)
+        like = LikedBy.objects.create(post=post, user=user)
+        profile = Profile.objects.get(user_id=post.user_id)
+        Notification.objects.create(like=like, user_from=user, user_to=profile)
         post.like_cnt = F('like_cnt') + 1
         post.save(update_fields=['like_cnt'])
         return Response({"message": "Post liked successfully."}, status=status.HTTP_200_OK)
@@ -122,6 +124,8 @@ def comment_post(request):
         comment = serializer.save(user=request.user.profile, post=post)
         post.comment_cnt = F('comment_cnt') + 1
         post.save(update_fields=['comment_cnt'])
+        profile = Profile.objects.get(user_id=post.user_id)
+        Notification.objects.create(comment_id=comment, user_from=user.profile, user_to=profile)
         return Response(CommentSerializer(comment).data, status=status.HTTP_201_CREATED)
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

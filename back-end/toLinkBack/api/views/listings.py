@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.authtoken.models import Token
 
 from api.serializers import ListingSerializer, ListingUpdateSerializer, AppliedSerializer
-from api.models import Listing, Applied, Profile, Link
+from api.models import Listing, Applied, Profile, Link, Notification
 
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -84,9 +84,11 @@ def apply_by_id(request):
         return Response({"applied": False}, status=status.HTTP_200_OK)
     except Applied.DoesNotExist:
         # If not exists, like the post
-        Applied.objects.create(listing=listing, user=user)
+        application = Applied.objects.create(listing=listing, user=user)
         listing.apl_cnt = F('apl_cnt') + 1
         listing.save(update_fields=['apl_cnt'])
+        profile = Profile.objects.get(user_id=listing.user)
+        Notification.objects.create(application=application, user_from=user, user_to=profile)
         return Response({"applied": True}, status=status.HTTP_200_OK)
     
 
