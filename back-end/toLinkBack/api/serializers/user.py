@@ -17,4 +17,17 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password(password)  # This method handles password hashing
         user.save()
         return user
-    
+
+
+class UserUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["name", "surname", "email", "country", "city", "phone", "birthdate"]
+        # Add any other fields you want to be updatable
+
+    def update(self, instance, validated_data):
+        # Loop through the other validated data fields and update the instance
+        for attr, value in validated_data.items():
+                setattr(instance, attr, value)
+        instance.save()
+        return instance

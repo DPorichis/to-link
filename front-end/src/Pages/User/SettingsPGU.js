@@ -1,26 +1,62 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../../Components/Header";
 
-const dummyprofile = {
-    id: 12,
-    name: "Lakis",
-    surname: "Lalakis",
-    email: "kati@kati.cy",
-    phone: "+306947589234",
-    birthdate: "10/10/10",
-    country: "Greece",
-    city: "Athens",
-    password: "...",
-};
-
 function SettingsPGU(props) {
-    const [savedProfile, setSavedProfile] = useState(dummyprofile);
-    const [editedProfile, setEditedProfile] = useState(savedProfile);
+    const [savedProfile, setSavedProfile] = useState({});
+    const [editedProfile, setEditedProfile] = useState({});
 
     const [personalEdit, setPersonalEdit] = useState(false);
     const [loginEdit, setLoginEdit] = useState(false);
+    const [loading, setLoading] = useState(true);
 
-    
+    const getCookie = (name) => {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+          const cookies = document.cookie.split(';');
+          for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === `${name}=`) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+            }
+          }
+        }
+        return cookieValue;
+    };
+
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            const csrfToken = getCookie('csrftoken');
+            console.log(csrfToken)
+
+            console.log(document.cookie);
+            const response = await fetch("http://127.0.0.1:8000/user/fetch", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                })
+            })
+            
+            if (response.ok) {
+                let answer = await response.json();
+                setSavedProfile(answer);
+                setEditedProfile(answer);
+            } else {
+            }
+        };
+
+        fetchUser();
+        setLoading(false);
+    }, []);
+
+
+
+
 
 
     const alertPlaceholder = document.getElementById('liveAlertPlaceholder')

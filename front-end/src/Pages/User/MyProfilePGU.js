@@ -4,62 +4,6 @@ import { useState, useEffect } from "react";
 import Postbox from "../../Components/Feed/Postbox";
 import JobTile from "../../Components/Jobs/JobTile";
 
-let dammylistings =
-    [
-        {
-            id:1002,
-            state:"Public",
-            title:"Junior Dev at ToLink",
-            user:"Makis",
-            relation:"In your network",
-            spot:"Remote",
-            time:"Full-time", 
-            location:"Athens, Greece", 
-            level:"Entry level",
-            desc:"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-            responses: []
-        },
-        {
-            id:1003,
-            state:"Public",
-            title:"Bet-builder agent",
-            user:"Uncle Nionios",
-            relation:"In your network",
-            spot:"On-site",
-            time:"Part-time", 
-            location:"Spiti tou, Spata, Greece", 
-            level:"Mid level",
-            desc:"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-            responses: []
-        }
-    ]
-
-const sampleProfile = 
-{
-    name: "Lakis",
-    surname: "Lalakis",
-    pfp: "/logo192.png",
-    email: "",
-    phone: "",
-    website: "",
-    bio: "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?",
-    experience: ["Important", "Important", "Important"],
-    education: ["Important", "Important"],
-    listings: dammylistings,
-    vis_edu: 0,
-    vis_exp: 0,
-    vis_act: 0,
-    vis_cont: 0,
-    link_cnt: 0,
-    post_cnt: 0,
-    listings_cnt: 0,
-    vis_cont: 0,
-    vis_edu: 0,
-    vis_exp: 0,
-    vis_act: 0
-}
-
-
 const getCookie = (name) => {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -81,8 +25,8 @@ function MyProfilePGU(props) {
     const [edit, setEdit] = useState(false);
     const [loading, setLoading] = useState(true);
 
-    const [savedProfile, setSavedProfile] = useState(sampleProfile);
-    const [editedProfile, setEditedProfile] = useState(sampleProfile);
+    const [savedProfile, setSavedProfile] = useState({});
+    const [editedProfile, setEditedProfile] = useState({});
     const [listings, setListings] = useState([]);
     const [posts, setPosts] = useState([]);
     const [image, setImages] = useState(null);
@@ -318,6 +262,8 @@ function MyProfilePGU(props) {
         }));
         
     };
+
+    if (loading) return <>Loading...</>
 
     return (
         <div>

@@ -1,7 +1,7 @@
 from django.urls import re_path
 from django.conf import settings
 from django.conf.urls.static import static
-from .views import login, signup, update_profile, logout, updateuser, get_post_by_id, \
+from .views import login, signup, update_profile, logout, fetch_user_info, update_user, update_user_password, get_post_by_id, \
     upload_post, like_post, comment_post, get_comments_by_post, get_dms_of_convo, \
     send_dm, fetch_convo_menu, retrive_convo, retrive_own_profile, retrive_profile, \
     upload_listing, show_listings, get_applied_by_listing_id, make_request, response_request, \
@@ -13,7 +13,9 @@ from .views import login, signup, update_profile, logout, updateuser, get_post_b
 urlpatterns = [
     re_path('login', login),
     re_path('signup', signup),
-    re_path('updateuser', updateuser),
+    re_path('user/fetch', fetch_user_info),
+    re_path('user/update', update_user),
+    re_path('user/newPassword', update_user_password),
     re_path('logout', logout),
 
     re_path('profile/own/update/', update_profile),
