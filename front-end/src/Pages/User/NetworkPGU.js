@@ -29,13 +29,6 @@ function NetworkPGU(props) {
 
   const cardsPerRow = 4; // Declare cardsPerRow here
 
-  const sortedInNetworkCards = [...links.filter((link) => link.InNetwork)].sort((a, b) =>
-    a.name.localeCompare(b.name)
-  );
-  const sortedOutOfNetworkCards = [...links.filter((link) => !link.InNetwork)].sort((a, b) =>
-    a.name.localeCompare(b.name)
-  );
-
   const fetchLinks = async () => {
     const csrfToken = getCookie('csrftoken');
     setLoading(true); // Set loading to true before fetching data
@@ -110,13 +103,6 @@ function NetworkPGU(props) {
     }
   };
 
-  const filteredInNetworkCards = sortedInNetworkCards.filter((card) =>
-    (card.name || "").toLowerCase().includes(searchTerm.toLowerCase())
-  );
-  
-  const filteredOutOfNetworkCards = sortedOutOfNetworkCards.filter((card) =>
-    (card.name || "").toLowerCase().includes(searchTerm.toLowerCase())
-  );
 
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
@@ -223,7 +209,7 @@ function NetworkPGU(props) {
             <>
               {filter === "all" && (
                 <>
-                  <h5>Your Network {links.length}</h5>
+                  <h5>Your Network</h5>
                   <div style={{ maxHeight: "57vh", overflowY: "auto", marginBottom: "10px" }}>
                   <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
                     {searchResults
@@ -234,11 +220,14 @@ function NetworkPGU(props) {
                 </div>
                   </div>
                   <h5>People you may know</h5>
-                  <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px", overflowY: "scroll" }}>
-                    {filteredOutOfNetworkCards.slice(0, cardsPerRow).map((link, index) => (
-                      <ProfileCard key={index} link={link} />
+                  <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
+                  {searchResults
+                    .filter((link) => link.relationship === "No Connection")  // Filter to include only "No Connection"
+                    .map((link) => (
+                      <ProfileCard key={link.user_id} link={link} InNetwork={false} />
                     ))}
-                  </div>
+                  
+                </div>
                 </>
               )}
               {filter === "net" && (
@@ -257,11 +246,13 @@ function NetworkPGU(props) {
                 <>
                   <h5>People you may know</h5>
                   <div style={{ maxHeight: "65vh", overflowY: "auto", marginBottom: "10px" }}>
-                    <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
-                      {filteredOutOfNetworkCards.map((link, index) => (
-                        <ProfileCard key={index} link={link} />
-                      ))}
-                    </div>
+                  <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
+                  {searchResults
+                    .filter((link) => link.relationship === "No Connection")  // Filter to include only "No Connection"
+                    .map((link) => (
+                      <ProfileCard key={link.user_id} link={link} InNetwork={false} />
+                    ))}
+                </div>
                   </div>
                 </>
               )}

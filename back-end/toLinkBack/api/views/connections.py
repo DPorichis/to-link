@@ -117,17 +117,19 @@ def fetch_connections(request):
 def fetch_searching_links(request):
     search_term = request.data.get('search', '').strip()
 
-    if not search_term:
-        return Response({"error": "No search term provided"}, status=status.HTTP_400_BAD_REQUEST)
-
-    # Split the search term into possible first name and surname parts
-    search_terms = search_term.split()
-
     # Get the user's profile
     user_profile = request.user.profile
 
-    # Fetch all profiles
+    # Fetch all profiles, excluding the current user
     all_profiles = Profile.objects.all().exclude(user_id=user_profile.user_id)
+
+    # If no search term is provided, return all profiles
+    if not search_term:
+        serializer = ProfileBannerSerializer(all_profiles, many=True, context={'authenticated_user': user_profile})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    # Split the search term into possible first name and surname parts
+    search_terms = search_term.split()
 
     # Apply the search filter based on the number of search terms
     if len(search_terms) == 2:
@@ -142,8 +144,8 @@ def fetch_searching_links(request):
             Q(surname__icontains=search_term)
         )
 
+    # Return the filtered profiles if they exist
     if filtered_profiles.exists():
-        # Use ProfileBannerSerializer to serialize the data
         serializer = ProfileBannerSerializer(filtered_profiles, many=True, context={'authenticated_user': user_profile})
         return Response(serializer.data, status=status.HTTP_200_OK)
     else:
