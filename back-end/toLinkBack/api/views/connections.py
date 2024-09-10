@@ -28,6 +28,10 @@ def make_request(request):
     if Link.objects.filter(Q(user_id_to=user_id_from, user_id_from=user_id_to) | Q(user_id_to=user_id_to, user_id_from=user_id_from)).exists():
         return Response({"error": "You are already friends with this user."}, status=status.HTTP_400_BAD_REQUEST)
     
+    if Request.objects.filter(user_id_to=user_id_from, user_id_from=user_id_to).exists():
+        return Response({"error": "Great minds think alike! This user already wants to connect with you, refresh this page to get the latest information"}, status=status.HTTP_400_BAD_REQUEST) 
+
+
     try:
         request = Request.objects.get(user_id_to=user_id_to, user_id_from=user_id_from)
         request.delete()
@@ -121,7 +125,7 @@ def fetch_searching_links(request):
     user_profile = request.user.profile
 
     # Fetch all profiles, excluding the current user
-    all_profiles = Profile.objects.all().exclude(user_id=user_profile.user_id)
+    all_profiles = Profile.objects.filter(~Q(user_id=user_profile.user_id))
 
     # If no search term is provided, return all profiles
     if not search_term:

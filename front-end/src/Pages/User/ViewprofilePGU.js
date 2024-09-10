@@ -2,6 +2,7 @@ import React from "react";
 import Header from "../../Components/Header";
 import { useSearchParams } from 'react-router-dom';
 import { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import Postbox from "../../Components/Feed/Postbox";
 import JobTile from "../../Components/Jobs/JobTile";
 
@@ -21,6 +22,7 @@ const getCookie = (name) => {
 };
 
 function ViewprofilePGU(props) {
+    const navigate = useNavigate();
 
     const [mode, setMode] = useState("info");
     const [loading, setLoading] = useState(true);
@@ -30,6 +32,7 @@ function ViewprofilePGU(props) {
     const id = searchParams.get('user_id');
     
     const [viewProfile, setviewProfile] = useState({});
+    const [relationship, setRelationship] = useState("No Connection");
     
     const [listings, setListings] = useState([]);
     const [posts, setPosts] = useState([]);
@@ -56,6 +59,7 @@ function ViewprofilePGU(props) {
                 // Fetch user account details if authenticated
                 let userData = await response.json();
                 setviewProfile(userData.profile_info)
+                setRelationship(userData.relationship)
             } else {
                 setviewProfile(null);
                 console.log("no user logged in")
@@ -125,11 +129,107 @@ function ViewprofilePGU(props) {
 
     };
 
+    const handleRequestClick = async (userId) => {
+        const csrfToken = getCookie('csrftoken');
+        try {
+            const response = await fetch("http://127.0.0.1:8000/request/new", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                credentials: "include",
+                body: JSON.stringify({ 'request_id': userId })
+            });
+
+            if (response.ok) {
+                if(relationship === "Pending Request Sent")
+                {
+                    setRelationship("No Connection")
+                } else
+                {
+                    setRelationship("Pending Request Sent")
+                }
+            } else {
+                const errorResult = await response.json();
+                alert(errorResult.error || "Failed to send request");
+            }
+        } catch (error) {
+            console.error("Error sending request:", error);
+            alert("An error occurred while sending the request");
+        }
+    };
+
+    const handleResponseClick = async (answer) => {
+        const csrfToken = getCookie('csrftoken');
+        try {
+            const response = await fetch("http://127.0.0.1:8000/request/respond", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                credentials: "include",
+                body: JSON.stringify({ 'request_id': id,
+                    "request_response": answer
+                 })
+            });
+
+            if (response.ok) {
+                if(answer === "accept")
+                {
+                    setRelationship("Friends")
+                }
+                else{
+                    setRelationship("No Connection")
+                }
+            } else {
+                const errorResult = await response.json();
+                alert(errorResult.error || "Failed to respond to request");
+                setRelationship("No Connection")
+            }
+        } catch (error) {
+            console.error("Error sending request:", error);
+            alert("An error occurred while sending the request");
+        }
+    };
+
     return (
         <div>
             <Header log="user" act="profile"/>
             <div style={{display:"flex", flexDirection:"column", width: "70%", marginLeft:"15%", marginTop:"20px"}}>
-                <div style={{display:"flex", flexDirection:"row", justifyContent:"flex-end", marginBottom:"5px"}}>
+                
+                
+                <div style={{display:"flex", flexDirection:"row", justifyContent:"space-between", marginBottom:"5px"}}>
+                    { relationship === "Friends" ?
+                        <button type="button" class="btn btn-outline-dark" style={{paddingTop: "0px", paddingBottom: "0px", marginRight:"4px"}} onClick={()=>{navigate(`/user/Messages?user_id=${id}`);}}>
+                                    Message
+                        </button>
+                        :
+                        (relationship === "Pending Request Sent"?
+                        
+                            <button type="button" class="btn btn-outline-dark" style={{paddingTop: "0px", paddingBottom: "0px", marginRight:"4px"}} onClick={() => handleRequestClick(id)}>
+                                Undo Link Request
+                            </button>
+                            
+                        :
+                        (relationship === "Pending Request Received"?
+                            <>
+                                <button type="button" class="btn btn-danger" style={{paddingTop: "0px", paddingBottom: "0px", marginRight:"4px"}} onClick={() => handleResponseClick("reject")}>
+                                    Reject Request
+                                </button>
+                                <button type="button" class="btn btn-success" style={{paddingTop: "0px", paddingBottom: "0px", marginRight:"4px"}} onClick={() => handleResponseClick("accept")}>
+                                    Accept Request
+                                </button>
+                            </>
+                            
+                        :
+                        <button type="button" class="btn btn-outline-dark" style={{paddingTop: "0px", paddingBottom: "0px", marginRight:"4px"}} onClick={() => handleRequestClick(id)}>
+                            Request Link
+                        </button>
+                        ))}
+                
+                
                     <button type="button" class="btn btn-outline-primary" style={{paddingTop: "0px", paddingBottom: "0px",
                         marginRight:"4px"
                     }}>Share Profile</button>

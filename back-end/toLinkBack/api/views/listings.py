@@ -53,7 +53,7 @@ def get_applied_by_listing_id(request):
     
     try:
         applications = Applied.objects.filter(listing=listing)
-        serializer = AppliedSerializer(applications, many=True)
+        serializer = AppliedSerializer(applications, many=True, context={'authenticated_user': user})
         return Response(serializer.data, status=status.HTTP_200_OK)
     except Applied.DoesNotExist:
         return Response({}, status=status.HTTP_200_OK)

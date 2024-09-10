@@ -24,10 +24,11 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
 class ProfileSerializer(serializers.ModelSerializer):
     
     profile_info = serializers.SerializerMethodField()
+    relationship = serializers.SerializerMethodField()
 
     class Meta:
         model = Profile
-        fields = ["user_id", 'profile_info']
+        fields = ["user_id", 'profile_info','relationship']
         read_only_fields = ['profile_info']
         # Add any other fields you want to be updatable
 
@@ -103,6 +104,33 @@ class ProfileSerializer(serializers.ModelSerializer):
             "listings_cnt": obj.listings_cnt,
         }
 
+    def get_relationship(self, obj):
+        authenticated_user = self.context.get('authenticated_user')
+
+        if authenticated_user is None:
+            return "No Authentication"
+
+        # Check if the authenticated user is the same as the object user
+        if obj.user_id == authenticated_user.user_id:
+            return "Self"
+
+        # Check for an established link (friendship)
+        if Link.objects.filter(user_id_to=obj, user_id_from=authenticated_user.profile).exists() or \
+            Link.objects.filter(user_id_to=authenticated_user.profile, user_id_from=obj).exists():
+            return "Friends"
+
+        # Check for a pending friend request from the authenticated user to the obj
+        if Request.objects.filter(user_id_from=authenticated_user.profile, user_id_to=obj).exists():
+            return "Pending Request Sent"
+
+        # Check for a pending friend request from the obj to the authenticated user
+        if Request.objects.filter(user_id_from=obj, user_id_to=authenticated_user.profile).exists():
+            return "Pending Request Received"
+
+        # If no link or pending request exists
+        return "No Connection"
+
+
 
 class AdminProfileSerializer(serializers.ModelSerializer):
         user_info = serializers.SerializerMethodField()
@@ -159,22 +187,16 @@ class ProfileBannerSerializer(serializers.ModelSerializer):
             return "Self"
 
         # Check for an established link (friendship)
-        if Link.objects.filter(
-            Q(user_id_to=obj) & Q(user_id_from=authenticated_user) |
-            Q(user_id_to=authenticated_user) & Q(user_id_from=obj)
-        ).exists():
+        if Link.objects.filter(user_id_to=obj, user_id_from=authenticated_user).exists() or \
+            Link.objects.filter(user_id_to=authenticated_user, user_id_from=obj).exists():
             return "Friends"
 
         # Check for a pending friend request from the authenticated user to the obj
-        if Request.objects.filter(
-            Q(user_id_from=authenticated_user) & Q(user_id_to=obj)
-        ).exists():
+        if Request.objects.filter(user_id_from=authenticated_user, user_id_to=obj).exists():
             return "Pending Request Sent"
 
         # Check for a pending friend request from the obj to the authenticated user
-        if Request.objects.filter(
-            Q(user_id_from=obj) & Q(user_id_to=authenticated_user)
-        ).exists():
+        if Request.objects.filter(user_id_from=obj, user_id_to=authenticated_user).exists():
             return "Pending Request Received"
 
         # If no link or pending request exists

@@ -18,13 +18,13 @@ function ProfileBannerClout(props){
             <div style={{flexDirection:"row",display:"flex",justifyContent:"flex-start",textAlign: "center"}}>
                 <img src={props.imgURL} alt="Avatar" style={{width :"64px",height:"64px"}} className="link-image" />
                 <div style={{display: 'flex',flexDirection: 'row',justifyContent: 'center',alignItems:"center",marginLeft:"15px"}}>
-                    TEXT
+                    {props.clout.text}
                 </div>
             </div>
             <div style={{display: "flex",flexDirection: "row",alignItems: "center",justifyContent: "center"}}>
             <button type="button" class="btn btn-outline-danger" style={{marginRight:"4px"}}>
-                            Dismiss
-                </button>
+                Dismiss
+            </button>
             </div>
     </div>
     );

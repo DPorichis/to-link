@@ -181,7 +181,7 @@ class Dm(models.Model):
     text = models.TextField( blank=True, null=True)  # Field name made lowercase.
 
 class Link(models.Model):
-    user_id_to = models.OneToOneField(Profile, on_delete=models.CASCADE, primary_key=True)  # Field name made lowercase. The composite primary key (User_ID_To, User_ID_From) found, that is not supported. The first column is selected.
+    user_id_to = models.ForeignKey(Profile, on_delete=models.CASCADE)  # Field name made lowercase. The composite primary key (User_ID_To, User_ID_From) found, that is not supported. The first column is selected.
     user_id_from = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='link_user_id_from_set')  # Field name made lowercase.
 
     class Meta:
@@ -196,11 +196,10 @@ class Notification(models.Model):
     like = models.ForeignKey('LikedBy', null=True, blank=True, on_delete=models.CASCADE)
     comment_id = models.ForeignKey('Comment', null=True, blank=True, on_delete=models.CASCADE)
     application = models.ForeignKey('Applied', null=True, blank=True, on_delete=models.CASCADE)
-    request = models.ForeignKey('Request', null=True, blank=True, on_delete=models.CASCADE)
     just_text = models.CharField(max_length=45, null=True, blank=True)
 
 class Request(models.Model):
-    user_id_from = models.ForeignKey(Profile, on_delete=models.CASCADE, primary_key=True)  # Field name made lowercase. The composite primary key (User_ID_From, User_ID_To) found, that is not supported. The first column is selected.
+    user_id_from = models.ForeignKey(Profile, on_delete=models.CASCADE)  # Field name made lowercase. The composite primary key (User_ID_From, User_ID_To) found, that is not supported. The first column is selected.
     user_id_to = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='request_user_id_to_set')  # Field name made lowercase.
 
     class Meta:

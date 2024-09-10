@@ -22,6 +22,7 @@ const getCookie = (name) => {
 
 function NotificationsPGU(props) {
     const [Notifications, setNotifications] = useState([]);
+    const [Requests, setRequests] = useState([]);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -41,7 +42,7 @@ function NotificationsPGU(props) {
 
                 if (response.ok) {
                     const data = await response.json();
-                    setNotifications(data);  
+                    setRequests(data);  
                 } else {
                     throw new Error('Failed to fetch posts');
                 }
@@ -54,23 +55,46 @@ function NotificationsPGU(props) {
 
         fetchNotifications();
     }, []);
+
+
+    const handleDismiss = () => {
+        return
+    }
+
+
     if (loading) return <p>Loading comments...</p>;
     if (error) return <p>Error: {error}</p>;
     return (
         <div>
             <Header log='user' act='notif'/>
             <div style={{display:"flex",flexDirection:"column",textAlign:"left",marginLeft:"15%"}}>
-                    <h4 style={{marginTop:"15px"}}>Your Notifications</h4>
-                    <h5 style={{marginTop:"20px"}}>Link Requests</h5>
+                    <h3 style={{marginTop:"15px"}}>Your Notifications</h3>
+                    <h4 style={{marginTop:"20px", marginBottom:"4px"}}>Link Requests</h4>
+                    {Notifications.length !== 0 ?
                     <div style={{width:"80%", maxHeight:"50vh", overflow:"auto"}}>
-                        {Notifications.map((Notification) =>
+                        {Requests.map((Notification) =>
                             <ProfileBannerNotificationsReq name = {Notification.user_info.name} surname={Notification.user_info.surname} title = {Notification.user_info.title} user_id_from={Notification.user_id_from} imgURL = {Notification.user_info.pfp} />
                         )}
                     </div>
-                    <h5>Clout Check</h5>
-                    <div style={{width:"80%", maxHeight:"20vh", overflow:"auto"}}>
-                        
-                    </div>      
+                    :
+                    <div style={{width:"80%", padding:"10px 10px", borderRadius:"5px", border:"1px #aaa solid", marginBottom:"10px"}}>
+                        <h5 style={{marginBottom:"3px"}}>No new requests so far</h5>
+                        <p style={{marginBottom:"0px"}}>We will let you know when other users request to Link</p>
+                    </div>
+                    }
+                    <h4>Clout Check</h4>
+                    {Notifications.length !== 0 ?
+                    <div style={{width:"80%", maxHeight:"50vh", overflow:"auto"}}>
+                        {Notifications.map((clout) =>
+                            <ProfileBannerClout clout = {clout} dissmiss={handleDismiss} key={clout.id}/>
+                        )}
+                    </div>
+                    :
+                    <div style={{width:"80%", padding:"10px 10px", borderRadius:"5px", border:"1px #aaa solid", marginBottom:"10px"}}>
+                        <h5 style={{marginBottom:"3px"}}>No new notifications</h5>
+                        <p style={{marginBottom:"0px"}}>Congrats! You know everything that happended lately</p>
+                    </div>
+                    }      
             </div>
         </div>
     );

@@ -153,7 +153,7 @@ function NetworkPGU(props) {
                           {searchResults
                             .filter((link) => link.relationship === "Friends")  // Filter to only include "Friends"
                             .map((link) => (
-                              <ProfileBanner key={link.user_id} link={link} InNetwork={true} />
+                              <ProfileBanner key={link.user_id} link={link}/>
                             ))}
                         </div>
                     )}
@@ -161,9 +161,9 @@ function NetworkPGU(props) {
                   <h5>People you may know</h5>
                   <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
                           {searchResults
-                            .filter((link) => link.relationship === "No Connection")  // Filter to only include "Friends"
+                            .filter((link) => link.relationship !== "Friends")  // Filter to only include "Friends"
                             .map((link) => (
-                              <ProfileBanner key={link.user_id} link={link} InNetwork={false} />
+                              <ProfileBanner key={link.user_id} link={link}/>
                             ))}
                         </div>
                 </>
@@ -179,7 +179,7 @@ function NetworkPGU(props) {
                           {searchResults
                             .filter((link) => link.relationship === "Friends")  // Filter to only include "Friends"
                             .map((link) => (
-                              <ProfileBanner key={link.user_id} link={link} InNetwork={true} />
+                              <ProfileBanner key={link.user_id} link={link}/>
                             ))}
                         </div>
                     )}
@@ -195,9 +195,9 @@ function NetworkPGU(props) {
                     ) : (
                       <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
                           {searchResults
-                            .filter((link) => link.relationship === "No Connection")  // Filter to only include "Friends"
+                            .filter((link) => link.relationship !== "Friends")  // Filter to only include "Friends"
                             .map((link) => (
-                              <ProfileBanner key={link.user_id} link={link} InNetwork={false} />
+                              <ProfileBanner key={link.user_id} link={link}/>
                             ))}
                         </div>
                     )}
@@ -215,16 +215,16 @@ function NetworkPGU(props) {
                     {searchResults
                       .filter((link) => link.relationship === "Friends")  // Filter to only include "Friends"
                       .map((link) => (
-                        <ProfileCard key={link.user_id} link={link} InNetwork={true} />
+                        <ProfileCard key={link.user_id} link={link}/>
                       ))}
                 </div>
                   </div>
                   <h5>People you may know</h5>
                   <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
                   {searchResults
-                    .filter((link) => link.relationship === "No Connection")  // Filter to include only "No Connection"
+                    .filter((link) => link.relationship !== "Friends")  // Filter to include only "No Connection"
                     .map((link) => (
-                      <ProfileCard key={link.user_id} link={link} InNetwork={false} />
+                      <ProfileCard key={link.user_id} link={link}/>
                     ))}
                   
                 </div>
@@ -236,7 +236,7 @@ function NetworkPGU(props) {
                   <div style={{ maxHeight: "65vh", overflowY: "auto", marginBottom: "10px" }}>
                     <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
                       {links.map((link) =>
-                        <ProfileCard key={link.id} link={link} InNetwork={true} /> 
+                        <ProfileCard key={link.id} link={link}/> 
                       )}
                     </div>
                   </div>
@@ -248,9 +248,9 @@ function NetworkPGU(props) {
                   <div style={{ maxHeight: "65vh", overflowY: "auto", marginBottom: "10px" }}>
                   <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
                   {searchResults
-                    .filter((link) => link.relationship === "No Connection")  // Filter to include only "No Connection"
+                    .filter((link) => link.relationship !== "Friends")  // Filter to include only "No Connection"
                     .map((link) => (
-                      <ProfileCard key={link.user_id} link={link} InNetwork={false} />
+                      <ProfileCard key={link.user_id} link={link}/>
                     ))}
                 </div>
                   </div>
