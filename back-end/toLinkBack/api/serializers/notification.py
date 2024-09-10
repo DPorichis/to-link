@@ -6,12 +6,12 @@ class NotificationSerializer(serializers.ModelSerializer):
     notification_content = serializers.SerializerMethodField()
     class Meta:
         model = Notification
-        fields = ["notification_id" ,"user_id_to", 'notification_content', "user_id_from"]
-        read_only_fields = ["user_id_to"]
+        fields = ["notification_id" ,"user_to", 'notification_content', "user_from"]
+        read_only_fields = ["user_to"]
 
     def get_notification_content(self, obj):
         # Fetch the profile associated with the other user
-        other_user_profile = Profile.objects.get(user=obj.user_id_from)
+        other_user_profile = Profile.objects.get(user=obj.user_from)
 
         if other_user_profile.pfp:
             # Access the file if it exists
@@ -21,24 +21,24 @@ class NotificationSerializer(serializers.ModelSerializer):
             file_url = "/default.png"
 
         if(obj.type == "like"):
-            text = other_user_profile.name + " " + other_user_profile.surname + "liked your post"
-            post = Post.objects.get(post_id=obj.post)
+            text = other_user_profile.name + " " + other_user_profile.surname + " liked your post"
+            post = Post.objects.get(post_id=obj.like.post.post_id)
             if(post.text != ""):
-                if len(post.text) > 15:
+                if len(post.text) < 15:
                     text += " about \"" + post.text + "\""
                 else:
-                    text += " about \" " + post.text[:15] + "... \""
+                    text += " about \"" + post.text[:15] + "... \""
         elif(obj.type == "comment"):
-            text = other_user_profile.name + " " + other_user_profile.surname + "commented \"" + obj.text + "\" on your post"
-            post = Post.objects.get(post_id=obj.post)
+            text = other_user_profile.name + " " + other_user_profile.surname + " commented \"" + obj.comment_id.text + "\" on your post"
+            post = Post.objects.get(post_id=obj.comment_id.post.post_id)
             if(post.text != ""):
-                if len(post.text) > 15:
+                if len(post.text) < 15:
                     text += " about \"" + post.text + "\""
                 else:
-                    text += " about \" " + post.text[:15] + "... \""
+                    text += " about \"" + post.text[:15] + "... \""
         elif(obj.type == "application"):
-            text = other_user_profile.name + " " + other_user_profile.surname + "applied to your job listing"
-            listing = Listing.objects.get(post_id=obj.application.listing)
+            text = other_user_profile.name + " " + other_user_profile.surname + " applied to your job listing"
+            listing = Listing.objects.get(listing_id=obj.application.listing.listing_id)
             if(listing.title != ""):
                 text += " \"" + listing.title + "\""
         else:

@@ -88,7 +88,7 @@ def apply_by_id(request):
         listing.apl_cnt = F('apl_cnt') + 1
         listing.save(update_fields=['apl_cnt'])
         profile = Profile.objects.get(user_id=listing.user)
-        Notification.objects.create(application=application, user_from=user, user_to=profile)
+        Notification.objects.create(application=application, user_from=user, user_to=profile, type="application")
         return Response({"applied": True}, status=status.HTTP_200_OK)
     
 

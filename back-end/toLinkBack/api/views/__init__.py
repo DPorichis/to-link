@@ -7,3 +7,4 @@ from .listings import *
 from .posts import *
 from .profile import *
 from .settings import *
+from .notifications import *

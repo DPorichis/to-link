@@ -12,7 +12,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from django.db.models import F, Q
 
-@api_view(['PUT'])
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def fetch_notifications(request):
     # Get the authenticated user
@@ -25,12 +25,8 @@ def fetch_notifications(request):
         return Response([], status=status.HTTP_200_OK)
     
     # Create the serializer with the current profile and the request data
-    serializer = NotificationSerializer(notifications, data=request.data, partial=True)  # `partial=True` to allow for partial updates
-
-    if serializer.is_valid():
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    else:
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    serializer = NotificationSerializer(notifications, many=True)  # `partial=True` to allow for partial updates
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])

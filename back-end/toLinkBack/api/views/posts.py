@@ -90,7 +90,7 @@ def like_post(request):
         # If not exists, like the post
         like = LikedBy.objects.create(post=post, user=user)
         profile = Profile.objects.get(user_id=post.user_id)
-        Notification.objects.create(like=like, user_from=user, user_to=profile)
+        Notification.objects.create(like=like, user_from=user, user_to=profile, type="like")
         post.like_cnt = F('like_cnt') + 1
         post.save(update_fields=['like_cnt'])
         return Response({"message": "Post liked successfully."}, status=status.HTTP_200_OK)
@@ -125,7 +125,7 @@ def comment_post(request):
         post.comment_cnt = F('comment_cnt') + 1
         post.save(update_fields=['comment_cnt'])
         profile = Profile.objects.get(user_id=post.user_id)
-        Notification.objects.create(comment_id=comment, user_from=user.profile, user_to=profile)
+        Notification.objects.create(comment_id=comment, user_from=user.profile, user_to=profile, type="comment")
         return Response(CommentSerializer(comment).data, status=status.HTTP_201_CREATED)
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

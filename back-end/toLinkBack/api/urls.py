@@ -8,7 +8,8 @@ from .views import login, signup, update_profile, logout, fetch_user_info, updat
     apply_by_id, fetch_request, fetch_connections, get_listing_by_id, admin_fetch_connections, \
     admin_fetch_applications, admin_fetch_profile, admin_fetch_personal, admin_fetch_listings, \
     admin_fetch_posts, admin_fetch_comments, admin_fetch_likes, get_all_posts, check_if_applied, \
-    update_listing, check_if_like_exist, get_post_by_user_id, fetch_searching_links, admin_fetch_users
+    update_listing, check_if_like_exist, get_post_by_user_id, fetch_searching_links, admin_fetch_users, \
+    fetch_notifications, dismiss_notification_by_id
 
 urlpatterns = [
     re_path('login', login),
@@ -36,6 +37,9 @@ urlpatterns = [
     re_path('convo/dm/new', send_dm),
     re_path('convo/dm/fetch', get_dms_of_convo),
     re_path('convo/find/', retrive_convo),
+
+    re_path('notification/fetch', fetch_notifications),
+    re_path('notification/dismiss', dismiss_notification_by_id),
 
     re_path('listings/new', upload_listing),
     re_path('listings/update', update_listing),
