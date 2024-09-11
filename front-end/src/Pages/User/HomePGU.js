@@ -31,6 +31,8 @@ function HomePGU(props) {
     const [error, setError] = useState(null);
     const [noAuth, setNoAuth] = useState(false);
     const [profile, setProfile] = useState({});
+    const [PostCount, setPostCount] = useState(); 
+    
     
     const [postText, setpostText] = useState("");
     const [postMedia, setpostMedia] = useState([]);
@@ -55,6 +57,32 @@ function HomePGU(props) {
         setpostMedia(prevMedia => prevMedia.filter((img, imgIndex) => imgIndex !== index));
     };
 
+
+    const fetchPosts = async () => {
+        const csrfToken = getCookie('csrftoken');
+        try {
+            const response = await fetch("http://127.0.0.1:8000/posts/fetch/all", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                credentials: "include",
+                body: JSON.stringify({})
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setPosts(data);  
+            } else if(response.status === 403) {
+                setNoAuth(true);
+            } else {
+                throw new Error('Failed to fetch posts');
+            }
+        } catch (error) {
+            setError(error.message);
+        }
+    };
 
     const handleUploadClick = async () => {
             const postData = new FormData();
@@ -83,6 +111,8 @@ function HomePGU(props) {
             if (response.ok) 
             {
                 console.log("Post Uploaded");
+                fetchPosts();
+                setPostCount(PostCount +1)
             }
             else{
                 console.log("wrong");
@@ -94,32 +124,7 @@ function HomePGU(props) {
 
 
     useEffect(() => {
-        const fetchPosts = async () => {
-            const csrfToken = getCookie('csrftoken');
-            try {
-                const response = await fetch("http://127.0.0.1:8000/posts/fetch/all", {
-                    method: "POST",
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': csrfToken
-                    },
-                    credentials: "include",
-                    body: JSON.stringify({})
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    setPosts(data);  
-                } else if(response.status === 403) {
-                    setNoAuth(true);
-                } else {
-                    throw new Error('Failed to fetch posts');
-                }
-            } catch (error) {
-                setError(error.message);
-            }
-        };
-
+        
         const fetchLinks = async () => {
             const csrfToken = getCookie('csrftoken');
             try {
@@ -164,7 +169,8 @@ function HomePGU(props) {
                 if (response.ok) {
                     const data = await response.json();
                     console.log()
-                    setProfile(data.profile_info);  
+                    setProfile(data.profile_info); 
+                    setPostCount(data.profile_info.post_cnt) 
                 } else if(response.status === 403) {
                     setNoAuth(true);
                 } else {
@@ -182,6 +188,7 @@ function HomePGU(props) {
         setLoading(false);
     }, []);
 
+    
     if (loading) return <>Loading</>
     
     
@@ -207,7 +214,7 @@ function HomePGU(props) {
                         </div>
                         <div style={{display:"flex",flexDirection:"row",justifyContent:"space-between",textAlign:"center"}}>
                             <div style={{display:"flex",flexDirection:"column"}}>
-                            <h5 style={{marginBottom:"0px"}}>{profile.post_cnt}</h5>
+                            <h5 style={{marginBottom:"0px"}}>{PostCount}</h5>
                             <p style={{marginBottom:"0px"}}>posts</p>
                             </div>
                             <div style={{display:"flex",flexDirection:"column"}}>

@@ -157,7 +157,7 @@ def get_comments_by_post(request):
 @permission_classes([IsAuthenticated])
 def get_all_posts(request):
     # Retrieve all posts
-    posts = Post.objects.all()
+    posts = Post.objects.all().order_by('-post_id')
     serializer = PostSerializer(posts, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
