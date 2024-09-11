@@ -29,34 +29,6 @@ function NetworkPGU(props) {
 
   const cardsPerRow = 4; // Declare cardsPerRow here
 
-  const fetchLinks = async () => {
-    const csrfToken = getCookie('csrftoken');
-    setLoading(true); // Set loading to true before fetching data
-    try {
-      const response = await fetch("http://127.0.0.1:8000/links/list", {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRFToken': csrfToken
-        },
-        credentials: "include",
-        body: JSON.stringify({})
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setLinks(data);
-        console.log("Fetched Links:", data);
-      } else {
-        throw new Error('Failed to fetch Links');
-      }
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setLoading(false); // Set loading to false after fetching data
-    }
-  };
-
   const fetchSearchedLinks = async (searchTerm) => {
     const csrfToken = getCookie('csrftoken');
     setLoading(true); // Set loading to true before fetching data
@@ -86,7 +58,6 @@ function NetworkPGU(props) {
   };
 
   useEffect(() => {
-    fetchLinks();
     fetchSearchedLinks();
   }, []);
 
@@ -108,7 +79,8 @@ function NetworkPGU(props) {
     setFilter(event.target.value);
     setSearchTerm(""); // Clear search term when changing filter
     setSearching(false);
-    setSearchResults([]); // Clear search results when changing filter
+    setSearchResults([]);
+    fetchSearchedLinks(); // Clear search results when changing filter
   };
 
   
@@ -222,7 +194,8 @@ function NetworkPGU(props) {
                   <h5>People you may know</h5>
                   <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
                   {searchResults
-                    .filter((link) => link.relationship !== "Friends")  // Filter to include only "No Connection"
+                    .filter((link) => link.relationship !== "Friends") 
+                    .slice(0, 4) 
                     .map((link) => (
                       <ProfileCard key={link.user_id} link={link}/>
                     ))}
@@ -235,9 +208,11 @@ function NetworkPGU(props) {
                   <h5>Your Network</h5>
                   <div style={{ maxHeight: "65vh", overflowY: "auto", marginBottom: "10px" }}>
                     <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
-                      {links.map((link) =>
-                        <ProfileCard key={link.id} link={link}/> 
-                      )}
+                    {searchResults
+                      .filter((link) => link.relationship === "Friends")  // Filter to only include "Friends"
+                      .map((link) => (
+                        <ProfileCard key={link.user_id} link={link}/>
+                      ))}
                     </div>
                   </div>
                 </>

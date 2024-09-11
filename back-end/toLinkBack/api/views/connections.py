@@ -124,10 +124,10 @@ def fetch_searching_links(request):
     # Get the user's profile
     user_profile = request.user.profile
 
-    # Fetch all profiles, excluding the current user
-    all_profiles = Profile.objects.filter(~Q(user_id=user_profile.user_id))
+    # Fetch all profiles, excluding the current user, and order alphabetically by name and surname
+    all_profiles = Profile.objects.filter(~Q(user_id=user_profile.user_id)).order_by('name', 'surname')
 
-    # If no search term is provided, return all profiles
+    # If no search term is provided, return all profiles sorted alphabetically
     if not search_term:
         serializer = ProfileBannerSerializer(all_profiles, many=True, context={'authenticated_user': user_profile})
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -140,13 +140,13 @@ def fetch_searching_links(request):
         first_name, last_name = search_terms
         filtered_profiles = all_profiles.filter(
             Q(name__icontains=first_name) & Q(surname__icontains=last_name)
-        )
+        ).order_by('name', 'surname')  # Add sorting here
     else:
         # If only one term is provided, search by either name or surname
         filtered_profiles = all_profiles.filter(
             Q(name__icontains=search_term) | 
             Q(surname__icontains=search_term)
-        )
+        ).order_by('name', 'surname')  # Add sorting here
 
     # Return the filtered profiles if they exist
     if filtered_profiles.exists():

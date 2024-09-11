@@ -21,12 +21,15 @@ const getCookie = (name) => {
 };
 
 function Postbox(props) {
+
     const [liked, setLiked] = useState(false);
     const [commentsVisible, setCommentsVisible] = useState(false);
     const [loading, setLoading] = useState(false);
     const [commentText, setCommentText] = useState("");
     const [error, setError] = useState(null);
-    const [likeCount, setLikeCount] = useState(props.post.like_cnt); // Initialize likeCount
+    const [likeCount, setLikeCount] = useState(props.post.like_cnt); 
+    const [commentCount,setCommentCount]= useState(props.post.comment_cnt);
+    
 
     useEffect(() => {
         const fetchLikes = async () => {
@@ -45,7 +48,6 @@ function Postbox(props) {
                 if (response.ok) {
                     const data = await response.json();
                     setLiked(data.liked);
-                    setLikeCount(data.like_count); // Update likeCount based on response
                 } else {
                     throw new Error('Failed to fetch Likes');
                 }
@@ -56,7 +58,7 @@ function Postbox(props) {
             }
         };
         fetchLikes();
-    }, [props.post.post_id]); // Re-run this effect if the post ID changes
+    }); // Re-run this effect if the post ID changes
 
     const toggleLiked = async () => {
         setLoading(true);
@@ -73,9 +75,14 @@ function Postbox(props) {
             });
 
             if (response.ok) {
-                const data = await response.json();
-                setLiked(!liked); // Toggle the liked state based on previous state
-                
+                setLiked(!liked);
+                if(liked){
+                    setLikeCount(likeCount - 1)
+                }
+                else{
+                    setLikeCount(likeCount + 1)
+                }
+    
             } else {
                 throw new Error('Failed to like/unlike post');
             }
@@ -112,6 +119,7 @@ function Postbox(props) {
         if (response.ok)
         {
             setCommentText("")
+            setCommentCount(commentCount +1)
         }
 
     }
@@ -162,7 +170,7 @@ function Postbox(props) {
                 </div>          
             </div>
             <p style={{textAlign: "left", justifyContent: "left", marginLeft: "2px", marginTop: "2px", marginBottom: "0"}}>
-                {props.post.like_cnt} Likes · {props.post.comment_cnt} Comments
+                {likeCount} Likes · {commentCount} Comments
             </p>
             <button className="show-comments-button" onClick={togglecomments}> 
                 {commentsVisible ? <>Show Comments v</> : <>Show Comments {">"}</>}
