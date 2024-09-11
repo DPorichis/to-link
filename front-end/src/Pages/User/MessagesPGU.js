@@ -6,145 +6,6 @@ import Message from "../../Components/Messaging/Message";
 import MessageCont from "../../Components/Messaging/MessageCONT";
 import { useState, useEffect } from "react";
 
-const convo= [
-    {
-        user:"1",
-        message: "Fwtiiiii ",
-        time: "10:05",
-        media: null
-    },
-    {
-        user:"1",
-        message: "eisai edw ",
-        time: "10:05",
-        media: null
-    },
-    {
-        user:"0",
-        message: "Parakalw",
-        time: "10:08",
-        media: null
-    },
-    {
-        user:"1",
-        message: "Piase mia mpyraa",
-        time: "10:10",
-        media: null
-    },
-    {
-        user:"0",
-        message:"EFTASEE",
-        time: "10:10",
-        media: null
-    },
-    {
-        user:"1",
-        message:"",
-        time: "10:10",
-        media: "/logo192.png"
-    },
-    {
-        user:"1",
-        message:"STIN YGEIA SOY",
-        time: "10:10",
-        media: null
-    }
-    
-
-];
-
-const links = 
-[
-{
-name: "Makis Kotsampasis",
-title:"CEO of synergio o makis",
-imgURL: "/logo192.png",
-messages: convo
-},
-{
-name: "Lakis Lalakis",
-title:"CEO of DIT",
-imgURL: "/logo192.png",
-messages: convo,
-},
-{
-name: "Ioannic",
-title: "CEO of TSILI" ,
-imgURL: "/logo192.png",
-messages: convo,
-
-},
-{
-name: "Lionel Messi",
-title: "CEO of Real Madrid",
-imgURL: "/logo192.png",
-messages: convo,
-
-},
-{
-name: "Makis Kotsampasis",
-title: "CEO of SYNERGEIO O MAKIS",
-imgURL: "/logo192.png",
-messages : convo,
-},
-{
-    name: "Lakis Lalakis",
-    title:"CEO of DIT",
-    imgURL: "/logo192.png",
-    messages: convo,
-    },
-    {
-        name: "Lakis Lalakis",
-        title:"CEO of DIT",
-        imgURL: "/logo192.png",
-        messages: convo,
-        },
-        {
-            name: "Lakis Lalakis",
-            title:"CEO of DIT",
-            imgURL: "/logo192.png",
-            messages: convo,
-            },
-            {
-                name: "Lakis Lalakis",
-                title:"CEO of DIT",
-                imgURL: "/logo192.png",
-                messages: convo,
-                },
-{
-name: "Makis Kotsampasis",
-title: "CEO of SYNERGEIO O MAKIS",
-imgURL: "/logo192.png",
-messages : convo,
-},
-{
-    name: "Makis Kotsampasis",
-    title: "CEO of SYNERGEIO O MAKIS",
-    imgURL: "/logo192.png",
-    messages : convo,
-    },
-    {
-        name: "Makis Kotsampasis",
-        title: "CEO of SYNERGEIO O MAKIS",
-        imgURL: "/logo192.png",
-        messages : convo,
-        },
-        {
-            name: "Makis Kotsampasis",
-            title: "CEO of SYNERGEIO O MAKIS",
-            imgURL: "/logo192.png",
-            messages : convo,
-            },
-            {
-                name: "Makis Kotsampasis",
-                title: "CEO of SYNERGEIO O MAKIS",
-                imgURL: "/logo192.png",
-                messages : convo,
-                },
-
-];
-
-
 function MessagesPGU(props) {
 
     
@@ -309,7 +170,11 @@ function MessagesPGU(props) {
                         )}
                         </>
                         :
-                        <>No DMs :(</>
+                        <div style={{padding:"10px 10px", borderRadius:"5px", backgroundColor:"#fff"}}>
+                            <h5>You don't seem to have any connections... </h5>
+                            <p>Let's change that! Go to Network and find your self some new friends.</p>
+                            <a href="/user/network" className="btn btn-primary">Go to Network</a>
+                        </div>
                         }
                         
                         
@@ -326,7 +191,7 @@ function MessagesPGU(props) {
                                 <h3 style={{fontSize:"4vh",marginRight:"1%",marginBottom:"0px"}}>{selected_dm.user_info.name + " " + selected_dm.user_info.surname}</h3>
                                 <p style={{color:"#D3D3D3",fontSize:"3vh",marginTop:"0.5vh",marginBottom:"0px"}}>{selected_dm.user_info.title}</p>
                             </div>
-                            <p style={{marginTop:"0px"}}>online</p>
+                            <p style={{marginTop:"0px"}}>{selected_dm.user_info.name + " last checked this chat at: "}</p>
                         </div>
                         <MessageCont convo={selected_dm} rer={rerend} me={userPFP}/>
                         </>

@@ -4,6 +4,7 @@ import Header from "../../Components/Header";
 import './homePGU.css';
 
 import ProfileSmall from "../../Components/Profile/ProfileSmall";
+import NotFoundPG from '../NotFoundPG';
 import Postbox from "../../Components/Feed/Postbox";
 
 const getCookie = (name) => {
@@ -28,6 +29,7 @@ function HomePGU(props) {
     const [posts, setPosts] = useState([]);
     const [links, setLinks] = useState([]);
     const [error, setError] = useState(null);
+    const [noAuth, setNoAuth] = useState(false);
     const [profile, setProfile] = useState({});
     
     const [postText, setpostText] = useState("");
@@ -108,6 +110,8 @@ function HomePGU(props) {
                 if (response.ok) {
                     const data = await response.json();
                     setPosts(data);  
+                } else if(response.status === 403) {
+                    setNoAuth(true);
                 } else {
                     throw new Error('Failed to fetch posts');
                 }
@@ -133,6 +137,8 @@ function HomePGU(props) {
                     const data = await response.json();
                     setLinks(data);  
                     console.log("Fetched Links:", data);
+                } else if(response.status === 403) {
+                    setNoAuth(true);
                 } else {
                     throw new Error('Failed to fetch Links');
                     
@@ -159,6 +165,8 @@ function HomePGU(props) {
                     const data = await response.json();
                     console.log()
                     setProfile(data.profile_info);  
+                } else if(response.status === 403) {
+                    setNoAuth(true);
                 } else {
                     throw new Error('Failed to fetch profile');
                 }
@@ -175,6 +183,12 @@ function HomePGU(props) {
     }, []);
 
     if (loading) return <>Loading</>
+    
+    
+    if(noAuth)
+    {
+        return (<NotFoundPG />)
+    }
 
     return (
         <div>

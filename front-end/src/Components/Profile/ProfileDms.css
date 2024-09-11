@@ -3,6 +3,7 @@
 }
 
 .linkdms{
+    padding: 5px 5px;
     display:flex; 
     text-align:start;
     flex-direction: row;
@@ -14,6 +15,7 @@
 
 .linkdms-selected
 {
+    padding: 5px 5px;
     display:flex; 
     text-align:start;
     flex-direction: row;

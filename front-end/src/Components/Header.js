@@ -41,7 +41,11 @@ function Header(props) {
             if (response.ok) {
                 const data = await response.json();
                 setPfp(data.profile_info.pfp);  
-            };
+            }
+            else
+            {
+                setPfp("no_auth");
+            }
             console.log(`user pfp is: ${pfp}`)
 
     }
@@ -51,6 +55,43 @@ function Header(props) {
 }, []);
 
 
+    if(loading)
+    {
+        return (
+            <nav class="navbar navbar-expand-lg" style={{background:"rgb(161,174,206)", background: "linear-gradient(160deg, rgba(161,174,206,1) 0%, rgba(251,252,254,1) 100%)",
+                boxShadow: "0px 5px 15px -3px rgba(0,0,0,0.75)", marginBottom:"20px"
+            }}>
+            <div class="container-fluid" >
+                <img src="/cropedlogo.png" width="50px" height="50px" class="d-inline-block align-top" alt="" />
+                <a class="navbar-brand" href="/" style={{font:"Raleway Semi bold italic", margin: "0px 0px"}}>To Link</a>
+                
+                <div>
+                    <button type="button" class="btn btn-primary" style={{marginRight: 7}}>Loading...</button>
+                </div>
+            </div>
+            </nav>
+
+        );
+    };
+
+    if(pfp === "no_auth")
+    {
+        return (
+            <nav class="navbar navbar-expand-lg" style={{background:"rgb(161,174,206)", background: "linear-gradient(160deg, rgba(161,174,206,1) 0%, rgba(251,252,254,1) 100%)",
+                boxShadow: "0px 5px 15px -3px rgba(0,0,0,0.75)", marginBottom:"20px"
+            }}>
+            <div class="container-fluid" >
+                <img src="/cropedlogo.png" width="50px" height="50px" class="d-inline-block align-top" alt="" />
+                <a class="navbar-brand" href="/" style={{font:"Raleway Semi bold italic", margin: "0px 0px"}}>To Link</a>
+                
+                <div>
+                    <a type="button" class="btn btn-primary" style={{marginRight: 7}} href="/">Sign In</a>
+                    <a type="button" class="btn btn-outline-primary" href="/signup">Sign Up</a>
+                </div>
+            </div>
+            </nav>
+        );
+    }
 
 
     if(props.log === 'admin')
@@ -156,7 +197,6 @@ function Header(props) {
                 </div>
             </div>
             </nav>
-
         );
     }
 }

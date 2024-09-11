@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect} from "react";
 import Header from "../Components/Header";
 
 import "./SignUp.css"
@@ -19,6 +19,26 @@ const emptyAccount =
 }
 
 function SignUpPG(props) {
+
+    useEffect(() => {
+        
+        const logout = async () => {
+        const response = await fetch("http://127.0.0.1:8000/logout", {
+            method: "POST",
+            credentials: "include",  // Include cookies in the request
+        });
+        if (response.ok) {
+            console.log("Logged out successfully");
+        } else {
+            console.error("Logout failed");
+        }
+        document.cookie = `csrftoken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+
+    }
+
+        logout();
+    }, []);
+
 
     const [image, setImages] = useState(null);
 
@@ -300,8 +320,6 @@ function SignUpPG(props) {
         if (Object.keys(errors).length !== 0) {
             setFormErrors1(errors);
         }
-
-
         const csrfToken = getCookie('csrftoken');
         
         // Create a FormData object
