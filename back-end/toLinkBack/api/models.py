@@ -126,6 +126,7 @@ class Post(models.Model):
     links = models.JSONField(blank=True, null=True)  # Field name made lowercase.
     like_cnt = models.IntegerField(default=0)  # Field name made lowercase.
     comment_cnt = models.IntegerField(default=0)  # Field name made lowercase.
+    timestamp = models.DateTimeField(auto_now_add=True)
 
 
 class Comment(models.Model):
@@ -142,13 +143,14 @@ class LikedBy(models.Model):
     class Meta:
         unique_together = (('post', 'user'),)
 
-
-
 class Convo(models.Model):
     convo_id = models.AutoField(db_column='Convo_ID', primary_key=True)  # Field name made lowercase.
     user_id1 = models.ForeignKey(Profile, on_delete=models.CASCADE, db_column='User_ID1')  # Field name made lowercase.
     user_id2 = models.ForeignKey(Profile, on_delete=models.CASCADE, db_column='User_ID2', related_name='convo_user_id2_set')  # Field name made lowercase.
     timestamp = models.DateTimeField(auto_now_add=True)
+    user_id1_last = models.DateTimeField(auto_now_add=True)
+    user_id1_last = models.DateTimeField(auto_now_add=True)
+    last_dm = models.IntegerField(default=0)
 
 # Files are public, creating huge naming scemes to prevent easy access
 # THIS IS NOT SECURE, THIS VIOLATES THE SECURITY PRINCIPLE DONT DO SECURITY WITH OBSCURITY
