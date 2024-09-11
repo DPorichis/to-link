@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 
-from api.serializers import ProfileSerializer, ProfileUpdateSerializer
+from api.serializers import ProfileSerializer, ProfileUpdateSerializer, ProfileHeaderSerializer
 from django.contrib.auth.hashers import check_password
 from api.models import User, Profile
 
@@ -69,4 +69,20 @@ def retrive_profile(request):
         return Response({"error": "Profile does not exist."}, status=status.HTTP_404_NOT_FOUND)
     
     serializer = ProfileSerializer(profile,  context={'authenticated_user': user})
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def retrive_header_info(request):
+    # Get the authenticated user
+    user = request.user
+
+    # Attempt to get the profile associated with the authenticated user
+    try:
+        profile = Profile.objects.get(user_id=user)
+    except Profile.DoesNotExist:
+        return Response({"error": "Profile does not exist."}, status=status.HTTP_404_NOT_FOUND)
+    
+    serializer = ProfileHeaderSerializer(profile)
     return Response(serializer.data, status=status.HTTP_200_OK)

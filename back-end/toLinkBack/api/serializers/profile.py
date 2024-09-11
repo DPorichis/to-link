@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from api.models import Profile, User,Link,Request
-from django.db.models import Q  
+from api.models import Profile, User, Link, Request, Convo, Notification
+from django.db.models import Q, F 
 
 
 class ProfileUpdateSerializer(serializers.ModelSerializer):
@@ -150,6 +150,42 @@ class AdminProfileSerializer(serializers.ModelSerializer):
                 "email": user.email,
             }
 
+class ProfileHeaderSerializer(serializers.ModelSerializer):
+    
+    profile_info = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = Profile
+        fields = ["user_id", 'profile_info']
+        read_only_fields = ['user_id']
+        
+    def get_profile_info(self, obj):
+        if obj.pfp:
+            # Access the file if it exists
+            file_url = "http://127.0.0.1:8000" + obj.pfp.url
+        else:
+            # Handle the case where no file is uploaded
+            file_url = "/default.png"  # or set a default image
+        
+        if Convo.objects.filter( ~Q(last_dm=1), Q(user_id1=obj), user_id1_last__lt=F('timestamp')).exists() \
+            or Convo.objects.filter( ~Q(last_dm=2), Q(user_id2=obj), user_id2_last__lt=F('timestamp')).exists():
+            message = True
+        else:
+            message = False
+
+        if Request.objects.filter(user_id_to=obj).exists() \
+            or Notification.objects.filter(user_to=obj).exists():
+            notification = True
+        else:
+            notification = False
+        
+        return{
+            "pfp": file_url,
+            "messages": message,
+            "notifications": notification
+        }
+
+
 class ProfileBannerSerializer(serializers.ModelSerializer):
     
     profile_info = serializers.SerializerMethodField()
@@ -201,3 +237,4 @@ class ProfileBannerSerializer(serializers.ModelSerializer):
 
         # If no link or pending request exists
         return "No Connection"
+    

@@ -21,14 +21,14 @@ const getCookie = (name) => {
 
 function Header(props) {
 
-    const [pfp, setPfp] = useState("/default.png")
+    const [pf, setPf] = useState(null)
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         const fetchProfile = async () => {
             const csrfToken = getCookie('csrftoken');
 
-            const response = await fetch("http://127.0.0.1:8000/profile/own/fetch", {  
+            const response = await fetch("http://127.0.0.1:8000/profile/own/header", {  
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -40,13 +40,13 @@ function Header(props) {
 
             if (response.ok) {
                 const data = await response.json();
-                setPfp(data.profile_info.pfp);  
+                setPf(data.profile_info);  
             }
             else
             {
-                setPfp("no_auth");
+                setPf("no_auth");
             }
-            console.log(`user pfp is: ${pfp}`)
+            console.log(`user pfp is: ${pf}`)
 
     }
 
@@ -74,7 +74,7 @@ function Header(props) {
         );
     };
 
-    if(pfp === "no_auth")
+    if(pf === null)
     {
         return (
             <nav class="navbar navbar-expand-lg" style={{background:"rgb(161,174,206)", background: "linear-gradient(160deg, rgba(161,174,206,1) 0%, rgba(251,252,254,1) 100%)",
@@ -117,7 +117,7 @@ function Header(props) {
                     </div>
                     </div>
                     <a class="nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src={pfp} width="40" height="40" style={{borderRadius:"25%"}} class="d-inline-block align-top" alt="" />
+                        <img src={pf.pfp} width="40" height="40" style={{borderRadius:"25%"}} class="d-inline-block align-top" alt="" />
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li><a class="dropdown-item" href="/admin/settings">Settings</a></li>
@@ -158,11 +158,13 @@ function Header(props) {
                             <a class={props.act !== 'network' ? "nav-link" : "nav-link active"} href="/user/network"
                             style={{borderRadius: "5px"}}>Network</a>
                         </li>
-                        <li class="nav-item mx-5">
+                        <li class="nav-item mx-5" style={{position:"relative"}}>
+                        {pf.messages ? <div style={{position:"absolute", right: "0",top: "20%", height:"10px", width:"10px", borderRadius:"100%", backgroundColor:"red"}}></div>: <></>}
                             <a class={props.act !== 'messages' ? "nav-link" : "nav-link active"} href="/user/messages"
                             style={{borderRadius: "5px"}}>Messages</a>
                         </li>
-                        <li class="nav-item mx-5">
+                        <li class="nav-item mx-5" style={{position:"relative"}}>
+                            {pf.notifications ? <div style={{position:"absolute", right: "0",top: "20%", height:"10px", width:"10px", borderRadius:"100%", backgroundColor:"red"}}></div>: <></>}
                             <a class={props.act !== 'notif' ? "nav-link" : "nav-link active"} href="/user/notifications"
                             style={{borderRadius: "5px"}}>Notifications</a>
                         </li>
@@ -170,7 +172,7 @@ function Header(props) {
                         </div>
                     </div>
                     <a class="nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src={pfp} width="40" height="40" style={{borderRadius:"25%"}} class="d-inline-block align-top" alt="" />
+                        <img src={pf.pfp} width="40" height="40" style={{borderRadius:"25%"}} class="d-inline-block align-top" alt="" />
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li><a class="dropdown-item" href="/user/settings">Settings</a></li>

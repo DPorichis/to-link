@@ -38,6 +38,12 @@ def get_dms_of_convo(request):
         # Serialize the comments
         serializer = DMSerializer(dms, many=True)
         
+        if conv.user_id1 == profile:
+            conv.user_id1_last = timezone.now()
+        else:
+            conv.user_id2_last = timezone.now()
+        conv.save()
+
         return Response(serializer.data, status=status.HTTP_200_OK)
     except Dm.DoesNotExist:
         return Response({"error": "Dms not found."}, status=status.HTTP_404_NOT_FOUND)
@@ -68,6 +74,13 @@ def send_dm(request):
         dm = serializer.save(user=profile)
         # Update the timestamp of the conversation
         conv.timestamp = timezone.now()
+        if conv.user_id1 == profile:
+            conv.user_id1_last = timezone.now()
+            conv.last_dm = 1
+        else:
+            conv.user_id2_last = timezone.now()
+            conv.last_dm = 2
+            
         conv.save()
         return Response(DMSerializer(dm).data, status=status.HTTP_201_CREATED)
     else:

@@ -16,11 +16,13 @@ class DMSerializer(serializers.ModelSerializer):
 
 class ConvoSerializer(serializers.ModelSerializer):
     user_info = serializers.SerializerMethodField()
-
+    notification = serializers.SerializerMethodField()
+    
     class Meta:
         model = Convo
-        fields = ['convo_id', 'user_info', 'timestamp']
-        read_only_fields = ['convo_id', 'user_info', 'timestamp']
+        fields = ['convo_id', 'user_info', 'timestamp', 'notification']
+        read_only_fields = ['convo_id', 'user_info', 'timestamp', 'notification']
+    
     def get_user_info(self, obj):
         # Get the authenticated user from the context
         authenticated_user = self.context.get('authenticated_user')
@@ -49,6 +51,25 @@ class ConvoSerializer(serializers.ModelSerializer):
             'user': other_user_profile.user.user_id,
             'pfp': file_url
         }
+    
+    def get_notification(self, obj):
+            # Get the authenticated user from the context
+        authenticated_user = self.context.get('authenticated_user')
+        print(obj)
+        # Determine which user is not the authenticated user
+        if obj.user_id1 == authenticated_user:
+            usr = 1
+            other_user = obj.user_id2
+        else:
+            usr = 2
+            other_user = obj.user_id1
+        if obj.last_dm != usr:
+            if obj.user_id1_last < obj.timestamp and usr == 1:
+                return True
+            elif obj.user_id2_last < obj.timestamp and usr == 2:
+                return True
+        return False
+        
     
 class ConvoCreatSerializer(serializers.ModelSerializer):
     class Meta:

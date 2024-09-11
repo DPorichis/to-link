@@ -98,7 +98,7 @@ function MessagesPGU(props) {
     }
 
     const handleDmClick = (cnv) => {
-        setSelected_dm(cnv); 
+        setSelected_dm(cnv);
     };
 
     const handleMediaSelection = (event) => {
@@ -191,7 +191,7 @@ function MessagesPGU(props) {
                                 <h3 style={{fontSize:"4vh",marginRight:"1%",marginBottom:"0px"}}>{selected_dm.user_info.name + " " + selected_dm.user_info.surname}</h3>
                                 <p style={{color:"#D3D3D3",fontSize:"3vh",marginTop:"0.5vh",marginBottom:"0px"}}>{selected_dm.user_info.title}</p>
                             </div>
-                            <p style={{marginTop:"0px"}}>{selected_dm.user_info.name + " last checked this chat at: "}</p>
+                            <p style={{marginTop:"0px"}}>In your Network</p>
                         </div>
                         <MessageCont convo={selected_dm} rer={rerend} me={userPFP}/>
                         </>

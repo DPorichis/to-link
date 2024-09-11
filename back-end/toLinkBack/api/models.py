@@ -149,7 +149,7 @@ class Convo(models.Model):
     user_id2 = models.ForeignKey(Profile, on_delete=models.CASCADE, db_column='User_ID2', related_name='convo_user_id2_set')  # Field name made lowercase.
     timestamp = models.DateTimeField(auto_now_add=True)
     user_id1_last = models.DateTimeField(auto_now_add=True)
-    user_id1_last = models.DateTimeField(auto_now_add=True)
+    user_id2_last = models.DateTimeField(auto_now_add=True)
     last_dm = models.IntegerField(default=0)
 
 # Files are public, creating huge naming scemes to prevent easy access

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import MessagesPGU from '../../Pages/User/MessagesPGU';
 
 
@@ -49,8 +49,12 @@ function ProfileDms(props){
         });
 
     }
+
+    const [notif, setNotif] = useState(props.link.notification)
+
+
     return(
-    <li className = {props.isSelected ? "linkdms-selected" : "linkdms" } key={props.name} onClick={() => props.changesel(props.link) } >
+    <li className = {props.isSelected ? "linkdms-selected" : "linkdms" } key={props.name} onClick={() => {props.changesel(props.link);  setNotif(false);}} >
         <img src={props.link.user_info.pfp} alt="Avatar" style={{width :"54px",flexDirection: "column",height: "54px", borderRadius:"25%", marginRight:"2px"}} className="link-image" />
         <div>
             <p style={{marginBottom: "0px", marginTop:"3px", marginLeft:"3px"}}>
@@ -58,6 +62,7 @@ function ProfileDms(props){
             </p>
             <span className="linkdms-Message" style={{textAlign: "start", marginLeft:"3px"}}>{(daysDifference < 1 ? "Today, " + formattedDate : formattedDate)}</span>
         </div>
+        {notif ? <div style={{position:"absolute", height:"15px", width:"15px", borderRadius:"100%", backgroundColor:"red"}}></div>: <></>}
     </li>
 
 );
