@@ -23,17 +23,13 @@ function MessageCont(props) {
 
     useEffect(() => {
         const fetchdms = async () => {
-            const csrfToken = getCookie('csrftoken');
-            console.log(csrfToken)
-
-            console.log(document.cookie);
+            const token = localStorage.getItem('access_token');
             const response = await fetch("http://127.0.0.1:8000/convo/dm/fetch", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken
+                    'Authorization': `Bearer ${token}`
                 },
-                credentials: "include",
                 body: JSON.stringify({
                     "convo": props.convo.convo_id
                 })

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import Postbox from "../../Components/Feed/Postbox";
 import JobTile from "../../Components/Jobs/JobTile";
+import { refreshAccessToken } from "../../functoolbox";
 
 const getCookie = (name) => {
     let cookieValue = null;
@@ -39,17 +40,13 @@ function MyProfilePGU(props) {
 
     useEffect(() => {
         const fetchUser = async () => {
-            const csrfToken = getCookie('csrftoken');
-            console.log(csrfToken)
-
-            console.log(document.cookie);
+            const token = localStorage.getItem('access_token');
             const response = await fetch("http://127.0.0.1:8000/profile/own/fetch", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken
+                    'Authorization': `Bearer ${token}`
                 },
-                credentials: "include",
                 body: JSON.stringify({
                 })
             })
@@ -67,6 +64,19 @@ function MyProfilePGU(props) {
                 }
                 setSavedProfile(userData.profile_info);
                 setEditedProfile(userData.profile_info);
+            } else if (response.status === 401) {
+                localStorage.removeItem('access_token');
+                await refreshAccessToken();
+                if(localStorage.getItem('access_token') !== null)
+                {
+                    await fetchUser();
+                }
+                else
+                {
+                    setSavedProfile(null);
+                    console.log("no user logged in")
+                }
+                
             } else {
                 setSavedProfile(null);
                 console.log("no user logged in")
@@ -77,9 +87,8 @@ function MyProfilePGU(props) {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken
+                    'Authorization': `Bearer ${token}`
                 },
-                credentials: "include",
                 body: JSON.stringify({
                     "specify_user": "own"
                 })
@@ -88,6 +97,18 @@ function MyProfilePGU(props) {
             if (response1.ok) {
                 let answer = await response1.json();
                 setListings(answer);
+            } else if (response1.status === 401) {
+                localStorage.removeItem('access_token');
+                await refreshAccessToken();
+                if(localStorage.getItem('access_token') !== null)
+                {
+                    await fetchUser();
+                }
+                else
+                {
+                    console.log("Problems with fetching your listings info")
+                }
+                
             } else {
                 console.log("Problems with fetching your listings info")
             }
@@ -96,7 +117,7 @@ function MyProfilePGU(props) {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken
+                    'Authorization': `Bearer ${token}`
                 },
                 credentials: "include",
                 body: JSON.stringify({
@@ -107,6 +128,18 @@ function MyProfilePGU(props) {
             if (response2.ok) {
                 let answer = await response2.json();
                 setPosts(answer);
+            } else if (response2.status === 401) {
+                localStorage.removeItem('access_token');
+                await refreshAccessToken();
+                if(localStorage.getItem('access_token') !== null)
+                {
+                    await fetchUser();
+                }
+                else
+                {
+                    console.log("Problems with fetching your listings info")
+                }
+                
             } else {
                 console.log("Problems with fetching your listings info")
             }
@@ -151,7 +184,7 @@ function MyProfilePGU(props) {
     };
 
     const saveChanges = async() => {
-        const csrfToken = getCookie('csrftoken');
+        const token = localStorage.getItem('access_token');
         // Create a FormData object
         const formData = new FormData();
 
@@ -173,7 +206,7 @@ function MyProfilePGU(props) {
         const response = await fetch("http://127.0.0.1:8000/profile/own/update/", {
             method: "PUT",
             headers: {
-                'X-CSRFToken': csrfToken
+                'Authorization': `Bearer ${token}`
             },
             credentials: "include",
             body: formData
@@ -192,8 +225,20 @@ function MyProfilePGU(props) {
             }
             setSavedProfile(userData);
             setEditedProfile(userData);
+        } else if (response.status === 401) {
+            localStorage.removeItem('access_token');
+            await refreshAccessToken();
+            if(localStorage.getItem('access_token') !== null)
+            {
+                await saveChanges();
+            }
+            else
+            {
+                console.log("No user logged in")
+            }
+            
         } else {
-            console.log("no user logged in")
+            console.log("No user logged in")
         }
     }
 

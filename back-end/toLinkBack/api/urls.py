@@ -1,6 +1,10 @@
-from django.urls import re_path
+from django.urls import re_path, path
 from django.conf import settings
 from django.conf.urls.static import static
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 from .views import login, signup, update_profile, logout, fetch_user_info, update_user, update_user_password, get_post_by_id, \
     upload_post, like_post, comment_post, get_comments_by_post, get_dms_of_convo, \
     send_dm, fetch_convo_menu, retrive_convo, retrive_own_profile, retrive_profile, \
@@ -63,5 +67,9 @@ urlpatterns = [
     re_path('admin/fetch/comments', admin_fetch_comments),
     re_path('admin/fetch/likes', admin_fetch_likes),
     re_path('admin/fetch/connections', admin_fetch_connections),
-    re_path('admin/fetch/allusers', admin_fetch_users)    
+    re_path('admin/fetch/allusers', admin_fetch_users),   
+
+
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'), 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

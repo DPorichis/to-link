@@ -3,6 +3,7 @@ import Header from "../../Components/Header";
 import JobTile from "../../Components/Jobs/JobTile";
 import { useSearchParams } from 'react-router-dom';
 import { useState, useEffect } from "react";
+import {refreshAccessToken} from "../../functoolbox"
 import JobPreview from "../../Components/Jobs/JobPreview";
 import JobDashboard from "../../Components/Jobs/JobDashboard";
 
@@ -40,17 +41,13 @@ function ListingsPGU(props) {
 
     useEffect(() => {
         const fetchListings = async () => {
-            const csrfToken = getCookie('csrftoken');
-            console.log(csrfToken)
-
-            console.log(document.cookie);
+            const token = localStorage.getItem('access_token');
             const response0 = await fetch("http://127.0.0.1:8000/listings/list", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken
+                    'Authorization': `Bearer ${token}`
                 },
-                credentials: "include",
                 body: JSON.stringify({
                     "specify_user": "own"
                 })
@@ -59,7 +56,19 @@ function ListingsPGU(props) {
             if (response0.ok) {
                 let answer = await response0.json();
                 setYourListings(answer);
-            } else {
+            } else if (response0.status === 401) {
+                localStorage.removeItem('access_token');
+                await refreshAccessToken();
+                if(localStorage.getItem('access_token') !== null)
+                {
+                    await fetchListings();
+                }
+                else
+                {
+                    console.log("no user logged in")
+                }
+                
+            }else {
                 console.log("Problems with fetching your listings info")
             }
 
@@ -68,9 +77,8 @@ function ListingsPGU(props) {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken
+                    'Authorization': `Bearer ${token}`
                 },
-                credentials: "include",
                 body: JSON.stringify({
                 })
             })
@@ -78,24 +86,32 @@ function ListingsPGU(props) {
             if (response1.ok) {
                 let answer = await response1.json();
                 setListings(answer);
-            } else {
+            } else if (response0.status === 401) {
+                localStorage.removeItem('access_token');
+                await refreshAccessToken();
+                if(localStorage.getItem('access_token') !== null)
+                {
+                    await fetchListings();
+                }
+                else
+                {
+                    console.log("no user logged in")
+                }
+                
+            }else {
                 console.log("Problems with fetching your listings info")
             }
             setLoading(false);
         };
 
         const restoreListing = async () => {
-            const csrfToken = getCookie('csrftoken');
-            console.log(csrfToken)
-
-            console.log(document.cookie);
+            const token = localStorage.getItem('access_token');
             const response = await fetch("http://127.0.0.1:8000/listing/fetch", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken
+                    'Authorization': `Bearer ${token}`
                 },
-                credentials: "include",
                 body: JSON.stringify({
                     "listing_id": id
                 })
@@ -105,8 +121,20 @@ function ListingsPGU(props) {
                 // Fetch user account details if authenticated
                 const listi = await response.json();
                 setSelectedListing(listi);
-            } else {
-                console.log("couldn't find listing")
+            } else if (response.status === 401) {
+                localStorage.removeItem('access_token');
+                await refreshAccessToken();
+                if(localStorage.getItem('access_token') !== null)
+                {
+                    await restoreListing();
+                }
+                else
+                {
+                    console.log("no user logged in")
+                }
+                
+            }else {
+                console.log("Problems with fetching your listings info")
             }
         };
 
@@ -124,17 +152,13 @@ function ListingsPGU(props) {
 
     useEffect(() => {
         const checkApplied = async () => {
-            const csrfToken = getCookie('csrftoken');
-            console.log(csrfToken)
-
-            console.log(document.cookie);
+            const token = localStorage.getItem('access_token');
             const response = await fetch("http://127.0.0.1:8000/listings/applied/check", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken
+                    'Authorization': `Bearer ${token}`
                 },
-                credentials: "include",
                 body: JSON.stringify({
                     "listing_id": selectedListing.listing_id
                 })
@@ -143,7 +167,19 @@ function ListingsPGU(props) {
             if (response.ok) {
                 let answer = await response.json();
                 setYouApplied(answer.applied);
-            } else {
+            } else if (response.status === 401) {
+                localStorage.removeItem('access_token');
+                await refreshAccessToken();
+                if(localStorage.getItem('access_token') !== null)
+                {
+                    await checkApplied();
+                }
+                else
+                {
+                    console.log("no user logged in")
+                }
+                
+            }else {
                 console.log("Problems with fetching your application info")
             }
         };
@@ -153,17 +189,13 @@ function ListingsPGU(props) {
     
     const toggleApply = () => {
         const apply = async () => {
-            const csrfToken = getCookie('csrftoken');
-            console.log(csrfToken)
-
-            console.log(document.cookie);
+            const token = localStorage.getItem('access_token');
             const response = await fetch("http://127.0.0.1:8000/listings/applied/new", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken
+                    'Authorization': `Bearer ${token}`
                 },
-                credentials: "include",
                 body: JSON.stringify({
                     "listing_id": selectedListing.listing_id
                 })
@@ -179,8 +211,20 @@ function ListingsPGU(props) {
                 {
                     setYouApplied("allowed")
                 }
-            } else {
-                console.log("Problems with fetching your application info")
+            } else if (response.status === 401) {
+                localStorage.removeItem('access_token');
+                await refreshAccessToken();
+                if(localStorage.getItem('access_token') !== null)
+                {
+                    await apply();
+                }
+                else
+                {
+                    console.log("no user logged in")
+                }
+                
+            }else {
+                console.log("Problems with sending your applicaton")
             }
         };
         apply()
@@ -193,17 +237,13 @@ function ListingsPGU(props) {
 
     const createNewListing = async () =>
     {
-        const csrfToken = getCookie('csrftoken');
-        console.log(csrfToken)
-
-        console.log(document.cookie);
+        const token = localStorage.getItem('access_token');
         const response = await fetch("http://127.0.0.1:8000/listings/new", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken
+                'Authorization': `Bearer ${token}`
             },
-            credentials: "include",
             body: JSON.stringify({
                 "title": "Untitled",
                 "visible": 3,
@@ -219,7 +259,7 @@ function ListingsPGU(props) {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken
+                'Authorization': `Bearer ${token}`
             },
             credentials: "include",
             body: JSON.stringify({
@@ -230,20 +270,30 @@ function ListingsPGU(props) {
         if (response0.ok) {
             let answer = await response0.json();
             setYourListings(answer);
-        } else {
+        } else if (response0.status === 401) {
+            localStorage.removeItem('access_token');
+            await refreshAccessToken();
+            if(localStorage.getItem('access_token') !== null)
+            {
+                await createNewListing();
+            }
+            else
+            {
+                console.log("no user logged in")
+            }
+            
+        }else {
             console.log("Problems with fetching your listings info")
         }
     }
 
     const updateListing = async (id, updatedListingData) => {
-        const csrfToken = getCookie('csrftoken');
-        console.log(updatedListingData)
-
+        const token = localStorage.getItem('access_token');
         const response = await fetch("http://127.0.0.1:8000/listings/update", {
             method: "PUT",
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken
+                'Authorization': `Bearer ${token}`
             },
             credentials: "include",
             body: JSON.stringify(updatedListingData)
@@ -262,8 +312,20 @@ function ListingsPGU(props) {
             setSelectedListing(answer)
 
             console.log(answer)
-        } else {
-            console.log("no user logged in")
+        } else if (response.status === 401) {
+            localStorage.removeItem('access_token');
+            await refreshAccessToken();
+            if(localStorage.getItem('access_token') !== null)
+            {
+                await updateListing(id, updatedListingData);
+            }
+            else
+            {
+                console.log("no user logged in")
+            }
+            
+        }else {
+            console.log("Problems with fetching your listings info")
         }
     };
 
@@ -276,16 +338,14 @@ function ListingsPGU(props) {
     const viewBrowse = async () => 
     {
         setSelectedListing({listing_id: "empty"});
-        const csrfToken = getCookie('csrftoken');
-
+        const token = localStorage.getItem('access_token');
         setLoading(true);
         const response1 = await fetch("http://127.0.0.1:8000/listings/list", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken
+                'Authorization': `Bearer ${token}`
             },
-            credentials: "include",
             body: JSON.stringify({
             })
         })
@@ -293,7 +353,19 @@ function ListingsPGU(props) {
         if (response1.ok) {
             let answer = await response1.json();
             setListings(answer);
-        } else {
+        } else if (response1.status === 401) {
+            localStorage.removeItem('access_token');
+            await refreshAccessToken();
+            if(localStorage.getItem('access_token') !== null)
+            {
+                await viewBrowse();
+            }
+            else
+            {
+                console.log("no user logged in")
+            }
+            
+        }else {
             console.log("Problems with fetching your listings info")
         }
         setLoading(false);

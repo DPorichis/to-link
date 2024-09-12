@@ -112,7 +112,7 @@ def fetch_connections(request):
         print(serializer.data)
         return Response(serializer.data, status=status.HTTP_200_OK)
     else:
-        return Response({"error": "Links not found."}, status=status.HTTP_404_NOT_FOUND)
+        return Response([], status=status.HTTP_200_OK)
     
 
 

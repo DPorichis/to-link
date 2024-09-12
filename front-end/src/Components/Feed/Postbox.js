@@ -33,64 +33,53 @@ function Postbox(props) {
 
     useEffect(() => {
         const fetchLikes = async () => {
-            const csrfToken = getCookie('csrftoken');
-            try {
-                const response = await fetch("http://127.0.0.1:8000/posts/like/exists", {
-                    method: "POST",
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': csrfToken
-                    },
-                    credentials: "include",
-                    body: JSON.stringify({ "post_id": props.post.post_id })
-                });
+            const token = localStorage.getItem('access_token');
+            const response = await fetch("http://127.0.0.1:8000/posts/like/exists", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ "post_id": props.post.post_id })
+            });
 
-                if (response.ok) {
-                    const data = await response.json();
-                    setLiked(data.liked);
-                } else {
-                    throw new Error('Failed to fetch Likes');
-                }
-            } catch (error) {
-                setError(error.message);
-            } finally {
-                setLoading(false);
+            if (response.ok) {
+                const data = await response.json();
+                setLiked(data.liked);
+            } else {
+                throw new Error('Failed to fetch Likes');
             }
+            setLoading(false);
         };
         fetchLikes();
     }); // Re-run this effect if the post ID changes
 
     const toggleLiked = async () => {
         setLoading(true);
-        const csrfToken = getCookie('csrftoken');
-        try {
-            const response = await fetch("http://127.0.0.1:8000/posts/like/new", {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken
-                },
-                credentials: "include",
-                body: JSON.stringify({ post_id: props.post.post_id })
-            });
+        const token = localStorage.getItem('access_token');
+        const response = await fetch("http://127.0.0.1:8000/posts/like/new", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            credentials: "include",
+            body: JSON.stringify({ post_id: props.post.post_id })
+        });
 
-            if (response.ok) {
-                setLiked(!liked);
-                if(liked){
-                    setLikeCount(likeCount - 1)
-                }
-                else{
-                    setLikeCount(likeCount + 1)
-                }
-    
-            } else {
-                throw new Error('Failed to like/unlike post');
+        if (response.ok) {
+            setLiked(!liked);
+            if(liked){
+                setLikeCount(likeCount - 1)
             }
-        } catch (error) {
-            setError(error.message);
-        } finally {
-            setLoading(false); // Set loading state to false
+            else{
+                setLikeCount(likeCount + 1)
+            }
+
+        } else {
+            throw new Error('Failed to like/unlike post');
         }
+        setLoading(false); // Set loading state to false
     };
 
     function togglecomments() {
@@ -102,12 +91,12 @@ function Postbox(props) {
     }
 
     const handleCommentUpload = async () => {
-        const csrfToken = getCookie('csrftoken');
+        const token = localStorage.getItem('access_token');
         const response = await fetch("http://127.0.0.1:8000/posts/comment/new", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken
+                'Authorization': `Bearer ${token}`
             },
             credentials: "include",
             body: JSON.stringify({ 

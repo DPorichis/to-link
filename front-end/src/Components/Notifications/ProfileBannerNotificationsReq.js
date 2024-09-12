@@ -27,7 +27,7 @@ function ProfileBannerNotificationsReq(props){
         setLoading(true);
         setError(null);
 
-        const csrfToken = getCookie('csrftoken');
+        const token = localStorage.getItem('access_token');
         const data = {
             "request_id": props.user_id_from, // The request_id should come from props
             "request_response": responseType
@@ -38,9 +38,8 @@ function ProfileBannerNotificationsReq(props){
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken,  // Send CSRF token for security
+                    'Authorization': `Bearer ${token}`
                 },
-                credentials: "include",
                 body: JSON.stringify(data),
             });
 

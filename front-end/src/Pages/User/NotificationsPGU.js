@@ -3,6 +3,7 @@ import Header from "../../Components/Header";
 import ProfileBannerNotificationsReq from "../../Components/Notifications/ProfileBannerNotificationsReq";
 import ProfileBannerClout from "../../Components/Notifications/ProfileBannerClout";
 import { useState, useEffect } from "react";
+import { refreshAccessToken } from "../../functoolbox";
 
 
 const getCookie = (name) => {
@@ -28,55 +29,69 @@ function NotificationsPGU(props) {
 
     useEffect(() => {
         const fetchNotifications = async () => {
-            const csrfToken = getCookie('csrftoken');
-            try {
-                const response = await fetch("http://127.0.0.1:8000/notification/fetch", {
-                    method: "POST",
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': csrfToken
-                    },
-                    credentials: "include",
-                    body: JSON.stringify({})
-                });
+            const token = localStorage.getItem('access_token');
+            const response = await fetch("http://127.0.0.1:8000/notification/fetch", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                credentials: "include",
+                body: JSON.stringify({})
+            });
 
-                if (response.ok) {
-                    const data = await response.json();
-                    setNotifications(data);  
-                } else {
-                    throw new Error('Failed to fetch posts');
+            if (response.ok) {
+                const data = await response.json();
+                setNotifications(data);  
+            } else if (response.status === 401) {
+                localStorage.removeItem('access_token');
+                await refreshAccessToken();
+                if(localStorage.getItem('access_token') !== null)
+                {
+                    await fetchNotifications();
                 }
-            } catch (error) {
-                setError(error.message);
-            } finally {
-                setLoading(false);
+                else
+                {
+                    console.log("no user logged in")
+                }
+                
+            }else {
+                throw new Error('Failed to fetch posts');
             }
+            setLoading(false);
         };
 
         const fetchRequests = async () => {
-            const csrfToken = getCookie('csrftoken');
-            try {
-                const response = await fetch("http://127.0.0.1:8000/request/list", {
-                    method: "POST",
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': csrfToken
-                    },
-                    credentials: "include",
-                    body: JSON.stringify({})
-                });
+            const token = localStorage.getItem('access_token');
+            const response = await fetch("http://127.0.0.1:8000/request/list", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                credentials: "include",
+                body: JSON.stringify({})
+            });
 
-                if (response.ok) {
-                    const data = await response.json();
-                    setRequests(data);  
-                } else {
-                    throw new Error('Failed to fetch posts');
+            if (response.ok) {
+                const data = await response.json();
+                setRequests(data);  
+            } else if (response.status === 401) {
+                localStorage.removeItem('access_token');
+                await refreshAccessToken();
+                if(localStorage.getItem('access_token') !== null)
+                {
+                    await fetchRequests();
                 }
-            } catch (error) {
-                setError(error.message);
-            } finally {
-                setLoading(false);
+                else
+                {
+                    console.log("no user logged in")
+                }
+                
+            }else {
+                throw new Error('Failed to fetch requests');
             }
+            setLoading(false);
         };
 
 
@@ -88,7 +103,7 @@ function NotificationsPGU(props) {
 
     const handleDismiss = async (index) => {
 
-        const csrfToken = getCookie('csrftoken');
+        const token = localStorage.getItem('access_token');
 
         const notif = Notifications[index]
 
@@ -96,9 +111,8 @@ function NotificationsPGU(props) {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken
+                'Authorization': `Bearer ${token}`
             },
-            credentials: "include",
             body: JSON.stringify({
                 "notification_id": notif.notification_id
             })
@@ -106,9 +120,9 @@ function NotificationsPGU(props) {
 
         if (response.ok) {
             const newnotif = Notifications.filter((_, i) => i !== index);
-        setNotifications(newnotif);  
+            setNotifications(newnotif);  
         } else {
-            throw new Error('Failed to fetch posts');
+            throw new Error('Failed to dismiss');
         }
 
         

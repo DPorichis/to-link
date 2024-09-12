@@ -21,13 +21,13 @@ function ProfileCard(props){
 
     const [relationship, setRelationship] = useState(props.link.relationship)
     const handleRequestClick = async (userId) => {
-        const csrfToken = getCookie('csrftoken');
+        const token = localStorage.getItem('access_token');
         try {
             const response = await fetch("http://127.0.0.1:8000/request/new", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken
+                    'Authorization': `Bearer ${token}`
                 },
                 credentials: "include",
                 body: JSON.stringify({ 'request_id': userId })
@@ -52,15 +52,14 @@ function ProfileCard(props){
     };
 
     const handleResponseClick = async (answer) => {
-        const csrfToken = getCookie('csrftoken');
+        const token = localStorage.getItem('access_token');
         try {
             const response = await fetch("http://127.0.0.1:8000/request/respond", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken
+                    'Authorization': `Bearer ${token}`
                 },
-                credentials: "include",
                 body: JSON.stringify({ 'request_id': props.link.user_id,
                     "request_response": answer
                  })

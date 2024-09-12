@@ -5,10 +5,6 @@ import NetworkPGU from "../../Pages/User/NetworkPGU";
 function ProfileBannerClout(props){
     const [isVisible, setIsVisible] = useState(true);
 
-    const handleDismiss = () => {
-        setIsVisible(false);
-    };
-
     if (!isVisible) {
         return null;
     }

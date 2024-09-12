@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from "react";
 import Header from "../Components/Header";
+import {refreshAccessToken} from "../functoolbox"
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
@@ -16,7 +17,7 @@ function LandingPG(props) {
         password: '',
     });
 
-    const [userLoggedIn, setUser] = useState({})
+    const [userLoggedIn, setUser] = useState(null)
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
 
@@ -37,56 +38,63 @@ function LandingPG(props) {
 
     useEffect(() => {
         const fetchUser = async () => {
-            const csrfToken = getCookie('csrftoken');
-            console.log(csrfToken)
-
-            console.log(document.cookie);
+            const token = localStorage.getItem('access_token');
             const response = await fetch("http://127.0.0.1:8000/profile/own/fetch", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken
+                    'Authorization': `Bearer ${token}`
                 },
-                credentials: "include",
                 body: JSON.stringify({
-                })
-            })
+                })})
             
             if (response.ok) {
                 // Fetch user account details if authenticated
                 const userData = await response.json();
                 setUser(userData);
-            } else {
+            } else if (response.status === 401) {
+                localStorage.removeItem('access_token');
+                await refreshAccessToken();
+                if(localStorage.getItem('access_token') !== null)
+                {
+                    await fetchUser();
+                }
+                else
+                {
+                    setUser(null);
+                    console.log("no user logged in")
+                }
+                
+            }else
+            {
                 setUser(null);
-                document.cookie = `sessionid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-                document.cookie = `csrftoken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-                document.cookie = `_dd_s=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-
                 console.log("no user logged in")
             }
-
-            setLoading(false);
         };
 
         fetchUser();
+        setLoading(false);
     }, []);
 
 
     const handleSubmit = async (e) => {
+        const token = localStorage.getItem('access_token');
         e.preventDefault();
         setError(false);
         const response = await fetch("http://127.0.0.1:8000/login", {
         method: "POST",
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
         },
-        credentials: "include",
         body: JSON.stringify({
             "email": formData.email,
             "password": formData.password
         })});
         if(response.ok)
         {
+            const data = await response.json();
+            localStorage.setItem('access_token', data.access);
+            localStorage.setItem('refresh_token', data.refresh);
             navigate(`/user`);
         }
         else
@@ -94,7 +102,6 @@ function LandingPG(props) {
             console.log("NAHHHHHHHHHH!")
             setError(true);
         }
-        
     };
 
     const handleChange = (e) => {
@@ -105,57 +112,41 @@ function LandingPG(props) {
         });
     };
 
-    
+    const handleLogout = async () => {
+        const token = localStorage.getItem('refresh_token');
 
-    const testCookie = async () => {
-        const csrfToken = getCookie('csrftoken');
-        console.log(csrfToken)
-
-        console.log(document.cookie);
-        try {
-            const response = await fetch("http://127.0.0.1:8000/profile/own/fetch", {
-            method: "POST",
+        const response = await fetch('http://127.0.0.1:8000/logout/', {
+            method: 'POST',
+            credentials: 'include',  // Include cookies (sessionid, csrftoken)
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken
-            },
-            credentials: "include",
-            body: JSON.stringify({
-            })
-        }).then(response => response.json())
-        .then(data => console.log(data))
-        .catch(error => console.error('Error:', error));;
-        console.log(response)
-        } catch (error) {
-            console.error("Error:", error);
-            return
-        }
-    }
-
-    const handleLogout = async () => {
-        const csrfToken = getCookie('csrftoken');
-        try {
-            // Send a request to the backend to log the user out
-            const response = await fetch('http://127.0.0.1:8000/logout/', {
-                method: 'POST',
-                credentials: 'include',  // Include cookies (sessionid, csrftoken)
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken
-                },
-            });
-
-            if (response.ok) {
-                // If logout is successful, clear any stored user data on the frontend
-                setUser(null);
-                document.cookie = `sessionid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-                document.cookie = `csrftoken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-                document.cookie = `_dd_s=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-            } else {
-                console.error('Failed to log out');
+                'Authorization': `Bearer ${token}`
             }
-        } catch (error) {
-            console.error('Error:', error);
+        });
+
+        if (response.ok) {
+            // If logout is successful, clear any stored user data on the frontend
+            setUser(null);
+            console.log("User Logged out successfully");
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('refresh_token');
+        } else if (response.status === 401) {
+            localStorage.removeItem('access_token');
+            await refreshAccessToken();
+            if(localStorage.getItem('access_token') !== null)
+            {
+                await handleLogout();
+            }
+            else
+            {
+                setUser(null);
+                console.log("no user logged in")
+            }
+            
+        }else
+        {
+            setUser(null);
+            console.log("no user logged in")
         }
     };
 

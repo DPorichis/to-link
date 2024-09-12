@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react";
 
 import Header from "../../Components/Header";
 import './homePGU.css';
-
+import {refreshAccessToken} from "../../functoolbox"
 import ProfileSmall from "../../Components/Profile/ProfileSmall";
 import NotFoundPG from '../NotFoundPG';
 import Postbox from "../../Components/Feed/Postbox";
@@ -59,13 +59,84 @@ function HomePGU(props) {
 
 
     const fetchPosts = async () => {
+        const token = localStorage.getItem('access_token');
+        const response = await fetch("http://127.0.0.1:8000/posts/fetch/all", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({})
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            setPosts(data);  
+        } else if(response.status === 403) {
+            setNoAuth(true);
+        } else if (response.status === 401) {
+            localStorage.removeItem('access_token');
+            await refreshAccessToken();
+            if(localStorage.getItem('access_token') !== null)
+            {
+                await fetchPosts();
+            }
+            else
+            {
+                console.log("no user logged in")
+                setNoAuth(true);
+            }   
+        } else {
+            throw new Error('Failed to fetch posts');
+        }
+    };
+
+    const handleUploadClick = async () => {
+        const token = localStorage.getItem('access_token');
+        const postData = new FormData();
+
+        if (postMedia.length !== 0) {
+            postMedia.forEach((file, index) => {
+                postData.append('image_uploads', file);
+            });
+            postData.append('media', true);
+        }
+        
+        postData.append('text', postText)
+    
         const csrfToken = getCookie('csrftoken');
-        try {
-            const response = await fetch("http://127.0.0.1:8000/posts/fetch/all", {
+        console.log(csrfToken)
+
+        const response = await fetch("http://127.0.0.1:8000/posts/upload/", {
+            method: "POST",
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            body: postData
+        });
+        
+        if (response.ok) 
+        {
+            console.log("Post Uploaded");
+            fetchPosts();
+            setPostCount(PostCount +1);
+            setpostText("");
+            setpostMedia([]);
+        }
+        else{
+            console.log("wrong");
+        }
+        
+    };
+
+    useEffect(() => {
+        const fetchLinks = async () => {
+            const token = localStorage.getItem('access_token');
+            const response = await fetch("http://127.0.0.1:8000/links/list", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken
+                    'Authorization': `Bearer ${token}`
                 },
                 credentials: "include",
                 body: JSON.stringify({})
@@ -73,111 +144,59 @@ function HomePGU(props) {
 
             if (response.ok) {
                 const data = await response.json();
-                setPosts(data);  
+                setLinks(data);  
+                console.log("Fetched Links:", data);
             } else if(response.status === 403) {
                 setNoAuth(true);
+            } else if (response.status === 401) {
+                localStorage.removeItem('access_token');
+                await refreshAccessToken();
+                if(localStorage.getItem('access_token') !== null)
+                {
+                    await fetchLinks();
+                }
+                else
+                {
+                    console.log("no user logged in")
+                    setNoAuth(true);
+                }   
             } else {
                 throw new Error('Failed to fetch posts');
-            }
-        } catch (error) {
-            setError(error.message);
-        }
-    };
-
-    const handleUploadClick = async () => {
-            const postData = new FormData();
-
-            if (postMedia.length !== 0) {
-                postMedia.forEach((file, index) => {
-                    postData.append('image_uploads', file);
-                });
-                postData.append('media', true);
-            }
-            
-            postData.append('text', postText)
-        
-            const csrfToken = getCookie('csrftoken');
-            console.log(csrfToken)
-
-            const response = await fetch("http://127.0.0.1:8000/posts/upload/", {
-                method: "POST",
-                headers: {
-                    'X-CSRFToken': csrfToken
-                },
-                credentials: "include",
-                body: postData
-            });
-            
-            if (response.ok) 
-            {
-                console.log("Post Uploaded");
-                fetchPosts();
-                setPostCount(PostCount +1)
-            }
-            else{
-                console.log("wrong");
-            }
-            setpostText("");
-            setpostMedia([]);
-        };
-
-
-
-    useEffect(() => {
-        
-        const fetchLinks = async () => {
-            const csrfToken = getCookie('csrftoken');
-            try {
-                const response = await fetch("http://127.0.0.1:8000/links/list", {
-                    method: "POST",
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': csrfToken
-                    },
-                    credentials: "include",
-                    body: JSON.stringify({})
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    setLinks(data);  
-                    console.log("Fetched Links:", data);
-                } else if(response.status === 403) {
-                    setNoAuth(true);
-                } else {
-                    throw new Error('Failed to fetch Links');
-                    
-                }
-            } catch (error) {
-                setError(error.message);
             }
         };
 
         const fetchProfile = async () => {
-            const csrfToken = getCookie('csrftoken');
-            try {
-                const response = await fetch("http://127.0.0.1:8000/profile/own/fetch", {  
-                    method: "POST",
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': csrfToken
-                    },
-                    credentials: "include",
-                    body: JSON.stringify({})
-                });
+            const token = localStorage.getItem('access_token');
+            const response = await fetch("http://127.0.0.1:8000/profile/own/fetch", {  
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({})
+            });
 
-                if (response.ok) {
-                    const data = await response.json();
-                    console.log()
-                    setProfile(data.profile_info); 
-                    setPostCount(data.profile_info.post_cnt) 
-                } else if(response.status === 403) {
-                    setNoAuth(true);
-                } else {
-                    throw new Error('Failed to fetch profile');
+            if (response.ok) {
+                const data = await response.json();
+                console.log()
+                setProfile(data.profile_info); 
+                setPostCount(data.profile_info.post_cnt) 
+            } else if(response.status === 403) {
+                setNoAuth(true);
+            } else if (response.status === 401) {
+                localStorage.removeItem('access_token');
+                await refreshAccessToken();
+                if(localStorage.getItem('access_token') !== null)
+                {
+                    await fetchProfile();
                 }
-            } catch (error) {
-                setError(error.message);
+                else
+                {
+                    console.log("no user logged in")
+                    setNoAuth(true);
+                }   
+            } else {
+                throw new Error('Failed to fetch posts');
             }
         };
 

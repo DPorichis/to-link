@@ -20,24 +20,24 @@ const emptyAccount =
 
 function SignUpPG(props) {
 
-    useEffect(() => {
+    // useEffect(() => {
         
-        const logout = async () => {
-        const response = await fetch("http://127.0.0.1:8000/logout", {
-            method: "POST",
-            credentials: "include",  // Include cookies in the request
-        });
-        if (response.ok) {
-            console.log("Logged out successfully");
-        } else {
-            console.error("Logout failed");
-        }
-        document.cookie = `csrftoken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+    //     const logout = async () => {
+    //     const response = await fetch("http://127.0.0.1:8000/logout", {
+    //         method: "POST",
+    //         credentials: "include",  // Include cookies in the request
+    //     });
+    //     if (response.ok) {
+    //         console.log("Logged out successfully");
+    //     } else {
+    //         console.error("Logout failed");
+    //     }
+    //     document.cookie = `csrftoken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
 
-    }
+    // }
 
-        logout();
-    }, []);
+    //     logout();
+    // }, []);
 
 
     const [image, setImages] = useState(null);
@@ -117,22 +117,21 @@ function SignUpPG(props) {
     
     const validateForm = async () => {
 
-        try {
-            const response = await fetch("http://127.0.0.1:8000/logout", {
-                method: "POST",
-                credentials: "include",  // Include cookies in the request
-            });
-            if (response.ok) {
-                console.log("Logged out successfully");
-            } else {
-                console.error("Logout failed");
-            }
-        } catch (error) {
-            console.error("Error:", error);
-        }
+        // try {
+        //     const response = await fetch("http://127.0.0.1:8000/logout", {
+        //         method: "POST",
+        //         credentials: "include",  // Include cookies in the request
+        //     });
+        //     if (response.ok) {
+        //         console.log("Logged out successfully");
+        //     } else {
+        //         console.error("Logout failed");
+        //     }
+        // } catch (error) {
+        //     console.error("Error:", error);
+        // }
 
         const errors = {};
-        const registeredEmails = ['john@example.com', 'jane@example.com'];
         
         if (formData0.password !== formData0.passwordVal) {
         errors.passwordVal = 'Passwords do not match';
@@ -163,51 +162,29 @@ function SignUpPG(props) {
         }
 
         if (Object.keys(errors).length===0){
-            try {
-                const response = await fetch("http://127.0.0.1:8000/signup", {
+            const response = await fetch("http://127.0.0.1:8000/signup", {
                 method: "POST",
                 headers: {
-                  "Content-Type": "application/json",
+                "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                  name: formData0.firstName,
-                  surname: formData0.lastName,
-                  email: formData0.email,
-                  password: formData0.password,
+                name: formData0.firstName,
+                surname: formData0.lastName,
+                email: formData0.email,
+                password: formData0.password,
                 }),
             });
             
             const data = await response.json();
 
             // Check if the 'success' field is present
-            if ('success' in data) {
-                console.log("Success field is present:", data.success);
-                try {
-                    const response = await fetch("http://127.0.0.1:8000/login", {
-                    method: "POST",
-                    headers: {
-                      "Content-Type": "application/json",
-                    },
-                    credentials:"include",
-                    body: JSON.stringify({
-                      email: formData0.email,
-                      password: formData0.password,
-                    }),
-                })
-                .then(response => response.json())
-                .then(data => console.log(data));
-                } catch (error) {
-                    console.error("Error:", error);
-                    errors.email = 'Sign in error'
-                }
+            if (response.ok) {
+                localStorage.setItem('access_token', data.access);
+                localStorage.setItem('refresh_token', data.refresh);
             } else {
                 console.log("Failed:", data);
                 errors.email = 'Email is already in use'
             }
-        } catch (error) {
-            console.error("Error:", error);
-            errors.email = 'Email is already in use'
-        }
         }
         
         return errors;
@@ -341,12 +318,13 @@ function SignUpPG(props) {
             readyForm.append('pfp', image);
         }
 
+        const token = localStorage.getItem('access_token');
+
         const response = await fetch("http://127.0.0.1:8000/profile/own/update/", {
             method: "PUT",
             headers: {
-                'X-CSRFToken': csrfToken
+                'Authorization': `Bearer ${token}`
             },
-            credentials: "include",
             body: readyForm
         })
 
@@ -361,9 +339,8 @@ function SignUpPG(props) {
             method: "PUT",
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken
+                'Authorization': `Bearer ${token}`
             },
-            credentials: "include",
             body: JSON.stringify({
                 "country": formData1.country, 
                 "city": formData1.city, 

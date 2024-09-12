@@ -1,14 +1,14 @@
+from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.decorators import api_view
+from django.contrib.auth import authenticate
 from rest_framework.response import Response
-
 from rest_framework import status
-
 from api.serializers import UserSerializer
 from api.models import User, Profile
 
 from django.contrib.auth.hashers import check_password, make_password
 from rest_framework.permissions import IsAuthenticated
-from django.contrib.auth import authenticate, login as django_login, logout as django_logout
+from django.contrib.auth import authenticate
 from rest_framework.decorators import api_view, permission_classes
 
 @api_view(['POST'])
@@ -24,12 +24,14 @@ def login(request):
     user = authenticate(email=email, password=password)
 
     if user is not None:
-        # Log in the user by creating a session
-        django_login(request, user)
+        # If authentication is successful, create JWT tokens
+        refresh = RefreshToken.for_user(user)
 
-        # Retrieve and serialize user data
-        serializer = UserSerializer(user)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({
+            'refresh': str(refresh),
+            'access': str(refresh.access_token),
+            'user': UserSerializer(user).data  # Include user details if necessary
+        }, status=status.HTTP_200_OK)
     else:
         # Invalid credentials
         return Response({"error": "Invalid credentials."}, status=status.HTTP_401_UNAUTHORIZED)    
@@ -48,15 +50,31 @@ def signup(request):
             surname=user.surname,
             email=user.email
         )
+        
+        refresh = RefreshToken.for_user(user)
 
-        return Response({"success": "User created successfully"}, status=status.HTTP_201_CREATED)
+        # Return tokens and user data
+        return Response({
+            'refresh': str(refresh),
+            'access': str(refresh.access_token),
+            'user': user_serializer.data
+        }, status=status.HTTP_201_CREATED)
     else:
         return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
 
 @api_view(['POST'])
 def logout(request):
-    django_logout(request)
-    return Response({"message": "Logged out successfully."}, status=status.HTTP_200_OK)
+    try:
+        # Get the refresh token from the request
+        refresh_token = request.data.get('refresh')
+
+        # Blacklist the refresh token
+        token = RefreshToken(refresh_token)
+        token.blacklist()
+
+        return Response({"message": "Logged out successfully."}, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({"error": "Invalid token."}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])
@@ -81,7 +99,10 @@ def update_user_password(request):
     # Re-authenticate the user after password change
     user = authenticate(email=user.email, password=new_password)
 
-    # Log the user back in with the new password
-    django_login(request, user)
+    refresh = RefreshToken.for_user(user)
 
-    return Response({"message": "Password updated successfully."}, status=status.HTTP_200_OK)
+    return Response({
+        "message": "Password updated successfully.",
+        "refresh": str(refresh),
+        "access": str(refresh.access_token)
+    }, status=status.HTTP_200_OK)

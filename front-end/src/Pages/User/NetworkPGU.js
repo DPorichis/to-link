@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Header from "../../Components/Header";
 import ProfileCard from "../../Components/Profile/ProfileCard";
 import ProfileBanner from "../../Components/Profile/ProfileBanner";
+import { refreshAccessToken } from "../../functoolbox";
 
 const getCookie = (name) => {
   let cookieValue = null;
@@ -30,31 +31,37 @@ function NetworkPGU(props) {
   const cardsPerRow = 4; // Declare cardsPerRow here
 
   const fetchSearchedLinks = async (searchTerm) => {
-    const csrfToken = getCookie('csrftoken');
+    const token = localStorage.getItem('access_token');
     setLoading(true); // Set loading to true before fetching data
-    try {
-      const response = await fetch("http://127.0.0.1:8000/profile/fetch_searching_link", {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRFToken': csrfToken
-        },
-        credentials: "include",
-        body: JSON.stringify({ 'search': searchTerm }) // Include searchTerm in the request body
-      });
+    const response = await fetch("http://127.0.0.1:8000/profile/fetch_searching_link", {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ 'search': searchTerm }) // Include searchTerm in the request body
+    });
 
-      if (response.ok) {
-        const data = await response.json();
-        setSearchResults(data);
-        console.log("Fetched Search Results:", data);
-      } else {
-        throw new Error('Failed to fetch search results');
+    if (response.ok) {
+      const data = await response.json();
+      setSearchResults(data);
+      console.log("Fetched Search Results:", data);
+    } else if (response.status === 401) {
+      localStorage.removeItem('access_token');
+      await refreshAccessToken();
+      if(localStorage.getItem('access_token') !== null)
+      {
+          await fetchSearchedLinks();
       }
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setLoading(false); // Set loading to false after fetching data
+      else
+      {
+          console.log("Problems with fetching your results")
+      } 
+    } else {
+        console.log("Problems with fetching your results")
     }
+    
+      setLoading(false); // Set loading to false after fetching data
   };
 
   useEffect(() => {

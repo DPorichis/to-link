@@ -6,7 +6,7 @@ import Message from "../../Components/Messaging/Message";
 import { useSearchParams } from 'react-router-dom';
 import MessageCont from "../../Components/Messaging/MessageCONT";
 import { useState, useEffect } from "react";
-
+import { refreshAccessToken } from "../../functoolbox";
 
 
 
@@ -39,15 +39,12 @@ function MessagesPGU(props) {
 
     useEffect(() => {
         const fetchconvos = async () => {
-            const csrfToken = getCookie('csrftoken');
-            console.log(csrfToken)
-
-            console.log(document.cookie);
+            const token = localStorage.getItem('access_token');
             const response = await fetch("http://127.0.0.1:8000/convo/list/", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken
+                    'Authorization': `Bearer ${token}`
                 },
                 credentials: "include",
                 body: JSON.stringify({
@@ -59,21 +56,30 @@ function MessagesPGU(props) {
                 const convos = await response.json();
                 setStoredLinks(convos);
                 console.log(storedLinks);
+            } else if (response.status === 401) {
+                localStorage.removeItem('access_token');
+                await refreshAccessToken();
+                if(localStorage.getItem('access_token') !== null)
+                {
+                    await fetchconvos();
+                }
+                else
+                {
+                    console.log("couldn't fetch convos")
+                }
+                
             } else {
                 console.log("couldn't fetch convos")
             }
         };
 
         const fetchprofilepic = async () => {
-            const csrfToken = getCookie('csrftoken');
-            console.log(csrfToken)
-
-            console.log(document.cookie);
+            const token = localStorage.getItem('access_token');
             const response = await fetch("http://127.0.0.1:8000/profile/own/fetch", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken
+                    'Authorization': `Bearer ${token}`
                 },
                 credentials: "include",
                 body: JSON.stringify({
@@ -85,6 +91,18 @@ function MessagesPGU(props) {
                 const user = await response.json();
                 setUserPFP(user.profile_info.pfp);
                 console.log(storedLinks);
+            } else if (response.status === 401) {
+                localStorage.removeItem('access_token');
+                await refreshAccessToken();
+                if(localStorage.getItem('access_token') !== null)
+                {
+                    await fetchprofilepic();
+                }
+                else
+                {
+                    console.log("couldn't fetch convos")
+                }
+                
             } else {
                 console.log("couldn't fetch convos")
             }
@@ -111,7 +129,19 @@ function MessagesPGU(props) {
                 // Fetch user account details if authenticated
                 const convo = await response.json();
                 setSelected_dm(convo);
-            } else {
+            } else if (response.status === 401) {
+                localStorage.removeItem('access_token');
+                await refreshAccessToken();
+                if(localStorage.getItem('access_token') !== null)
+                {
+                    await restoreDM();
+                }
+                else
+                {
+                    console.log("couldn't find dm")
+                }
+                
+            }else {
                 console.log("couldn't find dm")
             }
         };
@@ -165,13 +195,11 @@ function MessagesPGU(props) {
 
             messageData.append('convo', selected_dm.convo_id)
         
-            const csrfToken = getCookie('csrftoken');
-            console.log(csrfToken)
-
+            const token = localStorage.getItem('access_token');
             const response = await fetch("http://127.0.0.1:8000/convo/dm/new/", {
                 method: "POST",
                 headers: {
-                    'X-CSRFToken': csrfToken
+                    'Authorization': `Bearer ${token}`
                 },
                 credentials: "include",
                 body: messageData
@@ -182,7 +210,19 @@ function MessagesPGU(props) {
                 console.log("storedLinks");
                 const cnv = selected_dm
             }
-            else{
+            else if (response.status === 401) {
+                localStorage.removeItem('access_token');
+                await refreshAccessToken();
+                if(localStorage.getItem('access_token') !== null)
+                {
+                    await handleUploadClick();
+                }
+                else
+                {
+                    console.log("wrong");
+                }
+                
+            }else{
                 console.log("wrong");
             }
             setTextBoxContent("");
