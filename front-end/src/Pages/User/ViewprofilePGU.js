@@ -1,6 +1,6 @@
 import React from "react";
 import Header from "../../Components/Header";
-import { useSearchParams } from 'react-router-dom';
+import { redirect, useSearchParams } from 'react-router-dom';
 import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import Postbox from "../../Components/Feed/Postbox";
@@ -125,8 +125,8 @@ function ViewprofilePGU(props) {
         setMode("activity");
     };
 
-    const goToJobListing = () => {
-
+    const goToJobListing = (listi) => {
+        navigate(`/user/listings?listing_id=${listi.listing_id}`)
     };
 
     const handleRequestClick = async (userId) => {
@@ -224,9 +224,14 @@ function ViewprofilePGU(props) {
                             </>
                             
                         :
-                        <button type="button" class="btn btn-outline-dark" style={{paddingTop: "0px", paddingBottom: "0px", marginRight:"4px"}} onClick={() => handleRequestClick(id)}>
-                            Request Link
-                        </button>
+                        (relationship === "No Connection"?
+                            <button type="button" class="btn btn-outline-dark" style={{paddingTop: "0px", paddingBottom: "0px", marginRight:"4px"}} onClick={() => handleRequestClick(id)}>
+                                Request Link
+                            </button>
+                        :
+                            <></>
+                        )
+                        
                         ))}
                 
                 

@@ -3,18 +3,23 @@ import Header from "../../Components/Header";
 import ProfileDms from "../../Components/Profile/ProfileDms";
 import CommentsCONT from "../../Components/Feed/Comment";
 import Message from "../../Components/Messaging/Message";
+import { useSearchParams } from 'react-router-dom';
 import MessageCont from "../../Components/Messaging/MessageCONT";
 import { useState, useEffect } from "react";
 
-function MessagesPGU(props) {
 
-    
+
+
+function MessagesPGU(props) {
     const [storedLinks, setStoredLinks] = useState([]);
     const [selected_dm, setSelected_dm] = useState({});
     const [loading, setLoading] = useState(true);
     const [textboxContent, setTextBoxContent] = useState("");
     const [rerend, setRerend] = useState(true);
     const [userPFP, setUserPFP] = useState("")
+
+    const [searchParams] = useSearchParams();
+    const id = searchParams.get('user_id');
 
     const getCookie = (name) => {
         let cookieValue = null;
@@ -30,6 +35,7 @@ function MessagesPGU(props) {
         }
         return cookieValue;
     };
+
 
     useEffect(() => {
         const fetchconvos = async () => {
@@ -84,9 +90,43 @@ function MessagesPGU(props) {
             }
         };
 
+        const restoreDM = async () => {
+            const csrfToken = getCookie('csrftoken');
+            console.log(csrfToken)
+
+            console.log(document.cookie);
+            const response = await fetch("http://127.0.0.1:8000/convo/find/", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    "other_user": id
+                })
+            })
+            
+            if (response.ok) {
+                // Fetch user account details if authenticated
+                const convo = await response.json();
+                setSelected_dm(convo);
+            } else {
+                console.log("couldn't find dm")
+            }
+        };
+
 
         fetchconvos();
         fetchprofilepic();
+
+        if(id)
+        {
+            restoreDM()
+        }
+
+
+
         setLoading(false);
     }, []);
 

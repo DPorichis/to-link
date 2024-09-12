@@ -1,6 +1,7 @@
 import React from "react";
 import Header from "../../Components/Header";
 import JobTile from "../../Components/Jobs/JobTile";
+import { useSearchParams } from 'react-router-dom';
 import { useState, useEffect } from "react";
 import JobPreview from "../../Components/Jobs/JobPreview";
 import JobDashboard from "../../Components/Jobs/JobDashboard";
@@ -30,6 +31,8 @@ function ListingsPGU(props) {
     const [yourlistings, setYourListings] = useState([]);
     const [youApplied, setYouApplied] = useState("forbiden");
 
+    const [searchParams] = useSearchParams();
+    const id = searchParams.get('listing_id');
 
     const [mode, setMode] = useState("info");
     const [edit, setEdit] = useState(false);
@@ -81,7 +84,41 @@ function ListingsPGU(props) {
             setLoading(false);
         };
 
+        const restoreListing = async () => {
+            const csrfToken = getCookie('csrftoken');
+            console.log(csrfToken)
+
+            console.log(document.cookie);
+            const response = await fetch("http://127.0.0.1:8000/listing/fetch", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    "listing_id": id
+                })
+            })
+            
+            if (response.ok) {
+                // Fetch user account details if authenticated
+                const listi = await response.json();
+                setSelectedListing(listi);
+            } else {
+                console.log("couldn't find listing")
+            }
+        };
+
+
+
         fetchListings();
+
+        if(id)
+        {
+            restoreListing()
+        }
+
     }, []);
 
 

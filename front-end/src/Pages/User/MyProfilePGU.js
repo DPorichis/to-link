@@ -1,6 +1,7 @@
 import React from "react";
 import Header from "../../Components/Header";
 import { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import Postbox from "../../Components/Feed/Postbox";
 import JobTile from "../../Components/Jobs/JobTile";
 
@@ -20,6 +21,7 @@ const getCookie = (name) => {
 };
 
 function MyProfilePGU(props) {
+    const navigate = useNavigate();
 
     const [mode, setMode] = useState("info");
     const [edit, setEdit] = useState(false);
@@ -132,8 +134,8 @@ function MyProfilePGU(props) {
         setMode("activity");
     };
 
-    const goToJobListing = () => {
-
+    const goToJobListing = (listi) => {
+        navigate(`/user/listings?listing_id=${listi.listing_id}`)
     };
 
     const toggleEdit = () => {

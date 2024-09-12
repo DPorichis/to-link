@@ -195,9 +195,8 @@ def get_listing_by_id(request):
     user = request.user.profile
     listing_target = request.data.get('listing_id')
     
-    listing = Listing.objects.get(listing_id=listing_target)
-
-    if listing.exists():
+    try:
+        listing = Listing.objects.get(listing_id=listing_target)
         vis = listing.visible
         if listing.user == user:
             vis = 3
@@ -209,5 +208,6 @@ def get_listing_by_id(request):
             return Response(ListingSerializer(listing).data, status=status.HTTP_200_OK)
         else:
             return Response({"message":"You cannot see this listing because of the privacy settings set by the user"}, status=status.HTTP_400_BAD_REQUEST)
-
-    return Response({"message": "this listing doesn't exist"}, status=status.HTTP_400_BAD_REQUEST)
+    except Listing.DoesNotExist:
+        return Response({"message": "Listing not found."}, status=status.HTTP_404_NOT_FOUND)
+    
