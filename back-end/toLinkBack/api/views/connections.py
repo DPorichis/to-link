@@ -153,4 +153,4 @@ def fetch_searching_links(request):
         serializer = ProfileBannerSerializer(filtered_profiles, many=True, context={'authenticated_user': user_profile})
         return Response(serializer.data, status=status.HTTP_200_OK)
     else:
-        return Response({"error": "No profiles found matching the search term."}, status=status.HTTP_404_NOT_FOUND)
+        return Response([], status=status.HTTP_200_OK)

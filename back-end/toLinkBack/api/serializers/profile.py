@@ -66,18 +66,25 @@ class ProfileSerializer(serializers.ModelSerializer):
             "vis_act": obj.vis_act,
             }
         
+
+        vis = 1
+
         # Check if it is in network
-        vis = 3
+        if Link.objects.filter(user_id_to=obj, user_id_from=authenticated_user.profile).exists() or \
+            Link.objects.filter(user_id_to=authenticated_user.profile, user_id_from=obj).exists():
+            vis = 2
+
+        
 
         if obj.vis_exp <= vis:
             exp = obj.experience
         else:
-            exp = {}
+            exp = []
         
         if obj.vis_edu <= vis:
             edu = obj.education
         else:
-            edu = {}
+            edu = []
         
         if obj.vis_cont <= vis:
             email = obj.email

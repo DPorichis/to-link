@@ -115,7 +115,7 @@ function JobDashboard(props) {
                         </div>
                         {props.listing === editedListing ?
                         <div>
-                            <button type="button" class="btn btn-outline-secondary" onClick={handleSave}>No Changes Detected</button>
+                            <button type="button" class="btn btn-outline-secondary">No Changes Detected</button>
                         </div>
                         :
                         <div>
@@ -201,7 +201,7 @@ function JobDashboard(props) {
                             <p style={{marginBottom: "0px", marginTop: "16px", marginLeft: "6px", color: "#888", fontSize:"10px"}}>Listing code: {props.listing.listing_id}</p>
                         </div>
                         <p style={{marginTop: "0px", marginBottom:"3px"}}>
-                            <span style={{color: "#444", fontSize:"16px"}}>listed by {props.listing.user_info.name + " " +props.listing.user_info.name} </span>
+                            <span style={{color: "#444", fontSize:"16px"}}>listed by {props.listing.user_info.name + " " +props.listing.user_info.surname} </span>
                             <span style={{color: "#888", fontSize:"10px"}}>{props.listing.relation}</span>
                         </p>
                     </div>

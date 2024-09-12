@@ -12,7 +12,7 @@ function JobPreview(props) {
                 <div>
                     <h3 style={{marginBottom: "0px"}}>{props.listing.title}</h3>
                     <p style={{marginTop: "0px", marginBottom:"3px"}}>
-                        <span style={{color: "#444", fontSize:"16px"}}>listed by {props.listing.user_info.name + " " +props.listing.user_info.name} </span>
+                        <span style={{color: "#444", fontSize:"16px"}}>listed by {props.listing.user_info.name + " " +props.listing.user_info.surname} </span>
                         <span style={{color: "#888", fontSize:"10px"}}>{props.listing.relation}</span>
                     </p>
                 </div>

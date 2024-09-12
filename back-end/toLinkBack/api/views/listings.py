@@ -112,9 +112,9 @@ def check_if_applied(request):
     try:
         applied_by = Applied.objects.get(listing=listing, user=user)
         # If exists, unlike the post
-        return Response({"applied": "allowed"}, status=status.HTTP_200_OK)
-    except Applied.DoesNotExist:
         return Response({"applied": "applied"}, status=status.HTTP_200_OK)
+    except Applied.DoesNotExist:
+        return Response({"applied": "allowed"}, status=status.HTTP_200_OK)
 
 
 
@@ -151,19 +151,36 @@ def show_listings(request):
     user = request.user.profile
     target_user = request.data.get('specify_user')
     print(target_user)
-    
-    if target_user == "own":
-        target_user = user
-    elif target_user is not None:
+        
+    if target_user is None:
+        # Public listings
+        publiclistings = Listing.objects.filter(Q(visible='1'))
+
+        # Network listings
+        allowedlistings = Listing.objects.filter(
+            Q(visible='2') & (
+                Q(user_id__in=Link.objects.filter(user_id_from=user).values('user_id_to')) |
+                Q(user_id__in=Link.objects.filter(user_id_to=user).values('user_id_from'))
+            )
+        )
+        # Combine public listings and allowed network listings
+        listings = publiclistings | allowedlistings  # Combine QuerySets
+
+    elif target_user == "own":
+        listings = Listing.objects.filter(user=user)
+    else:
         try:
             target_user = Profile.objects.get(user_id=target_user)
         except Profile.DoesNotExist:
             return Response({"error": "Profile does not exist."}, status=status.HTTP_404_NOT_FOUND)
         
-    if target_user is None:
-        listings = Listing.objects.filter(visible='1')
-    else:
-        listings = Listing.objects.filter(user=target_user)
+        listings = Listing.objects.filter(user=target_user, visible='1')
+        
+        if Link.objects.filter(user_id_to=target_user, user_id_from=user).exists() or \
+        Link.objects.filter(user_id_to=user, user_id_from=target_user).exists():
+            allowedlistings = Listing.objects.filter(user=target_user, visible='2')
+            listings = listings | allowedlistings
+
     if listings.exists():
         serializer = ListingSerializer(listings, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)

@@ -33,10 +33,12 @@ class ListingSerializer(serializers.ModelSerializer):
 
 class ListingUpdateSerializer(serializers.ModelSerializer):
     
+    user_info = serializers.SerializerMethodField()
+
     class Meta:
         model = Listing
-        fields = ['listing_id', 'user', 'title', 'visible', 'spot', 'time', 'level', 'desc', 'location']
-        read_only_fields = ['listing_id', 'user']
+        fields = ['listing_id', 'user', 'title', 'visible', 'spot', 'time', 'level', 'desc', 'location', 'timestamp', 'user_info', 'apl_cnt']
+        read_only_fields = ['listing_id', 'user', 'timestamp', 'user_info', 'apl_cnt']
         # Add any other fields you want to be updatable
 
     def update(self, instance, validated_data):
@@ -45,6 +47,19 @@ class ListingUpdateSerializer(serializers.ModelSerializer):
             setattr(instance, attr, value)
         instance.save()
         return instance
+    
+    def get_user_info(self, obj):
+        # Get the authenticated user from the context
+        other_user = obj.user
+
+        # Fetch the profile associated with the other user
+        profile = Profile.objects.get(user_id=other_user)
+
+        return {
+            'name': profile.name,
+            'surname': profile.surname,
+            'title': profile.title
+        }
     
 class AppliedSerializer(serializers.ModelSerializer):
     profile_info = serializers.SerializerMethodField()

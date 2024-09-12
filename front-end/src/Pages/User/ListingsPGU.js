@@ -6,86 +6,20 @@ import JobPreview from "../../Components/Jobs/JobPreview";
 import JobDashboard from "../../Components/Jobs/JobDashboard";
 
 
-let dammyresponses = 
-    [
-    {
-    name: "Theopoula Tzini",
-    title:"CEO of Ibiza",
-    imgURL: "/logo192.png",
-    InNetwork: true,
-    },
-    {
-    name: "Nitsa",
-    title:"CEO of Koup Skoup",
-    imgURL: "/logo192.png",
-    InNetwork: false,
-    },
-    {
-    name: "SpongeBob",
-    title:"CEO of Bikini",
-    imgURL: "/logo192.png",
-    InNetwork: true,
+const getCookie = (name) => {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === `${name}=`) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+        }
+        }
     }
-    ]
-
-
-let dammylistings =
-    [
-        {
-            id:1002,
-            state:"Public",
-            title:"Junior Dev at ToLink",
-            user:"Makis",
-            relation:"In your network",
-            spot:"Remote",
-            time:"Full-time", 
-            location:"Athens, Greece", 
-            level:"Entry level",
-            desc:"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-            responses: dammyresponses
-        },
-        {
-            id:1003,
-            state:"Public",
-            title:"Bet-builder agent",
-            user:"Uncle Nionios",
-            relation:"In your network",
-            spot:"On-site",
-            time:"Part-time", 
-            location:"Spiti tou, Spata, Greece", 
-            level:"Mid level",
-            desc:"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-            responses: dammyresponses
-        },
-        {
-            id:1004,
-            state:"Public",
-            title:"Junior Dev at ToLink",
-            user:"Makis",
-            relation:"In your network",
-            spot:"Remote",
-            time:"Full-time", 
-            location:"Athens, Greece", 
-            level:"Entry level",
-            desc:"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-            responses: dammyresponses
-        }
-    ]
-
-    const getCookie = (name) => {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-          const cookies = document.cookie.split(';');
-          for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === `${name}=`) {
-              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-              break;
-            }
-          }
-        }
-        return cookieValue;
-    };
+    return cookieValue;
+};
 
 
 function ListingsPGU(props) {
@@ -281,6 +215,15 @@ function ListingsPGU(props) {
         if (response.ok) {
             // Fetch user account details if authenticated
             let answer = await response.json();
+            
+            setYourListings(prevListings => {
+                return prevListings.map((item) => 
+                  item.listing_id === answer.listing_id ? answer : item
+                );
+            });
+
+            setSelectedListing(answer)
+
             console.log(answer)
         } else {
             console.log("no user logged in")
@@ -293,9 +236,30 @@ function ListingsPGU(props) {
         setYourListingsView(true);
     }
 
-    const viewBrowse = () => 
+    const viewBrowse = async () => 
     {
         setSelectedListing({listing_id: "empty"});
+        const csrfToken = getCookie('csrftoken');
+
+        setLoading(true);
+        const response1 = await fetch("http://127.0.0.1:8000/listings/list", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+            credentials: "include",
+            body: JSON.stringify({
+            })
+        })
+        
+        if (response1.ok) {
+            let answer = await response1.json();
+            setListings(answer);
+        } else {
+            console.log("Problems with fetching your listings info")
+        }
+        setLoading(false);
         setYourListingsView(false);
     }
 
@@ -330,19 +294,20 @@ function ListingsPGU(props) {
                                 <JobTile listing={listi} handleSelect={changeSelection} active={selectedListing.listing_id === listi.listing_id} />
                             )}</>
                             :
-                            <div style={{display:"flex", justifyContent: "center", width:"100%"}}>
-                                <p style={{marginTop: "10px", marginBottom:"10px"}}>No listings found :(</p>
+                            <div style={{textAlign:"center", padding:"10px 10px", borderRadius:"5px", backgroundColor:"#fff", marginTop:"10px"}}>
+                                <h5>You have no listings...</h5>
+                                <p style={{marginBottom:"3px"}}>Create a job listing to attract talent to <br/> your new startup or something</p>
                             </div>
                         }
                     </div>
                 </div>
                 <div style={{width: "70%"}}>
                     {selectedListing.listing_id === "empty" ?
-                        <div style={{width:"100%", height:"20vh", border: "1px #aaa solid",
-                            padding: "10px 20px", borderRadius: "10px", textAlign:"left", textAlign:"center"}}>
+                        <div style={{width:"100%", border: "1px #aaa solid",
+                            padding: "20px 10px", borderRadius: "10px", textAlign:"left", textAlign:"center"}}>
                                 <h4>Select a job from the left side bar</h4>
-                                <p>Found an intresting listing? Select it to preview it and apply.</p>
-                            </div>      
+                                <p style={{marginBottom:"0px"}}>Select one of your listings to edit or check how applied.</p>
+                        </div>     
                     :
                         <JobDashboard listing={selectedListing} update={updateListing}/>
                     }
@@ -362,8 +327,9 @@ function ListingsPGU(props) {
                             )}
                             </>
                             :
-                            <div style={{display:"flex", justifyContent: "center", width:"100%"}}>
-                                <p>No listings found :(</p>
+                            <div style={{textAlign:"center", padding:"10px 10px", borderRadius:"5px", backgroundColor:"#fff"}}>
+                                <h5>No listings found...</h5>
+                                <p style={{marginBottom:"3px"}}>Not gonna lie, the job market seems awfull today... <br/>Check later as new jobs may be added</p>
                             </div>
                             
                         }
@@ -371,10 +337,10 @@ function ListingsPGU(props) {
                 </div>
                 <div style={{width: "70%"}}>
                     {selectedListing.listing_id === "empty" ?
-                        <div style={{width:"100%", height:"20vh", border: "1px #aaa solid",
-                        padding: "10px 20px", borderRadius: "10px", textAlign:"left", textAlign:"center"}}>
+                        <div style={{width:"100%", border: "1px #aaa solid",
+                        padding: "20px 10px", borderRadius: "10px", textAlign:"left", textAlign:"center"}}>
                             <h4>Select a job from the left side bar</h4>
-                            <p>Found an intresting listing? Select it to preview it and apply.</p>
+                            <p style={{marginBottom:"0px"}}>Found an intresting listing? Select it to preview it and apply.</p>
                         </div>    
                     :
                         <JobPreview listing={selectedListing} applied={youApplied} handleApply={toggleApply}/>

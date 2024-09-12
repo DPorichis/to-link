@@ -12,9 +12,9 @@ function JobTile(props) {
         <div onClick={handleClick} className={props.active ? "active-job-tile" : "standard-job-tile"}>
             <div style={{display:"flex", justifyContent:"space-between", flexDirection:"row"}}>
             <div>
-                <h5 style={{marginBottom: "0px"}}>{props.listing.title}</h5>
+                <h5 style={{marginBottom: "0px", textAlign:"left"}}>{props.listing.title}</h5>
                 <p style={{marginTop: "0px", marginBottom:"3px"}}>
-                    <span style={{color: "#444", fontSize:"16px"}}>listed by {props.listing.user_info.name + " " +props.listing.user_info.name} </span>
+                    <span style={{color: "#444", fontSize:"16px"}}>listed by {props.listing.user_info.name + " " +props.listing.user_info.surname} </span>
                     <span style={{color: "#888", fontSize:"10px"}}>{props.listing.relation}</span>
                 </p>
             </div>

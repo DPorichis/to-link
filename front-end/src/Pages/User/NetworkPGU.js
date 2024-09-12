@@ -66,12 +66,8 @@ function NetworkPGU(props) {
     setSearchTerm(newSearchTerm);
     setSearching(newSearchTerm.trim() !== "");
     
-    // Call the search function whenever the search term changes
-    if (newSearchTerm.trim()) {
-      fetchSearchedLinks(newSearchTerm);
-    } else {
-      setSearchResults([]);
-    }
+    fetchSearchedLinks(newSearchTerm);
+    
   };
 
 
@@ -83,7 +79,13 @@ function NetworkPGU(props) {
     fetchSearchedLinks(); // Clear search results when changing filter
   };
 
-  
+  const filteredUnknownResults = searchResults
+  .filter((link) => link.relationship !== "Friends");
+
+  const filteredFriendsResults = searchResults
+  .filter((link) => link.relationship === "Friends");
+
+
 
   return (
     <div>
@@ -122,21 +124,33 @@ function NetworkPGU(props) {
                       <div>Loading Search Results...</div> // Loading indicator for search results
                     ) : (
                       <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
-                          {searchResults
-                            .filter((link) => link.relationship === "Friends")  // Filter to only include "Friends"
+                          {filteredFriendsResults.length > 0 ?
+                            filteredFriendsResults
                             .map((link) => (
                               <ProfileBanner key={link.user_id} link={link}/>
-                            ))}
-                        </div>
+                            ))
+                          :
+                          <div style={{width:"100%", padding:"10px 10px", borderRadius:"5px", border:"1px #aaa solid", marginBottom:"10px"}}>
+                              <h5 style={{marginBottom:"3px"}}>No results found</h5>
+                              <p style={{marginBottom:"0px"}}>No user in your network matches that query</p>
+                          </div>
+                          }
+                      </div>
                     )}
                   </div>
                   <h5>People you may know</h5>
                   <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
-                          {searchResults
-                            .filter((link) => link.relationship !== "Friends")  // Filter to only include "Friends"
+                          {filteredUnknownResults.length > 0 ?
+                            filteredUnknownResults
                             .map((link) => (
                               <ProfileBanner key={link.user_id} link={link}/>
-                            ))}
+                            ))
+                          :
+                          <div style={{width:"100%", padding:"10px 10px", borderRadius:"5px", border:"1px #aaa solid", marginBottom:"10px"}}>
+                              <h5 style={{marginBottom:"3px"}}>No results found</h5>
+                              <p style={{marginBottom:"0px"}}>No user in outside your network matches that query</p>
+                          </div>
+                          }
                         </div>
                 </>
               )}
@@ -148,11 +162,17 @@ function NetworkPGU(props) {
                       <div>Loading Search Results...</div> // Loading indicator for search results
                     ) : (
                       <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
-                          {searchResults
-                            .filter((link) => link.relationship === "Friends")  // Filter to only include "Friends"
+                          {filteredFriendsResults.length > 0 ?
+                            filteredFriendsResults
                             .map((link) => (
                               <ProfileBanner key={link.user_id} link={link}/>
-                            ))}
+                            ))
+                          :
+                          <div style={{width:"100%", padding:"10px 10px", borderRadius:"5px", border:"1px #aaa solid", marginBottom:"10px"}}>
+                              <h5 style={{marginBottom:"3px"}}>No results found</h5>
+                              <p style={{marginBottom:"0px"}}>No user in your network matches that query</p>
+                          </div>
+                          }
                         </div>
                     )}
                   </div>
@@ -166,11 +186,17 @@ function NetworkPGU(props) {
                       <div>Loading Search Results...</div> // Loading indicator for search results
                     ) : (
                       <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
-                          {searchResults
-                            .filter((link) => link.relationship !== "Friends")  // Filter to only include "Friends"
+                          {filteredUnknownResults.length > 0 ?
+                            filteredUnknownResults
                             .map((link) => (
                               <ProfileBanner key={link.user_id} link={link}/>
-                            ))}
+                            ))
+                          :
+                          <div style={{width:"100%", padding:"10px 10px", borderRadius:"5px", border:"1px #aaa solid", marginBottom:"10px"}}>
+                              <h5 style={{marginBottom:"3px"}}>No results found</h5>
+                              <p style={{marginBottom:"0px"}}>No user in outside your network matches that query</p>
+                          </div>
+                          }
                         </div>
                     )}
                   </div>
@@ -184,22 +210,33 @@ function NetworkPGU(props) {
                   <h5>Your Network</h5>
                   <div style={{ maxHeight: "57vh", overflowY: "auto", marginBottom: "10px" }}>
                   <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
-                    {searchResults
-                      .filter((link) => link.relationship === "Friends")  // Filter to only include "Friends"
-                      .map((link) => (
-                        <ProfileCard key={link.user_id} link={link}/>
-                      ))}
-                </div>
+                  {filteredFriendsResults.length > 0 ?
+                    filteredFriendsResults.slice(0, 4)
+                    .map((link) => (
+                      <ProfileCard key={link.user_id} link={link}/>
+                    ))
+                    :
+                    <div style={{width:"100%", padding:"10px 10px", borderRadius:"5px", border:"1px #aaa solid", marginBottom:"10px"}}>
+                      <h5 style={{marginBottom:"3px"}}>You have no users in your Network</h5>
+                      <p style={{marginBottom:"0px"}}>That's not cool! Find people you are intrested in and ask to Link</p>
+                    </div>
+                  }
+                  </div>
+                  
                   </div>
                   <h5>People you may know</h5>
                   <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
-                  {searchResults
-                    .filter((link) => link.relationship !== "Friends") 
-                    .slice(0, 4) 
+                  {filteredUnknownResults.length > 0 ?
+                    filteredUnknownResults.slice(0, 4)
                     .map((link) => (
                       <ProfileCard key={link.user_id} link={link}/>
-                    ))}
-                  
+                    ))
+                    :
+                    <div style={{width:"100%", padding:"10px 10px", borderRadius:"5px", border:"1px #aaa solid", marginBottom:"10px"}}>
+                      <h5 style={{marginBottom:"3px"}}>No users found</h5>
+                      <p style={{marginBottom:"0px"}}>This is a new app, ok? Come back later to check if new users are here</p>
+                  </div>
+                  }
                 </div>
                 </>
               )}
@@ -208,11 +245,17 @@ function NetworkPGU(props) {
                   <h5>Your Network</h5>
                   <div style={{ maxHeight: "65vh", overflowY: "auto", marginBottom: "10px" }}>
                     <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
-                    {searchResults
-                      .filter((link) => link.relationship === "Friends")  // Filter to only include "Friends"
-                      .map((link) => (
-                        <ProfileCard key={link.user_id} link={link}/>
-                      ))}
+                    {filteredFriendsResults.length > 0 ?
+                    filteredFriendsResults.slice(0, 4)
+                    .map((link) => (
+                      <ProfileCard key={link.user_id} link={link}/>
+                    ))
+                    :
+                    <div style={{width:"100%", padding:"10px 10px", borderRadius:"5px", border:"1px #aaa solid", marginBottom:"10px"}}>
+                      <h5 style={{marginBottom:"3px"}}>You have no users in your Network</h5>
+                      <p style={{marginBottom:"0px"}}>That's not cool! Find people you are intrested in and ask to Link</p>
+                    </div>
+                  }
                     </div>
                   </div>
                 </>
@@ -222,11 +265,17 @@ function NetworkPGU(props) {
                   <h5>People you may know</h5>
                   <div style={{ maxHeight: "65vh", overflowY: "auto", marginBottom: "10px" }}>
                   <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
-                  {searchResults
-                    .filter((link) => link.relationship !== "Friends")  // Filter to include only "No Connection"
+                  {filteredUnknownResults.length > 0 ?
+                    filteredUnknownResults.slice(0, 4)
                     .map((link) => (
                       <ProfileCard key={link.user_id} link={link}/>
-                    ))}
+                    ))
+                    :
+                    <div style={{width:"100%", padding:"10px 10px", borderRadius:"5px", border:"1px #aaa solid", marginBottom:"10px"}}>
+                      <h5 style={{marginBottom:"3px"}}>No users found</h5>
+                      <p style={{marginBottom:"0px"}}>This is a new app, ok? Come back later to check if new users are here</p>
+                  </div>
+                  }
                 </div>
                   </div>
                 </>
