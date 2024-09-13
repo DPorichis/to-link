@@ -58,7 +58,7 @@ class User(AbstractBaseUser):
     email = models.CharField(unique=True, max_length=45)  # Field name made lowercase.
     country = models.CharField(max_length=45, blank=True, null=True)  # Field name made lowercase.
     city = models.CharField(max_length=45, blank=True, null=True)  # Field name made lowercase.
-    phone = models.IntegerField(blank=True, null=True)  # Field name made lowercase.
+    phone = models.CharField(max_length=45, blank=True, null=True)  # Field name made lowercase.
     birthdate = models.DateField(blank=True, null=True)  # Field name made lowercase.
 
     # Django's authentication system stuff #
@@ -81,7 +81,7 @@ class Profile(models.Model):
     title = models.CharField(max_length=45, blank=True, null=True)  # Field name made lowercase.
     bio = models.TextField(blank=True, null=True)  # Field name made lowercase.
     email = models.CharField(max_length=45, null=True)  # Field name made lowercase.
-    phone = models.IntegerField(blank=True, null=True)  # Field name made lowercase.
+    phone = models.CharField(max_length=20, blank=True, null=True)  # Field name made lowercase.
     website = models.TextField(blank=True, null=True)  # Field name made lowercase.
     experience = models.JSONField(null=True)  # Field name made lowercase.
     education = models.JSONField(null=True)  # Field name made lowercase.

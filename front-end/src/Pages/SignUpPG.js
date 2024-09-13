@@ -281,8 +281,14 @@ function SignUpPG(props) {
             errors.pfFirstName = 'You must enter a first name'
         }
 
-        if (formData0.pfLastName === ""){
+        if (formData1.pfLastName === ""){
             errors.pfLastName = 'You must enter a last name'
+        }
+
+        const datePattern = /^\d{4}-\d{2}-\d{2}$/; // Regular expression for YYYY-MM-DD format
+
+        if (!datePattern.test(formData1.birthdate)) {
+            errors.birthdate = 'You must enter a valid birthdate';
         }
 
         return errors;
@@ -296,6 +302,7 @@ function SignUpPG(props) {
         
         if (Object.keys(errors).length !== 0) {
             setFormErrors1(errors);
+            return
         }
         const csrfToken = getCookie('csrftoken');
         
@@ -494,14 +501,19 @@ function SignUpPG(props) {
                         </div>
 
                         <div class="col-md-6" style={{marginBottom:"5px"}}>
-                            <label for="birthdate" class="form-label" style={{marginBottom:"2px"}}>Birthdate</label>
-                            <input type="date" class="form-control" name="birthdate"
-                            onChange={handleChange1} value={formData1.birthdate}/>
+                            <label class="form-label" style={{marginBottom:"2px"}}>Birthdate</label>
+                            <input type="date" 
+                                className={`form-control ${formErrors1.birthdate ? 'is-invalid' : ''}`}
+                                value={formData1.birthdate}
+                                onChange={handleChange1}
+                                id="birthdate"
+                                name="birthdate"/>
+                            <div className="invalid-feedback">{formErrors1.birthdate || 'Please enter a valid date.'}</div>
                         </div>
                         
                         <div class="col-md-6" style={{marginBottom:"5px"}}>
                             <label for="phoneNumber" class="form-label" style={{marginBottom:"2px"}}>Phone Number</label>
-                            <input type="number" class="form-control" name="phoneNumber" 
+                            <input type="text" class="form-control" name="phoneNumber" 
                             onChange={handleChange1} value={formData1.phoneNumber}/>
                         </div>
 
@@ -527,7 +539,7 @@ function SignUpPG(props) {
                                     name="pfFirstName"
                                     value={formData1.pfFirstName}
                                     onChange={handleChange1}
-                                    required
+                                    
                                     placeholder="ex. Jim"
                                 />
                                 <div className="invalid-feedback">{formErrors1.pfFirstName || 'Please enter your last name.'}</div>
@@ -542,7 +554,7 @@ function SignUpPG(props) {
                                     name="pfLastName"
                                     value={formData1.pfLastName}
                                     onChange={handleChange1}
-                                    required
+                                    
                                     placeholder="ex. Johnson"
                                 />
                                 <div className="invalid-feedback">{formErrors1.pfLastName || 'Please enter your last name.'}</div>

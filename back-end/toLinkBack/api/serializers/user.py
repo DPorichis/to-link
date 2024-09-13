@@ -19,7 +19,13 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 
-class UserUpdateSerializer(serializers.ModelSerializer):
+class CustomIntegerField(serializers.IntegerField):
+    def to_internal_value(self, value):
+        if value in [None, '']:
+            return None  # Convert empty string or null to None
+        return super().to_internal_value(value)
+
+class UserUpdateSerializer(serializers.ModelSerializer):    
     class Meta:
         model = User
         fields = ["name", "surname", "email", "country", "city", "phone", "birthdate"]

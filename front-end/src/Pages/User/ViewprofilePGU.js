@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import Postbox from "../../Components/Feed/Postbox";
 import JobTile from "../../Components/Jobs/JobTile";
 import { refreshAccessToken } from "../../functoolbox";
+import NotFoundPG from "../NotFoundPG";
 
 const getCookie = (name) => {
     let cookieValue = null;
@@ -27,7 +28,7 @@ function ViewprofilePGU(props) {
 
     const [mode, setMode] = useState("info");
     const [loading, setLoading] = useState(true);
-
+    const [noAuth, setNoAuth] = useState(false);
     const [searchParams] = useSearchParams();
 
     const id = searchParams.get('user_id');
@@ -67,12 +68,14 @@ function ViewprofilePGU(props) {
                 else
                 {
                     console.log("no user logged in")
+                    setNoAuth(true);
                 }
                 
             }else
             {
                 setviewProfile(null);
                 console.log("no user logged in")
+                setNoAuth(true);
             }
 
             const response1 = await fetch("http://127.0.0.1:8000/listings/list", {
@@ -134,11 +137,10 @@ function ViewprofilePGU(props) {
             } else {
                 console.log("Problems with fetching profile info")
             }
-
+            setLoading(false);
         };
 
         fetchUser();
-        setLoading(false);
     }, []);
     
     const handleInfo = () => {
@@ -226,9 +228,15 @@ function ViewprofilePGU(props) {
         }
     };
 
+    if(noAuth){
+        return (<NotFoundPG />)
+    }
+
+    if(loading) return <>Loading...</>
+
     return (
         <div>
-            <Header log="user" act="profile"/>
+            <Header log="user" act=""/>
             <div style={{display:"flex", flexDirection:"column", width: "70%", marginLeft:"15%", marginTop:"20px"}}>
                 
                 

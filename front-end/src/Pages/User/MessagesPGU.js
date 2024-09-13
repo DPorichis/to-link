@@ -7,6 +7,7 @@ import { useSearchParams } from 'react-router-dom';
 import MessageCont from "../../Components/Messaging/MessageCONT";
 import { useState, useEffect } from "react";
 import { refreshAccessToken } from "../../functoolbox";
+import NotFoundPG from "../NotFoundPG";
 
 
 
@@ -17,6 +18,7 @@ function MessagesPGU(props) {
     const [textboxContent, setTextBoxContent] = useState("");
     const [rerend, setRerend] = useState(true);
     const [userPFP, setUserPFP] = useState("")
+    const [noAuth, setNoAuth] = useState(false);
 
     const [searchParams] = useSearchParams();
     const id = searchParams.get('user_id');
@@ -66,10 +68,12 @@ function MessagesPGU(props) {
                 else
                 {
                     console.log("couldn't fetch convos")
+                    setNoAuth(true);
                 }
                 
             } else {
                 console.log("couldn't fetch convos")
+                setNoAuth(true);
             }
         };
 
@@ -101,6 +105,7 @@ function MessagesPGU(props) {
                 else
                 {
                     console.log("couldn't fetch convos")
+                    setNoAuth(true);
                 }
                 
             } else {
@@ -231,6 +236,11 @@ function MessagesPGU(props) {
     };
 
     if (loading) return <>Loadins</>
+
+    if(noAuth)
+        {
+            return (<NotFoundPG />)
+        }
     
     return (
         <div >

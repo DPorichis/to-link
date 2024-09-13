@@ -19,7 +19,7 @@ def update_user(request):
     user = request.user
     
     # Create the serializer with the current profile and the request data
-    serializer = UserSerializer(user, data=request.data, partial=True)  # `partial=True` to allow for partial updates
+    serializer = UserSerializer(user, data=request.data, partial=True, allow_null=True)  # `partial=True` to allow for partial updates
     print(request.data)
     if serializer.is_valid():
         # Save the updated profile information

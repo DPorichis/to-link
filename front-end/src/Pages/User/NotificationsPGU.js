@@ -4,28 +4,14 @@ import ProfileBannerNotificationsReq from "../../Components/Notifications/Profil
 import ProfileBannerClout from "../../Components/Notifications/ProfileBannerClout";
 import { useState, useEffect } from "react";
 import { refreshAccessToken } from "../../functoolbox";
-
-
-const getCookie = (name) => {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === `${name}=`) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-};
+import NotFoundPG from "../NotFoundPG";
 
 function NotificationsPGU(props) {
     const [Notifications, setNotifications] = useState([]);
     const [Requests, setRequests] = useState([]);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [noAuth, setNoAuth] = useState(false);
 
     useEffect(() => {
         const fetchNotifications = async () => {
@@ -53,10 +39,12 @@ function NotificationsPGU(props) {
                 else
                 {
                     console.log("no user logged in")
+                    setNoAuth(true);
                 }
                 
             }else {
                 throw new Error('Failed to fetch posts');
+                setNoAuth(true);
             }
             setLoading(false);
         };
@@ -86,10 +74,12 @@ function NotificationsPGU(props) {
                 else
                 {
                     console.log("no user logged in")
+                    setNoAuth(true);
                 }
                 
             }else {
                 throw new Error('Failed to fetch requests');
+                setNoAuth(true);
             }
             setLoading(false);
         };
@@ -129,8 +119,13 @@ function NotificationsPGU(props) {
     }
 
 
-    if (loading) return <p>Loading comments...</p>;
-    if (error) return <p>Error: {error}</p>;
+    if (loading) return <p>Loading</p>;
+
+    if(noAuth)
+    {
+        return (<NotFoundPG />)
+    }
+    
     return (
         <div>
             <Header log='user' act='notif'/>

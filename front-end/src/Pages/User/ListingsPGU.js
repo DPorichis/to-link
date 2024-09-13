@@ -5,6 +5,7 @@ import { useSearchParams } from 'react-router-dom';
 import { useState, useEffect } from "react";
 import {refreshAccessToken} from "../../functoolbox"
 import JobPreview from "../../Components/Jobs/JobPreview";
+import NotFoundPG from '../NotFoundPG';
 import JobDashboard from "../../Components/Jobs/JobDashboard";
 
 
@@ -31,6 +32,7 @@ function ListingsPGU(props) {
     const [listings, setListings] = useState([]);
     const [yourlistings, setYourListings] = useState([]);
     const [youApplied, setYouApplied] = useState("forbiden");
+    const [noAuth, setNoAuth] = useState(false);
 
     const [searchParams] = useSearchParams();
     const id = searchParams.get('listing_id');
@@ -63,13 +65,17 @@ function ListingsPGU(props) {
                 {
                     await fetchListings();
                 }
-                else
+                else if(response0.status === 403) {
+                    setNoAuth(true);
+                }else
                 {
                     console.log("no user logged in")
+                    setNoAuth(true);
                 }
                 
             }else {
                 console.log("Problems with fetching your listings info")
+                setNoAuth(true);
             }
 
 
@@ -100,6 +106,7 @@ function ListingsPGU(props) {
                 
             }else {
                 console.log("Problems with fetching your listings info")
+                setNoAuth(true);
             }
             setLoading(false);
         };
@@ -131,10 +138,12 @@ function ListingsPGU(props) {
                 else
                 {
                     console.log("no user logged in")
+                    setNoAuth(true);
                 }
                 
             }else {
                 console.log("Problems with fetching your listings info")
+                setNoAuth(true);
             }
         };
 
@@ -370,6 +379,11 @@ function ListingsPGU(props) {
         }
         setLoading(false);
         setYourListingsView(false);
+    }
+
+    if(noAuth)
+    {
+        return (<NotFoundPG />)
     }
 
     return (

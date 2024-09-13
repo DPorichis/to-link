@@ -3,21 +3,7 @@ import Header from "../../Components/Header";
 import ProfileCard from "../../Components/Profile/ProfileCard";
 import ProfileBanner from "../../Components/Profile/ProfileBanner";
 import { refreshAccessToken } from "../../functoolbox";
-
-const getCookie = (name) => {
-  let cookieValue = null;
-  if (document.cookie && document.cookie !== '') {
-    const cookies = document.cookie.split(';');
-    for (let i = 0; i < cookies.length; i++) {
-      const cookie = cookies[i].trim();
-      if (cookie.substring(0, name.length + 1) === `${name}=`) {
-        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-        break;
-      }
-    }
-  }
-  return cookieValue;
-};
+import NotFoundPG from "../NotFoundPG";
 
 function NetworkPGU(props) {
   const [searchTerm, setSearchTerm] = useState("");
@@ -25,6 +11,7 @@ function NetworkPGU(props) {
   const [filter, setFilter] = useState("all");
   const [searching, setSearching] = useState(false);
   const [error, setError] = useState(null);
+  const [noAuth, setNoAuth] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(true); // Set loading to true initially
 
@@ -56,15 +43,18 @@ function NetworkPGU(props) {
       else
       {
           console.log("Problems with fetching your results")
+          setNoAuth(true);
       } 
     } else {
         console.log("Problems with fetching your results")
+        setNoAuth(true);
     }
     
       setLoading(false); // Set loading to false after fetching data
   };
 
   useEffect(() => {
+    setLoading(true);
     fetchSearchedLinks();
   }, []);
 
@@ -92,6 +82,13 @@ function NetworkPGU(props) {
   const filteredFriendsResults = searchResults
   .filter((link) => link.relationship === "Friends");
 
+
+  if(noAuth)
+  {
+    return (<NotFoundPG />)
+  }
+
+  if(loading) return <>Loading</>
 
 
   return (

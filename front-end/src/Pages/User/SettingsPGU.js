@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Header from "../../Components/Header";
 import { refreshAccessToken } from "../../functoolbox";
+import NotFoundPG from "../NotFoundPG";
 
 function SettingsPGU(props) {
     const [savedProfile, setSavedProfile] = useState({});
@@ -9,6 +10,7 @@ function SettingsPGU(props) {
     const [personalEdit, setPersonalEdit] = useState(false);
     const [loginEdit, setLoginEdit] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [noAuth, setNoAuth] = useState(false);
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -37,9 +39,11 @@ function SettingsPGU(props) {
                 else
                 {
                     console.log("no user logged in")
+                    setNoAuth(true);
                 }
                 
             }else{
+                setNoAuth(true);
             }
         };
 
@@ -107,6 +111,9 @@ function SettingsPGU(props) {
         const errors = await validateForm();
         setFormErrors(errors);
         if (Object.keys(errors).length === 0) {
+            // Create a FormData object
+            const formData = new FormData();
+
             const token = localStorage.getItem('access_token');
             const response = await fetch("http://127.0.0.1:8000/user/update", {
                 method: "PUT",
@@ -114,7 +121,8 @@ function SettingsPGU(props) {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify(editedProfile)
+                body: JSON.stringify(editedProfile
+                )
             })
             
             if (response.ok) {
@@ -140,10 +148,21 @@ function SettingsPGU(props) {
                 }
                 
             }else{
-                setFormErrors(prevErrors => ({
-                    ...prevErrors,
-                    email: "This email can't be used because it is associated with another account"
-                }));
+                let errormessages = await response.json();
+                if ("birthdate" in errormessages)
+                {
+                    setFormErrors(prevErrors => ({
+                        ...prevErrors,
+                        birthdate: "Please enter a valid date"
+                    }));    
+                }
+                else
+                {
+                    setFormErrors(prevErrors => ({
+                        ...prevErrors,
+                        email: "This email can't be used because it is associated with another account"
+                    }));     
+                }
             }
         }
         else{
@@ -238,6 +257,14 @@ function SettingsPGU(props) {
 
     };
 
+    
+    if (loading) return <p>Loading</p>;
+
+
+    if(noAuth)
+        {
+            return (<NotFoundPG />)
+        }
 
     return (
         <div>
@@ -306,8 +333,15 @@ function SettingsPGU(props) {
                             </div>
                             <div class="col-md-3" style={{marginBottom:"5px"}}>
                                 <label class="form-label" style={{marginBottom:"2px"}}>Birthdate</label>
-                                <input type="date" class="form-control" value={editedProfile.birthdate} disabled={!personalEdit}
-                                onChange={handleFormChange} name="birthdate"/>
+                                <input type="date" 
+                                    className={`form-control ${formErrors.birthdate ? 'is-invalid' : ''}`}
+                                    value={editedProfile.birthdate} 
+                                    disabled={!personalEdit}
+                                    onChange={handleFormChange}
+                                    id="birthdate"
+                                    name="birthdate" 
+                                    required/>
+                                <div className="invalid-feedback">{formErrors.birthdate || 'Please enter a valid date.'}</div>
                             </div>
                         </div>
                     </div>
@@ -330,7 +364,7 @@ function SettingsPGU(props) {
                             </div>
                             <div class="col-md-3" style={{marginBottom:"5px"}}>
                                 <label class="form-label" style={{marginBottom:"2px"}}>Phone</label>
-                                <input type="number" class="form-control" value={editedProfile.phone} disabled={!personalEdit}
+                                <input type="text" class="form-control" value={editedProfile.phone} disabled={!personalEdit}
                                 onChange={handleFormChange} name="phone"/>
                             </div>
                             <div class="col-md-3" style={{marginBottom:"5px"}}>

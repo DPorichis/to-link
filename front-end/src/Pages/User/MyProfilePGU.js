@@ -5,21 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import Postbox from "../../Components/Feed/Postbox";
 import JobTile from "../../Components/Jobs/JobTile";
 import { refreshAccessToken } from "../../functoolbox";
-
-const getCookie = (name) => {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-      const cookies = document.cookie.split(';');
-      for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i].trim();
-        if (cookie.substring(0, name.length + 1) === `${name}=`) {
-          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-          break;
-        }
-      }
-    }
-    return cookieValue;
-};
+import NotFoundPG from "../NotFoundPG";
 
 function MyProfilePGU(props) {
     const navigate = useNavigate();
@@ -33,6 +19,7 @@ function MyProfilePGU(props) {
     const [listings, setListings] = useState([]);
     const [posts, setPosts] = useState([]);
     const [image, setImages] = useState(null);
+    const [noAuth, setNoAuth] = useState(false);
 
     const handleImageChange = (e) => {
         setImages(e.target.files[0]);
@@ -75,11 +62,13 @@ function MyProfilePGU(props) {
                 {
                     setSavedProfile(null);
                     console.log("no user logged in")
+                    setNoAuth(true);
                 }
                 
             } else {
                 setSavedProfile(null);
                 console.log("no user logged in")
+                setNoAuth(true);
             }
 
 
