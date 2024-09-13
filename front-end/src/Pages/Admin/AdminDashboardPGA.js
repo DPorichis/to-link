@@ -4,22 +4,8 @@ import { useNavigate } from 'react-router-dom';
 
 import "./AdminDashboardPGA.css"
 import { useFormState } from "react-dom";
+import { refreshAccessToken } from "../../functoolbox";
 
-
-const getCookie = (name) => {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-      const cookies = document.cookie.split(';');
-      for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i].trim();
-        if (cookie.substring(0, name.length + 1) === `${name}=`) {
-          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-          break;
-        }
-      }
-    }
-    return cookieValue;
-};
 
 function AdminDashboardPGA(props) {
 
@@ -28,23 +14,36 @@ function AdminDashboardPGA(props) {
 
     useEffect(() => {
         const fetchUsers = async () => {
-            const csrfToken = getCookie('csrftoken');
-                const response = await fetch("http://127.0.0.1:8000/admin/fetch/allusers", {
-                    method: "POST",
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': csrfToken
-                    },
-                    credentials: "include",
-                    body: JSON.stringify({})
-                });
+            const token = localStorage.getItem('access_token');
+            const response = await fetch("http://127.0.0.1:8000/admin/fetch/allusers", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                credentials: "include",
+                body: JSON.stringify({})
+            });
 
-                if (response.ok) {
-                    const data = await response.json();
-                    setUsers(data);  
-                } else {
-                    throw new Error('Failed to fetch posts');
+            if (response.ok) {
+                const data = await response.json();
+                setUsers(data);
+                setFilterdData(data);
+            } else if (response.status === 401) {
+                localStorage.removeItem('access_token');
+                await refreshAccessToken();
+                if(localStorage.getItem('access_token') !== null)
+                {
+                    await fetchUsers();
                 }
+                else
+                {
+                    console.log("no user logged in")
+                }
+                
+            } else {
+                throw new Error('Failed to fetch posts');
+            }
         };
 
         fetchUsers();
@@ -124,6 +123,8 @@ function AdminDashboardPGA(props) {
 
     const handleSelectionChange = (e) => {
         const {id} = e.target;
+        console.log(id)
+        console.log(exportSelection)
         if(!exportSelection.selectedUsers.includes(id))
         {
             setExportSelection({
@@ -350,8 +351,8 @@ function AdminDashboardPGA(props) {
                             <td>{usr.user_info.email}</td>
                             <td>{usr.post_cnt}</td>
                             <td>{usr.listings_cnt}</td>
-                            <td><input type="checkbox" id={usr.uid} onChange={handleSelectionChange} 
-                            checked={exportSelection.selectedUsers.includes(usr.uid)}/></td>
+                            <td><input type="checkbox" id={usr.user_id} onChange={handleSelectionChange} 
+                            checked={exportSelection.selectedUsers.includes(String(usr.user_id))}/></td>
                         </tr>
                         )}
                     </tbody>

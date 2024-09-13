@@ -136,14 +136,14 @@ function AccountViewPGA(props) {
 
         const fetchProfile = async () => {
 
-            const csrfToken = getCookie('csrftoken');
+            const token = localStorage.getItem('access_token');
             const response = await fetch("http://127.0.0.1:8000/admin/fetch/profile", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken
+                    'Authorization': `Bearer ${token}`
                 },
-                credentials: "include",
+                
                 body: JSON.stringify({"user_id": id})
             });
 
@@ -157,14 +157,14 @@ function AccountViewPGA(props) {
 
         const fetchPersonal = async () => {
 
-            const csrfToken = getCookie('csrftoken');
+            const token = localStorage.getItem('access_token');
             const response = await fetch("http://127.0.0.1:8000/admin/fetch/personal", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken
+                    'Authorization': `Bearer ${token}`
                 },
-                credentials: "include",
+                
                 body: JSON.stringify({"user_id": id})
             });
 
@@ -178,14 +178,14 @@ function AccountViewPGA(props) {
 
         const fetchListings = async () => {
 
-            const csrfToken = getCookie('csrftoken');
+            const token = localStorage.getItem('access_token');
             const response = await fetch("http://127.0.0.1:8000/admin/fetch/listings", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken
+                    'Authorization': `Bearer ${token}`
                 },
-                credentials: "include",
+                
                 body: JSON.stringify({"user_id": id})
             });
 
@@ -199,14 +199,14 @@ function AccountViewPGA(props) {
 
         const fetchApplications = async () => {
 
-            const csrfToken = getCookie('csrftoken');
+            const token = localStorage.getItem('access_token');
             const response = await fetch("http://127.0.0.1:8000/admin/fetch/applications", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken
+                    'Authorization': `Bearer ${token}`
                 },
-                credentials: "include",
+                
                 body: JSON.stringify({"user_id": id})
             });
 
@@ -220,14 +220,14 @@ function AccountViewPGA(props) {
 
         const fetchPosts = async () => {
 
-            const csrfToken = getCookie('csrftoken');
+            const token = localStorage.getItem('access_token');
             const response = await fetch("http://127.0.0.1:8000/admin/fetch/posts", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken
+                    'Authorization': `Bearer ${token}`
                 },
-                credentials: "include",
+                
                 body: JSON.stringify({"user_id": id})
             });
 
@@ -241,14 +241,13 @@ function AccountViewPGA(props) {
 
         const fetchComments = async () => {
 
-            const csrfToken = getCookie('csrftoken');
+            const token = localStorage.getItem('access_token');
             const response = await fetch("http://127.0.0.1:8000/admin/fetch/comments", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken
+                    'Authorization': `Bearer ${token}`
                 },
-                credentials: "include",
                 body: JSON.stringify({"user_id": id})
             });
 
@@ -262,14 +261,14 @@ function AccountViewPGA(props) {
 
         const fetchLikes = async () => {
 
-            const csrfToken = getCookie('csrftoken');
+            const token = localStorage.getItem('access_token');
             const response = await fetch("http://127.0.0.1:8000/admin/fetch/likes", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken
+                    'Authorization': `Bearer ${token}`
                 },
-                credentials: "include",
+                
                 body: JSON.stringify({"user_id": id})
             });
 
@@ -283,14 +282,14 @@ function AccountViewPGA(props) {
 
         const fetchConnections = async () => {
 
-            const csrfToken = getCookie('csrftoken');
+            const token = localStorage.getItem('access_token');
             const response = await fetch("http://127.0.0.1:8000/admin/fetch/connections", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken
+                    'Authorization': `Bearer ${token}`
                 },
-                credentials: "include",
+                
                 body: JSON.stringify({"user_id": id})
             });
 

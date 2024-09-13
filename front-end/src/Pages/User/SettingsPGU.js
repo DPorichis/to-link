@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Header from "../../Components/Header";
+import { refreshAccessToken } from "../../functoolbox";
 
 function SettingsPGU(props) {
     const [savedProfile, setSavedProfile] = useState({});
@@ -9,35 +10,15 @@ function SettingsPGU(props) {
     const [loginEdit, setLoginEdit] = useState(false);
     const [loading, setLoading] = useState(true);
 
-    const getCookie = (name) => {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-          const cookies = document.cookie.split(';');
-          for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === `${name}=`) {
-              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-              break;
-            }
-          }
-        }
-        return cookieValue;
-    };
-
-
     useEffect(() => {
         const fetchUser = async () => {
-            const csrfToken = getCookie('csrftoken');
-            console.log(csrfToken)
-
-            console.log(document.cookie);
+            const token = localStorage.getItem('access_token');
             const response = await fetch("http://127.0.0.1:8000/user/fetch", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken
+                    'Authorization': `Bearer ${token}`
                 },
-                credentials: "include",
                 body: JSON.stringify({
                 })
             })
@@ -46,7 +27,19 @@ function SettingsPGU(props) {
                 let answer = await response.json();
                 setSavedProfile(answer);
                 setEditedProfile(answer);
-            } else {
+            } else if (response.status === 401) {
+                localStorage.removeItem('access_token');
+                await refreshAccessToken();
+                if(localStorage.getItem('access_token') !== null)
+                {
+                    await fetchUser();
+                }
+                else
+                {
+                    console.log("no user logged in")
+                }
+                
+            }else{
             }
         };
 
@@ -114,14 +107,13 @@ function SettingsPGU(props) {
         const errors = await validateForm();
         setFormErrors(errors);
         if (Object.keys(errors).length === 0) {
-            const csrfToken = getCookie('csrftoken');
+            const token = localStorage.getItem('access_token');
             const response = await fetch("http://127.0.0.1:8000/user/update", {
                 method: "PUT",
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken
+                    'Authorization': `Bearer ${token}`
                 },
-                credentials: "include",
                 body: JSON.stringify(editedProfile)
             })
             
@@ -135,7 +127,19 @@ function SettingsPGU(props) {
                     ...editedProfile,
                 });
                 setPersonalEdit(false);
-            } else {
+            } else if (response.status === 401) {
+                localStorage.removeItem('access_token');
+                await refreshAccessToken();
+                if(localStorage.getItem('access_token') !== null)
+                {
+                    await handleSubmit(e);
+                }
+                else
+                {
+                    console.log("no user logged in")
+                }
+                
+            }else{
                 setFormErrors(prevErrors => ({
                     ...prevErrors,
                     email: "This email can't be used because it is associated with another account"
@@ -175,14 +179,13 @@ function SettingsPGU(props) {
         const errors = validatePasswordForm();
         setPasswordFormErrors(errors);
         if (Object.keys(errors).length === 0) {
-            const csrfToken = getCookie('csrftoken');
+            const token = localStorage.getItem('access_token');
             const response = await fetch("http://127.0.0.1:8000/user/newPassword", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken
+                    'Authorization': `Bearer ${token}`
                 },
-                credentials: "include",
                 body: JSON.stringify({
                     current_password: passwordForm.oldPassoword,
                     new_password: passwordForm.password
@@ -193,7 +196,20 @@ function SettingsPGU(props) {
                 let userData = await response.json();
                 console.log('Form submitted successfully:', passwordForm);
                 appendAlert("Password Changed successfully", 'success');
-            } else {
+            } else if (response.status === 401) {
+                localStorage.removeItem('access_token');
+                await refreshAccessToken();
+                if(localStorage.getItem('access_token') !== null)
+                {
+                    await handlePasswordChange(e);
+                }
+                else
+                {
+                    console.log("no user logged in")
+                }
+                
+            }else 
+            {
                 setPasswordFormErrors(prevErrors => ({
                     ...prevErrors,
                     oldPassoword: "Incorrect Password"

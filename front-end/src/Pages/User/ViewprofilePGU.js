@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import Postbox from "../../Components/Feed/Postbox";
 import JobTile from "../../Components/Jobs/JobTile";
+import { refreshAccessToken } from "../../functoolbox";
 
 const getCookie = (name) => {
     let cookieValue = null;
@@ -39,17 +40,13 @@ function ViewprofilePGU(props) {
 
     useEffect(() => {
         const fetchUser = async () => {
-            const csrfToken = getCookie('csrftoken');
-            console.log(csrfToken)
-
-            console.log(document.cookie);
+            const token = localStorage.getItem('access_token');
             const response = await fetch("http://127.0.0.1:8000/profile/view/", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken
+                    'Authorization': `Bearer ${token}`
                 },
-                credentials: "include",
                 body: JSON.stringify({
                     "user_id": id
                 })
@@ -60,7 +57,20 @@ function ViewprofilePGU(props) {
                 let userData = await response.json();
                 setviewProfile(userData.profile_info)
                 setRelationship(userData.relationship)
-            } else {
+            } else if (response.status === 401) {
+                localStorage.removeItem('access_token');
+                await refreshAccessToken();
+                if(localStorage.getItem('access_token') !== null)
+                {
+                    await fetchUser();
+                }
+                else
+                {
+                    console.log("no user logged in")
+                }
+                
+            }else
+            {
                 setviewProfile(null);
                 console.log("no user logged in")
             }
@@ -69,9 +79,8 @@ function ViewprofilePGU(props) {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken
+                    'Authorization': `Bearer ${token}`
                 },
-                credentials: "include",
                 body: JSON.stringify({
                     "specify_user": id
                 })
@@ -80,6 +89,18 @@ function ViewprofilePGU(props) {
             if (response1.ok) {
                 let answer = await response1.json();
                 setListings(answer);
+            } else if (response.status === 401) {
+                localStorage.removeItem('access_token');
+                await refreshAccessToken();
+                if(localStorage.getItem('access_token') !== null)
+                {
+                    await fetchUser();
+                }
+                else
+                {
+                    console.log("Problems with fetching listing info")
+                }
+                
             } else {
                 console.log("Problems with fetching your listings info")
             }
@@ -88,9 +109,8 @@ function ViewprofilePGU(props) {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken
+                    'Authorization': `Bearer ${token}`
                 },
-                credentials: "include",
                 body: JSON.stringify({
                     "user_id": id
                 })
@@ -99,8 +119,20 @@ function ViewprofilePGU(props) {
             if (response2.ok) {
                 let answer = await response2.json();
                 setPosts(answer);
+            } else if (response.status === 401) {
+                localStorage.removeItem('access_token');
+                await refreshAccessToken();
+                if(localStorage.getItem('access_token') !== null)
+                {
+                    await fetchUser();
+                }
+                else
+                {
+                    console.log("Problems with fetching profile info")
+                }
+                
             } else {
-                console.log("Problems with fetching your listings info")
+                console.log("Problems with fetching profile info")
             }
 
         };
