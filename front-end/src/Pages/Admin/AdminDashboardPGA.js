@@ -11,6 +11,12 @@ function AdminDashboardPGA(props) {
 
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [filterParams, setFilterParams] = useState(
+        {
+            for: 'all',
+            text: ''
+        }
+        );   
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -22,88 +28,47 @@ function AdminDashboardPGA(props) {
                     'Authorization': `Bearer ${token}`
                 },
                 credentials: "include",
-                body: JSON.stringify({})
+                body: JSON.stringify({ search: filterParams.text, filter_by: filterParams.for })
             });
-
+        
             if (response.ok) {
                 const data = await response.json();
-                setUsers(data);
-                setFilterdData(data);
+                console.log('API Response Data:', data); 
+                if (Array.isArray(data)) {
+                    setUsers(data);
+                    setFilterdData(data);
+                } else {
+                    console.error('API response is not an array:', data);
+                    setFilterdData([]);
+                }
             } else if (response.status === 401) {
                 localStorage.removeItem('access_token');
                 await refreshAccessToken();
-                if(localStorage.getItem('access_token') !== null)
-                {
+                if (localStorage.getItem('access_token') !== null) {
                     await fetchUsers();
+                } else {
+                    console.log("no user logged in");
                 }
-                else
-                {
-                    console.log("no user logged in")
-                }
-                
             } else {
                 throw new Error('Failed to fetch posts');
             }
         };
-
         fetchUsers();
         setLoading(false);
-    }, []);
+    }, [filterParams]);
 
     const navigate = useNavigate();
 
 
     const [filteredData, setFilterdData] = useState(users);
     
-    const [filterParams, setFilterParams] = useState(
-    {
-        for: 'all',
-        text: ''
-    }
-    );
-
-    useEffect(() => {
-
-        if(filterParams.text === '')
-        {
-            setFilterdData(users);
-            return;
-        }
-        const data = users;
-        var filtereditems;
-
-        if(filterParams.for === 'name')
-        {
-            filtereditems = data.filter(item =>
-            {
-                const name = item.name + " " + item.surname;
-                return name.toLowerCase().includes(filterParams.text.toLowerCase());
-            });       
-        }
-        else if(filterParams.for === 'email')
-        {
-            filtereditems = data.filter(item => item.email.toLowerCase().includes(filterParams.text.toLowerCase()));
-        }
-        else if(filterParams === 'uid')
-        {
-            filtereditems = data.filter(item => item.uid.toLowerCase().includes(filterParams.text.toLowerCase()));
-        }
-        else
-        {
-            filtereditems = data.filter(item => item.uid.toLowerCase().includes(filterParams.text.toLowerCase())
-            || item.email.toLowerCase().includes(filterParams.text.toLowerCase())
-            || item.name.toLowerCase().includes(filterParams.text.toLowerCase()));
-        }
-
-        setFilterdData(filtereditems);
-        }, [filterParams]);
-    
+     
 
     const handleRowClick = (event) => {
         const { id } = event.currentTarget.dataset;
         navigate(`/admin/view?user_id=${id}`);
     };
-
+    
     const handleChange = (e) => {
         const { name, value} = e.target;
         setFilterParams({
@@ -111,6 +76,7 @@ function AdminDashboardPGA(props) {
         [name]: value,
         });
     };
+
 
     const [exportMode, setExportMode] = useState(false);
     const [exportSelection, setExportSelection] = useState(
