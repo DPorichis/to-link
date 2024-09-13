@@ -84,6 +84,7 @@ function SignUpPG(props) {
         pfBio: '',
         pfEducation: [],
         pfExperience: [],
+        pfSkills:[],
         pfPicture: '',
     
         pfPhone: '',
@@ -258,19 +259,32 @@ function SignUpPG(props) {
       }));
     };
 
-    const getCookie = (name) => {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-          const cookies = document.cookie.split(';');
-          for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === `${name}=`) {
-              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-              break;
-            }
-          }
-        }
-        return cookieValue;
+    const remSkill = (event) => {
+        const {name} = event.target;
+        setFormData1((prevProfile) => ({
+          ...prevProfile,
+          pfSkills: formData1.pfSkills.filter((_, i) => i != name),
+        }));
+    };
+
+    const addSkill = () => {
+        setFormData1((prevProfile) => ({
+          ...prevProfile,
+          pfSkills: [... prevProfile.pfSkills, ""],
+        }));
+    };
+
+    const handleSkillChange = (event) => {
+        const { name, value } = event.target;
+        
+        const newSkill = formData1.pfSkills.map((inst, i) =>
+            i == name ? value : inst
+        );
+
+        setFormData1((prevProfile) => ({
+        ...prevProfile,
+        pfSkills: newSkill,
+      }));
     };
 
     const validateForm1 = () => {
@@ -304,7 +318,6 @@ function SignUpPG(props) {
             setFormErrors1(errors);
             return
         }
-        const csrfToken = getCookie('csrftoken');
         
         // Create a FormData object
         const readyForm = new FormData();
@@ -320,6 +333,7 @@ function SignUpPG(props) {
         // Experience and Education are likely arrays, so you need to stringify them
         readyForm.append("experience", JSON.stringify(formData1.pfExperience));
         readyForm.append("education", JSON.stringify(formData1.pfEducation));
+        readyForm.append("skills", JSON.stringify(formData1.pfSkills));
         
         if (image) {
             readyForm.append('pfp', image);
@@ -632,6 +646,26 @@ function SignUpPG(props) {
                                 <button type="button" class="btn btn-outline-success mt-2" id="addExperience"
                                 onClick={addEdu} style={{marginBottom:"5px"}}
                                 >Add Education</button>
+                            </div>
+                        </div>
+                        <div class="mb-12" style={{marginBottom:"3px"}}>
+                            <label for="pfSkills" class="form-label" style={{marginBottom:"2px"}}>Skills</label>
+                            <ul id="skillList" class="list-group">
+                                {formData1.pfSkills.map((_, index) =>
+                                    <li class="list-group-item" style={{display:"flex", justifyContent:"space-between"}}>
+                                        <input type="text" class="form-control" name={index} 
+                                        placeholder="Add skill here" value={formData1.pfSkills[index]} onChange={handleSkillChange}/>
+                                        <button type="button" class="btn btn-danger" 
+                                        style={{marginLeft: "4px"}} onClick={remSkill} name={index}>
+                                            -
+                                        </button>
+                                    </li>                                    
+                                )}
+                            </ul>
+                            <div class="list-group">
+                                <button type="button" class="btn btn-outline-success mt-2" id="addSkill"
+                                onClick={addSkill} style={{marginBottom:"5px"}}
+                                >Add Skill</button>
                             </div>
                         </div>
                     </div>                

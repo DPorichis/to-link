@@ -85,6 +85,7 @@ class Profile(models.Model):
     website = models.TextField(blank=True, null=True)  # Field name made lowercase.
     experience = models.JSONField(null=True)  # Field name made lowercase.
     education = models.JSONField(null=True)  # Field name made lowercase.
+    skills = models.JSONField(null=True)  # Field name made lowercase.
     link_cnt = models.IntegerField(blank=True, default=0)  # Field name made lowercase.
     post_cnt = models.IntegerField(blank=True, default=0)  # Field name made lowercase.
     listings_cnt = models.IntegerField(blank=True, default=0)  # Field name made lowercase.
@@ -106,6 +107,7 @@ class Listing(models.Model):
     level = models.CharField(max_length=45)  # Field name made lowercase.
     location = models.CharField(max_length=45, default="No location provided")
     desc = models.TextField()  # Field name made lowercase.
+    skills = models.JSONField(null=True)  # Field name made lowercase.
     apl_cnt = models.IntegerField(blank=True, default=0)
     timestamp = models.DateTimeField(auto_now_add=True)  # Field name made lowercase.
 

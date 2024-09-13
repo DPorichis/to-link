@@ -248,9 +248,17 @@ function HomePGU(props) {
                     </div>
                     <h5>MY Links</h5>
                     <div className = "Links" style={{}}>
-                            {links.map((link) =>
+                        {links.length > 0? 
+                        (links.map((link) =>
                             <ProfileSmall link={link}/>
-                        )}
+                        ))
+                        :
+                        <div style={{backgroundColor:"white",borderRadius:"10px", padding:"4px 4px", textAlign:"center"}}>
+                            <h6 style={{marginBottom:"2px"}}>You have no connections</h6>
+                            <p style={{marginBottom:"4px"}}>Let's change that!</p>
+                            <a href="/user/network" class="btn btn-primary btn-sm">Go to network</a>
+                        </div>
+                    }
                     </div>
                 </div>
             </div>
@@ -321,7 +329,11 @@ function HomePGU(props) {
                         <Postbox post={post}/> 
                     ))
                 ) : (
-                    <p>No posts available</p>
+                    <div style={{ backgroundColor: "#fff", border: "1px solid #ccc", borderRadius:"3px", padding:"20px 10px"}}>
+                        <h5>This place is awfully quiet...</h5>
+                        <p style={{marginBottom:"0px"}}>We are a new app ok? Don't judge us that hard. <br/>
+                        Instead, post something, the box is up there!</p>
+                    </div>
                 )}
                 </div>
             </div>

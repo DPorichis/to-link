@@ -6,7 +6,7 @@ from django.db.models import Q, F
 class ProfileUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        fields = ['pfp', 'name', 'surname', 'title', 'bio', 'phone', 'website', 'email', 'experience', 'education', "vis_cont", "vis_edu", "vis_exp", "vis_act"]
+        fields = ['pfp', 'name', 'surname', 'title', 'bio', 'phone', 'website', 'email', 'experience', 'education', "skills","vis_cont", "vis_edu", "vis_exp", "vis_act"]
         # Add any other fields you want to be updatable
 
     def update(self, instance, validated_data):
@@ -57,6 +57,7 @@ class ProfileSerializer(serializers.ModelSerializer):
             "website": obj.website,
             "experience": obj.experience, 
             "education": obj.education,
+            "skills": obj.skills,
             "link_cnt": obj.link_cnt,
             "post_cnt": obj.post_cnt,
             "listings_cnt": obj.listings_cnt,
@@ -106,6 +107,7 @@ class ProfileSerializer(serializers.ModelSerializer):
             "website": website,
             "experience": exp, 
             "education": edu,
+            "skills": obj.skills,
             "link_cnt": obj.link_cnt,
             "post_cnt": obj.post_cnt,
             "listings_cnt": obj.listings_cnt,
@@ -143,7 +145,7 @@ class AdminProfileSerializer(serializers.ModelSerializer):
         user_info = serializers.SerializerMethodField()
         class Meta:
             model = Profile
-            fields = ['user_id', 'pfp', 'name', 'surname', 'title', 'bio', 'phone', 'website', 'experience', 'education', 'listings_cnt', "post_cnt", "user_info"]
+            fields = ['user_id', 'pfp', 'name', 'surname', 'title', 'bio', 'phone', 'website', 'experience', 'education', 'skills','listings_cnt', "post_cnt", "user_info"]
             # Add any other fields you want to be updatable
 
 

@@ -52,6 +52,18 @@ function JobPreview(props) {
             <p>
                 {props.listing.desc}
             </p>
+            <h5 style={{marginBottom:"2px"}}>
+                Skills
+            </h5>
+            {props.listing.skills.length !== 0? 
+                <ul>
+                    {props.listing.skills.map((exp) =>
+                        <li>{exp}</li>
+                    )}
+                </ul>  
+                :
+                <p>No skills set</p>
+            }        
         </div>
     );
 }

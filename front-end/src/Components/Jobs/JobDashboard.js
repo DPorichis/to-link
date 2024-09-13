@@ -59,6 +59,34 @@ function JobDashboard(props) {
         setEditedListing(props.listing);
     };
 
+    const remSkill = (event) => {
+        const {name} = event.target;
+        setEditedListing((prevProfile) => ({
+          ...prevProfile,
+          skills: editedListing.skills.filter((_, i) => i != name),
+        }));
+    };
+
+    const addSkill = () => {
+        setEditedListing((prevProfile) => ({
+          ...prevProfile,
+          skills: [... prevProfile.skills, ""],
+        }));
+    };
+
+    const handleSkillChange = (event) => {
+        const { name, value } = event.target;
+        
+        const newSkill = editedListing.skills.map((inst, i) =>
+            i == name ? value : inst
+        );
+
+        setEditedListing((prevProfile) => ({
+        ...prevProfile,
+        skills: newSkill,
+      }));
+    };
+
 
     useEffect(() => {
         const fetchapplic = async () => {
@@ -186,6 +214,26 @@ function JobDashboard(props) {
                             placeholder="ex. SUPER WOW MUCH MONEY JOB AT TO LINK WOWOWOW"
                             value={editedListing.desc} onChange={handleInputChange}></textarea>
                         </div>
+                        <div class="mb-3" style={{marginBottom:"3px"}}>
+                            <label for="pfSkills" class="form-label" style={{marginBottom:"2px"}}>Skills</label>
+                            <ul id="skillList" class="list-group">
+                                {editedListing.skills.map((_, index) =>
+                                    <li class="list-group-item" style={{display:"flex", justifyContent:"space-between"}}>
+                                        <input type="text" class="form-control" name={index} 
+                                        placeholder="Add skill here" value={editedListing.skills[index]} onChange={handleSkillChange}/>
+                                        <button type="button" class="btn btn-danger" 
+                                        style={{marginLeft: "4px"}} onClick={remSkill} name={index}>
+                                            -
+                                        </button>
+                                    </li>                                    
+                                )}
+                            </ul>
+                            <div class="list-group">
+                                <button type="button" class="btn btn-outline-success mt-2" id="addSkill"
+                                onClick={addSkill} style={{marginBottom:"5px"}}
+                                >Add Skill</button>
+                            </div>
+                        </div>
                     </form>                
                 </>
                 :
@@ -230,6 +278,19 @@ function JobDashboard(props) {
                 <p>
                     {props.listing.desc}
                 </p>
+                <h5 style={{marginBottom:"2px"}}>
+                    Skills
+                </h5>
+                {props.listing.skills.length !== 0? 
+                    <ul>
+                        {props.listing.skills.map((exp) =>
+                            <li>{exp}</li>
+                        )}
+                    </ul>  
+                    :
+                    <p>No skills set</p>
+                }
+
                 </>
                 :
                 <>

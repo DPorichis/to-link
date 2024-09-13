@@ -6,7 +6,7 @@ class ListingSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Listing
-        fields = ['listing_id', 'user', 'title', 'visible', 'spot', 'time', 'level', 'desc', 'location', 'timestamp', 'user_info', 'apl_cnt']
+        fields = ['listing_id', 'user', 'title', 'visible', 'spot', 'time', 'level', 'desc', 'skills', 'location', 'timestamp', 'user_info', 'apl_cnt']
         read_only_fields = ['listing_id', 'user', 'timestamp', 'user_info', 'apl_cnt']
         # Add any other fields you want to be updatable
             
@@ -37,7 +37,7 @@ class ListingUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Listing
-        fields = ['listing_id', 'user', 'title', 'visible', 'spot', 'time', 'level', 'desc', 'location', 'timestamp', 'user_info', 'apl_cnt']
+        fields = ['listing_id', 'user', 'title', 'visible', 'spot', 'time', 'level', 'desc', 'skills', 'location', 'timestamp', 'user_info', 'apl_cnt']
         read_only_fields = ['listing_id', 'user', 'timestamp', 'user_info', 'apl_cnt']
         # Add any other fields you want to be updatable
 

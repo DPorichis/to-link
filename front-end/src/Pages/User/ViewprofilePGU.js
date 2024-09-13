@@ -342,26 +342,46 @@ function ViewprofilePGU(props) {
                         Experience
                     </h4>
                     {viewProfile.experience? 
-                        <ul>
+                        
+                        (viewProfile.experience.length > 0 ? 
+                            <ul>
                             {viewProfile.experience.map((exp) =>
                                 <li>{exp}</li>
                             )}
                         </ul>  
                         :
                         <p>No experience set</p>
+                        )
+                        :
+                        <p>No experience set</p>
                     }
-                    
                     <h4 style={{marginBottom:"2px"}}>
                         Education
                     </h4>
                     {viewProfile.education? 
+                        (viewProfile.education.length > 0 ? 
+                            <ul>
+                                {viewProfile.education.map((exp) =>
+                                    <li>{exp}</li>
+                                )}
+                            </ul>
+                        :
+                        <p>No education set</p>
+                        )
+                        :
+                        <p>No education set</p>
+                    }
+                    <h4 style={{marginBottom:"2px"}}>
+                        Skills
+                    </h4>
+                    {viewProfile.skills? 
                         <ul>
-                            {viewProfile.education.map((exp) =>
+                            {viewProfile.skills.map((exp) =>
                                 <li>{exp}</li>
                             )}
                         </ul>  
                         :
-                        <p>No education set</p>
+                        <p>No skills set</p>
                     }
                 </div>
                 :

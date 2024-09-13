@@ -179,7 +179,7 @@ function MyProfilePGU(props) {
 
         // Append all fields from editedProfile to the FormData
         for (let key in editedProfile) {
-            if(key === "education" || key === "experience")
+            if(key === "education" || key === "experience" || key === "skills")
             {
                 formData.append(key, JSON.stringify(editedProfile[key]))
             }
@@ -211,6 +211,10 @@ function MyProfilePGU(props) {
             if (userData.experience === null) 
             {
                 userData.experience = []
+            }
+            if (userData.skills === null) 
+            {
+                userData.skills = []
             }
             setSavedProfile(userData);
             setEditedProfile(userData);
@@ -289,6 +293,34 @@ function MyProfilePGU(props) {
         }));
     };
 
+
+    const remSkill = (event) => {
+        const {name} = event.target;
+        setEditedProfile((prevProfile) => ({
+          ...prevProfile,
+          skills: editedProfile.skills.filter((_, i) => i != name),
+        }));
+    };
+
+    const addSkill = () => {
+        setEditedProfile((prevProfile) => ({
+          ...prevProfile,
+          skills: [... prevProfile.skills, ""],
+        }));
+    };
+
+    const handleSkillChange = (event) => {
+        const { name, value } = event.target;
+        
+        const newSkill = editedProfile.skills.map((inst, i) =>
+            i == name ? value : inst
+        );
+
+        setEditedProfile((prevProfile) => ({
+        ...prevProfile,
+        skills: newSkill,
+      }));
+    };
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
@@ -438,6 +470,26 @@ function MyProfilePGU(props) {
                                     >Add Education</button>
                                 </div>
                             </div>
+                            <div class="mb-12" style={{marginBottom:"3px"}}>
+                                <label for="pfSkills" class="form-label" style={{marginBottom:"2px"}}>Skills</label>
+                                <ul id="skillList" class="list-group">
+                                    {editedProfile.skills.map((_, index) =>
+                                        <li class="list-group-item" style={{display:"flex", justifyContent:"space-between"}}>
+                                            <input type="text" class="form-control" name={index} 
+                                            placeholder="Add skill here" value={editedProfile.skills[index]} onChange={handleSkillChange}/>
+                                            <button type="button" class="btn btn-danger" 
+                                            style={{marginLeft: "4px"}} onClick={remSkill} name={index}>
+                                                -
+                                            </button>
+                                        </li>                                    
+                                    )}
+                                </ul>
+                                <div class="list-group">
+                                    <button type="button" class="btn btn-outline-success mt-2" id="addSkill"
+                                    onClick={addSkill} style={{marginBottom:"5px"}}
+                                    >Add Skill</button>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-4">
                             <h5>Category Visibility</h5>
@@ -559,6 +611,19 @@ function MyProfilePGU(props) {
                         :
                         <p>No education set</p>
                     }
+
+                    <h4 style={{marginBottom:"2px"}}>
+                        Skills
+                    </h4>
+                    {savedProfile.skills.length !== 0? 
+                        <ul>
+                            {savedProfile.skills.map((exp) =>
+                                <li>{exp}</li>
+                            )}
+                        </ul>  
+                        :
+                        <p>No skills set</p>
+                    }
                 </div>
                 :
                 (mode === "posts"
@@ -572,7 +637,12 @@ function MyProfilePGU(props) {
                         }
                         </> 
                     :
-                        <>No posts</>
+                    <div style={{ backgroundColor: "#fff", border: "1px solid #ccc", borderRadius:"3px", padding:"20px 10px", marginTop:"10px"}}>
+                        <h5>You have not posted anything</h5>
+                        <p style={{marginBottom:"0px"}}>Bro don't be shy...
+                        I am sure everyone wants to hear your opinion about things! <br/>
+                        (They don't but the marketing department told me to be reasuring)</p>
+                    </div>
                     )
                     :
                     (mode === "listings"
@@ -585,15 +655,22 @@ function MyProfilePGU(props) {
                         )}
                         </>
                         :
-                        <>
-                            No Listings found
-                        </>
+                        <div style={{ backgroundColor: "#fff", border: "1px solid #ccc", borderRadius:"3px", padding:"20px 10px", marginTop:"10px"}}>
+                            <h5>You have not posted any listings</h5>
+                            <p style={{marginBottom:"0px"}}>That's a shame... <br/>
+                            Do you know how much time it took to create that feature? Don't be so mean...</p>
+                        </div>
                         }
                         
                     </>
 
                     :
-                    <>Activity</>
+                    <div style={{ backgroundColor: "#fff", border: "1px solid #ccc", borderRadius:"3px", padding:"20px 10px", marginTop:"10px"}}>
+                        <h5>Jim forgot to code this one</h5>
+                        <p style={{marginBottom:"0px"}}>
+                            Come back later, maybe our developers will create something amazing here
+                        </p>
+                    </div>
                     )
 
                 )

@@ -41,6 +41,16 @@ function ListingsPGU(props) {
     const [edit, setEdit] = useState(false);
     const [loading, setLoading] = useState(true);
 
+    const changeSelection = (listing) => {
+        let list = listing
+        if (list.skills === null) 
+        {
+            list.skills = []
+        }
+        
+        setSelectedListing(list);
+    };
+
     useEffect(() => {
         const fetchListings = async () => {
             const token = localStorage.getItem('access_token');
@@ -127,7 +137,7 @@ function ListingsPGU(props) {
             if (response.ok) {
                 // Fetch user account details if authenticated
                 const listi = await response.json();
-                setSelectedListing(listi);
+                changeSelection(listi);
             } else if (response.status === 401) {
                 localStorage.removeItem('access_token');
                 await refreshAccessToken();
@@ -240,9 +250,7 @@ function ListingsPGU(props) {
     };
 
 
-    const changeSelection = (listing) => {
-        setSelectedListing(listing);
-    };
+
 
     const createNewListing = async () =>
     {
@@ -318,7 +326,7 @@ function ListingsPGU(props) {
                 );
             });
 
-            setSelectedListing(answer)
+            changeSelection(answer)
 
             console.log(answer)
         } else if (response.status === 401) {
