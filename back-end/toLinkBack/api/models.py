@@ -111,6 +111,10 @@ class Listing(models.Model):
     apl_cnt = models.IntegerField(blank=True, default=0)
     timestamp = models.DateTimeField(auto_now_add=True)  # Field name made lowercase.
 
+class ListingViews(models.Model):
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE)  # Field name made lowercase. The composite primary key (User_ID, Listing_ID) found, that is not supported. The first column is selected.
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE)  # Field name made lowercase.
+    timestamp = models.DateTimeField(auto_now_add=True)  # Field name made lowercase.
 
 class Applied(models.Model):
     user = models.ForeignKey(Profile, on_delete=models.CASCADE, db_column='User_ID')  # Field name made lowercase. The composite primary key (User_ID, Listing_ID) found, that is not supported. The first column is selected.
@@ -130,7 +134,11 @@ class Post(models.Model):
     comment_cnt = models.IntegerField(default=0)  # Field name made lowercase.
     timestamp = models.DateTimeField(auto_now_add=True)
 
-
+class PostViews(models.Model):
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE)  # Field name made lowercase. The composite primary key (User_ID, Listing_ID) found, that is not supported. The first column is selected.
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now_add=True)  # Field name made lowercase.
+    
 class Comment(models.Model):
     comment_id = models.AutoField(db_column='Comment_ID', primary_key=True)
     post = models.ForeignKey(Post, on_delete=models.CASCADE, db_column='Post_ID')  # Field name made lowercase. The composite primary key (Post_ID, User_ID) found, that is not supported. The first column is selected.

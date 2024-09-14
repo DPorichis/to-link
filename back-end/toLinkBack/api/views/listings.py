@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.authtoken.models import Token
 
 from api.serializers import ListingSerializer, ListingUpdateSerializer, AppliedSerializer
-from api.models import Listing, Applied, Profile, Link, Notification
+from api.models import Listing, Applied, Profile, Link, Notification, ListingViews
 
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -109,6 +109,9 @@ def check_if_applied(request):
         return Response({"applied": "You can't apply to your own job"}, status=status.HTTP_200_OK)
     # Check if the like already exists
     user = request.user.profile
+
+    ### Check if applied is only called upon viewing, track user activity
+    ListingViews.objects.create(user=user, listing=listing)
     try:
         applied_by = Applied.objects.get(listing=listing, user=user)
         # If exists, unlike the post
