@@ -47,6 +47,10 @@ function MessageCont(props) {
         fetchdms();
     }, [props.rer]);
 
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
+    }, [dms]);
+
 
     return (
         <div style={{ overflowY: "scroll", paddingRight: "10px", flex:"1" }}>
@@ -65,7 +69,7 @@ function MessageCont(props) {
                                 other_name={props.convo.user_info.name + " " + props.convo.user_info.surname}
                                 other_title={props.convo.user_info.title}
                                 other_pfp={props.convo.user_info.pfp}
-                                your_pfp={props.me} // FIX
+                                your_pfp={props.me} 
                                 message={message}
                                 same={index > 0 && dms[index - 1].user === message.user}
                             />

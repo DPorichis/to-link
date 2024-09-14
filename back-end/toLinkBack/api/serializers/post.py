@@ -89,3 +89,8 @@ class CommentSerializer(serializers.ModelSerializer):
     
     def create(self, validated_data):
         return Comment.objects.create(**validated_data)
+
+class PostIdSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = ['post_id']

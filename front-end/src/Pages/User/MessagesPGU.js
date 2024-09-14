@@ -19,6 +19,7 @@ function MessagesPGU(props) {
     const [rerend, setRerend] = useState(true);
     const [userPFP, setUserPFP] = useState("")
     const [noAuth, setNoAuth] = useState(false);
+    const [messageSent, setMessageSent] = useState(false);
 
     const [searchParams] = useSearchParams();
     const id = searchParams.get('user_id');
@@ -163,7 +164,7 @@ function MessagesPGU(props) {
 
 
         setLoading(false);
-    }, []);
+    }, [id]);
 
     const [image, setImage] = useState(null);
 
@@ -214,6 +215,7 @@ function MessagesPGU(props) {
             {
                 console.log("storedLinks");
                 const cnv = selected_dm
+                setMessageSent(prev => !prev);
             }
             else if (response.status === 401) {
                 localStorage.removeItem('access_token');
@@ -273,18 +275,17 @@ function MessagesPGU(props) {
                 <div className="Textbox" style={{display:"flex", flexDirection:"column",textAlign:"left",justifyContent:"space-between",width:"70%", padding:"5px 10px",
                     border: "#ccc 1px solid", borderRadius:"10px",  height:"90vh"
                 }}>
-                    {selected_dm.convo_id !== undefined 
-                    ?
-                        <>
+                {selected_dm.convo_id !== undefined ?
+                    <>
                         <div>
-                            <div style={{display:"flex", flexDirection:"row",textAlign:"left"}}>
-                                <h3 style={{fontSize:"4vh",marginRight:"1%",marginBottom:"0px"}}>{selected_dm.user_info.name + " " + selected_dm.user_info.surname}</h3>
-                                <p style={{color:"#D3D3D3",fontSize:"3vh",marginTop:"0.5vh",marginBottom:"0px"}}>{selected_dm.user_info.title}</p>
+                            <div style={{ display: "flex", flexDirection: "row", textAlign: "left" }}>
+                                <h3 style={{ fontSize: "4vh", marginRight: "1%", marginBottom: "0px" }}>{selected_dm.user_info.name + " " + selected_dm.user_info.surname}</h3>
+                                <p style={{ color: "#D3D3D3", fontSize: "3vh", marginTop: "0.5vh", marginBottom: "0px" }}>{selected_dm.user_info.title}</p>
                             </div>
-                            <p style={{marginTop:"0px"}}>In your Network</p>
+                            <p style={{ marginTop: "0px" }}>In your Network</p>
                         </div>
-                        <MessageCont convo={selected_dm} rer={rerend} me={userPFP}/>
-                        </>
+                        <MessageCont convo={selected_dm} rer={messageSent} me={userPFP} />
+                    </>
                         :
                         <div style={{"textAlign": "center"}}>
                             <h4>Select a dm from the left</h4>

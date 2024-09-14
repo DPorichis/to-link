@@ -13,7 +13,7 @@ from .views import login, signup, update_profile, logout, fetch_user_info, updat
     admin_fetch_applications, admin_fetch_profile, admin_fetch_personal, admin_fetch_listings, \
     admin_fetch_posts, admin_fetch_comments, admin_fetch_likes, get_all_posts, check_if_applied, \
     update_listing, check_if_like_exist, get_post_by_user_id, fetch_searching_links, admin_fetch_users, \
-    fetch_notifications, dismiss_notification_by_id, retrive_header_info
+    fetch_notifications, dismiss_notification_by_id, retrive_header_info,get_posts_id
 
 urlpatterns = [
     re_path('login', login),
@@ -29,7 +29,7 @@ urlpatterns = [
     re_path('profile/view/', retrive_profile),
     re_path('profile/fetch_searching',fetch_searching_links),
 
-    re_path('posts/view/', get_post_by_id),
+    re_path('posts/view/byid', get_post_by_id),
     re_path('posts/fetch/all', get_all_posts),
     re_path('posts/fetch/user', get_post_by_user_id),
     re_path('posts/upload/', upload_post),
@@ -37,6 +37,8 @@ urlpatterns = [
     re_path('posts/like/exists', check_if_like_exist),
     re_path('posts/comment/new', comment_post),
     re_path('posts/comment/show', get_comments_by_post),
+    re_path('posts/getid', get_posts_id),
+
     
     re_path('convo/list/', fetch_convo_menu),
     re_path('convo/dm/new', send_dm),

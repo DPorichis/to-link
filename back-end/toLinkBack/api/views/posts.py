@@ -3,7 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from api.models import Post, LikedBy, Profile, Comment, PostMedia, Notification
-from api.serializers import PostSerializer, CommentSerializer, LikedBySerializer
+from api.serializers import PostSerializer, CommentSerializer, LikedBySerializer,PostIdSerializer
 from django.db.models import F
 
 @api_view(['POST'])
@@ -159,6 +159,13 @@ def get_all_posts(request):
     # Retrieve all posts
     posts = Post.objects.all().order_by('-post_id')
     serializer = PostSerializer(posts, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def get_posts_id(request):
+    posts = Post.objects.all().order_by('-post_id')
+    serializer = PostIdSerializer(posts, many=True) 
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
