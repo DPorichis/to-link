@@ -1,0 +1,8 @@
+django==5.0
+djangorestframework
+environs
+markdown
+django-filter
+Pillow
+django-cors-headers
+djangorestframework-simplejwt

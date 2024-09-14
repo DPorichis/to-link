@@ -1,0 +1,433 @@
+import React from "react";
+import Header from "../../Components/Header";
+import { redirect, useSearchParams } from 'react-router-dom';
+import { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
+import Postbox from "../../Components/Feed/Postbox";
+import JobTile from "../../Components/Jobs/JobTile";
+import { refreshAccessToken } from "../../functoolbox";
+import NotFoundPG from "../NotFoundPG";
+
+const getCookie = (name) => {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === `${name}=`) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+};
+
+function ViewprofilePGU(props) {
+    const navigate = useNavigate();
+
+    const [mode, setMode] = useState("info");
+    const [loading, setLoading] = useState(true);
+    const [noAuth, setNoAuth] = useState(false);
+    const [searchParams] = useSearchParams();
+
+    const id = searchParams.get('user_id');
+    
+    const [viewProfile, setviewProfile] = useState({});
+    const [relationship, setRelationship] = useState("No Connection");
+    
+    const [listings, setListings] = useState([]);
+    const [posts, setPosts] = useState([]);
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            const token = localStorage.getItem('access_token');
+            const response = await fetch("http://127.0.0.1:8000/profile/view/", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    "user_id": id
+                })
+            })
+            
+            if (response.ok) {
+                // Fetch user account details if authenticated
+                let userData = await response.json();
+                setviewProfile(userData.profile_info)
+                setRelationship(userData.relationship)
+            } else if (response.status === 401) {
+                localStorage.removeItem('access_token');
+                await refreshAccessToken();
+                if(localStorage.getItem('access_token') !== null)
+                {
+                    await fetchUser();
+                }
+                else
+                {
+                    console.log("no user logged in")
+                    setNoAuth(true);
+                }
+                
+            }else
+            {
+                setviewProfile(null);
+                console.log("no user logged in")
+                setNoAuth(true);
+            }
+
+            const response1 = await fetch("http://127.0.0.1:8000/listings/list", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    "specify_user": id
+                })
+            })
+
+            if (response1.ok) {
+                let answer = await response1.json();
+                setListings(answer);
+            } else if (response.status === 401) {
+                localStorage.removeItem('access_token');
+                await refreshAccessToken();
+                if(localStorage.getItem('access_token') !== null)
+                {
+                    await fetchUser();
+                }
+                else
+                {
+                    console.log("Problems with fetching listing info")
+                }
+                
+            } else {
+                console.log("Problems with fetching your listings info")
+            }
+
+            const response2 = await fetch("http://127.0.0.1:8000/posts/fetch/user", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    "user_id": id
+                })
+            })
+
+            if (response2.ok) {
+                let answer = await response2.json();
+                setPosts(answer);
+            } else if (response.status === 401) {
+                localStorage.removeItem('access_token');
+                await refreshAccessToken();
+                if(localStorage.getItem('access_token') !== null)
+                {
+                    await fetchUser();
+                }
+                else
+                {
+                    console.log("Problems with fetching profile info")
+                }
+                
+            } else {
+                console.log("Problems with fetching profile info")
+            }
+            setLoading(false);
+        };
+
+        fetchUser();
+    }, []);
+    
+    const handleInfo = () => {
+        setMode("info");
+    };
+
+    const handlePosts = () => {
+        setMode("posts");
+    };
+
+    const handleListings = () => {
+        setMode("listings");
+    };
+
+    const handleActivity = () => {
+        setMode("activity");
+    };
+
+    const goToJobListing = (listi) => {
+        navigate(`/user/listings?listing_id=${listi.listing_id}`)
+    };
+
+    const handleRequestClick = async (userId) => {
+        const csrfToken = getCookie('csrftoken');
+        try {
+            const response = await fetch("http://127.0.0.1:8000/request/new", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                credentials: "include",
+                body: JSON.stringify({ 'request_id': userId })
+            });
+
+            if (response.ok) {
+                if(relationship === "Pending Request Sent")
+                {
+                    setRelationship("No Connection")
+                } else
+                {
+                    setRelationship("Pending Request Sent")
+                }
+            } else {
+                const errorResult = await response.json();
+                alert(errorResult.error || "Failed to send request");
+            }
+        } catch (error) {
+            console.error("Error sending request:", error);
+            alert("An error occurred while sending the request");
+        }
+    };
+
+    const handleResponseClick = async (answer) => {
+        const csrfToken = getCookie('csrftoken');
+        try {
+            const response = await fetch("http://127.0.0.1:8000/request/respond", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                credentials: "include",
+                body: JSON.stringify({ 'request_id': id,
+                    "request_response": answer
+                 })
+            });
+
+            if (response.ok) {
+                if(answer === "accept")
+                {
+                    setRelationship("Friends")
+                }
+                else{
+                    setRelationship("No Connection")
+                }
+            } else {
+                const errorResult = await response.json();
+                alert(errorResult.error || "Failed to respond to request");
+                setRelationship("No Connection")
+            }
+        } catch (error) {
+            console.error("Error sending request:", error);
+            alert("An error occurred while sending the request");
+        }
+    };
+
+    if(noAuth){
+        return (<NotFoundPG />)
+    }
+
+    if(loading) return <>Loading...</>
+
+    return (
+        <div>
+            <Header log="user" act=""/>
+            <div style={{display:"flex", flexDirection:"column", width: "70%", marginLeft:"15%", marginTop:"20px"}}>
+                
+                
+                <div style={{display:"flex", flexDirection:"row", justifyContent:"space-between", marginBottom:"5px"}}>
+                    { relationship === "Friends" ?
+                        <button type="button" class="btn btn-outline-dark" style={{paddingTop: "0px", paddingBottom: "0px", marginRight:"4px"}} onClick={()=>{navigate(`/user/Messages?user_id=${id}`);}}>
+                                    Message
+                        </button>
+                        :
+                        (relationship === "Pending Request Sent"?
+                        
+                            <button type="button" class="btn btn-outline-dark" style={{paddingTop: "0px", paddingBottom: "0px", marginRight:"4px"}} onClick={() => handleRequestClick(id)}>
+                                Undo Link Request
+                            </button>
+                            
+                        :
+                        (relationship === "Pending Request Received"?
+                            <>
+                                <button type="button" class="btn btn-danger" style={{paddingTop: "0px", paddingBottom: "0px", marginRight:"4px"}} onClick={() => handleResponseClick("reject")}>
+                                    Reject Request
+                                </button>
+                                <button type="button" class="btn btn-success" style={{paddingTop: "0px", paddingBottom: "0px", marginRight:"4px"}} onClick={() => handleResponseClick("accept")}>
+                                    Accept Request
+                                </button>
+                            </>
+                            
+                        :
+                        (relationship === "No Connection"?
+                            <button type="button" class="btn btn-outline-dark" style={{paddingTop: "0px", paddingBottom: "0px", marginRight:"4px"}} onClick={() => handleRequestClick(id)}>
+                                Request Link
+                            </button>
+                        :
+                            <></>
+                        )
+                        
+                        ))}
+                
+                
+                    <button type="button" class="btn btn-outline-primary" style={{paddingTop: "0px", paddingBottom: "0px",
+                        marginRight:"4px"
+                    }}>Share Profile</button>
+                </div>
+                <>
+                <div style={{display:"flex", flexDirection:"row", justifyContent:"space-between", alignContent:"center", height:"100%",
+                    marginBottom:"5px",  borderTop: "solid #ddd 1px", padding: "5px 5px"
+                }}>
+                    <div style={{display:"flex", flexDirection:"row", justifyContent:"flex-start"}}>
+                        <img src={viewProfile.pfp} alt="Avatar" style={{width:"110px", height:"110px"}} className="link-image" />
+                        <div style={{textAlign:"left", marginLeft:"15px", alignContent:"center", height:"100%"}}>
+                        <h3 style={{marginBottom: "0px", fontSize:"32px"}}>
+                            {viewProfile.name + " " + viewProfile.surname}
+                        </h3>
+                        <p style={{marginBottom: "0px", fontSize:"20px"}}>
+                            {viewProfile.title}
+                        </p>
+                        </div>
+                    </div>
+                    {viewProfile.email !== "" || viewProfile.phone !== "" || viewProfile.website !== "" ?
+                    <p style={{textAlign:"right", marginBottom:"0px", marginTop:"10px"}}>
+                        Contact information<br/>
+                        {viewProfile.email?<> Email: {viewProfile.email}<br/> </>:<></>}
+                        {viewProfile.phone?<> Phone: {viewProfile.phone}<br/> </>:<></>}
+                        {viewProfile.website?<> Website: {viewProfile.website}<br/> </>:<></>}
+                    </p>
+                    :
+                    <p style={{textAlign:"right", marginBottom:"0px", marginTop:"10px"}}>
+                        Contact information<br/>
+                        Email: {viewProfile.email}<br/>
+                        Phone: {viewProfile.phone}<br/>
+                        Website: {viewProfile.website}
+                    </p>
+                    }
+                </div>
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class={mode === "info" ? "nav-link active": "nav-link"} aria-current="page" onClick={handleInfo}>Info</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class={mode === "posts" ? "nav-link active": "nav-link"} onClick={handlePosts}>Posts</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class={mode === "listings" ? "nav-link active": "nav-link"} onClick={handleListings}>Listings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class={mode === "activity" ? "nav-link active": "nav-link"} onClick={handleActivity}>Activity</a>
+                    </li>
+                </ul>
+                {mode === "info"
+                ?
+                <div style={{textAlign:"left", marginTop:"10px", padding: "5px 5px"}}>
+                    <h4 style={{marginBottom:"2px"}}>
+                        About {viewProfile.name}
+                    </h4>
+                    {viewProfile.bio? 
+                        <p>
+                            {viewProfile.bio}
+                        </p>
+                        :
+                        <p>No bio set</p>
+                    }
+
+                    <h4 style={{marginBottom:"2px"}}>
+                        Experience
+                    </h4>
+                    {viewProfile.experience? 
+                        
+                        (viewProfile.experience.length > 0 ? 
+                            <ul>
+                            {viewProfile.experience.map((exp) =>
+                                <li>{exp}</li>
+                            )}
+                        </ul>  
+                        :
+                        <p>No experience set</p>
+                        )
+                        :
+                        <p>No experience set</p>
+                    }
+                    <h4 style={{marginBottom:"2px"}}>
+                        Education
+                    </h4>
+                    {viewProfile.education? 
+                        (viewProfile.education.length > 0 ? 
+                            <ul>
+                                {viewProfile.education.map((exp) =>
+                                    <li>{exp}</li>
+                                )}
+                            </ul>
+                        :
+                        <p>No education set</p>
+                        )
+                        :
+                        <p>No education set</p>
+                    }
+                    <h4 style={{marginBottom:"2px"}}>
+                        Skills
+                    </h4>
+                    {viewProfile.skills? 
+                        <ul>
+                            {viewProfile.skills.map((exp) =>
+                                <li>{exp}</li>
+                            )}
+                        </ul>  
+                        :
+                        <p>No skills set</p>
+                    }
+                </div>
+                :
+                (mode === "posts"
+                    ?
+                    (posts.length !== 0 ?
+                        <>
+                        {
+                        posts.map(post => (
+                            <Postbox post={post}/> 
+                        ))
+                        }
+                        </> 
+                    :
+                        <>No posts</>
+                    )
+                    
+                    :
+                    (mode === "listings"
+                    ?
+                    <>
+                        {listings.length !== 0  ? 
+                        <>
+                        {listings.map((listi) =>
+                            <JobTile listing={listi} handleSelect={goToJobListing} active={false} />
+                        )}
+                        </>
+                        :
+                        <>
+                            No Listings found
+                        </>
+                        }
+                        
+                    </>
+
+                    :
+                    <>Activity</>
+                    )
+
+                )
+
+                }
+                
+                </>
+            </div>
+        </div>
+    );
+}
+export default ViewprofilePGU;    
