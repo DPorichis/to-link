@@ -14,7 +14,8 @@ from .views import login, signup, update_profile, logout, fetch_user_info, updat
     admin_fetch_applications, admin_fetch_profile, admin_fetch_personal, admin_fetch_listings, \
     admin_fetch_posts, admin_fetch_comments, admin_fetch_likes, get_all_posts, check_if_applied, \
     update_listing, check_if_like_exist, get_post_by_user_id, fetch_searching_links, admin_fetch_users, \
-    fetch_notifications, dismiss_notification_by_id, retrive_header_info, get_posts_id, get_post_by_id
+    fetch_notifications, dismiss_notification_by_id, retrive_header_info, get_posts_id, get_post_by_id, \
+    get_interactions
 
 urlpatterns = [
     re_path('login', login),
@@ -71,6 +72,7 @@ urlpatterns = [
     re_path('admin/fetch/connections', admin_fetch_connections),
     re_path('admin/fetch/allusers', admin_fetch_users),   
 
+    re_path('reco/init', get_interactions), 
 
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'), 

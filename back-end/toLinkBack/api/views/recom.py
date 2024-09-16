@@ -1,20 +1,15 @@
 # views.py
 from django.http import JsonResponse
-from models import Profile, ListingViews, Applied, Link
 
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework import status
+from api.recommendations import listing_recom, post_recom
+
+
+@api_view(['POST'])
 def get_interactions(request):
-    if request.method == 'GET':
-        user_interactions = []
-        users_network = []
-
-        # Collecting views and applications
-        views = ListingViews.objects.all().values('user', 'post', 'timestamp')
-        applications = Applied.objects.all().values('user', 'listing', 'timestamp')
-        network = Link.objects.all().values('user_id_to', 'user_id_from')
-
-        user_interactions.extend(list(views))
-        user_interactions.extend(list(applications))
-
-        users_network.extend(list(network))
-
-        return JsonResponse({"interactions": user_interactions, "network":users_network})
+    listing_recom()
+    post_recom()
+    return Response({}, status=status.HTTP_200_OK)

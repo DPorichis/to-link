@@ -1,10 +1,10 @@
 # This is a test bench for the API functionality
 
 ### Login API 
-POST http://127.0.0.1:8000/login
+POST http://127.0.0.1:8000/reco/init
 Content-Type: application/json
 
-{"email": "a@a.a", "password": "1"}
+{}
 
 ### Sign Up API
 

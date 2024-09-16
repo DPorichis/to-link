@@ -7,8 +7,20 @@ def listing_recom():
     views = []
     applications = []
     users_network= []
-    n_users = 5
-    n_items = 4
+    active_users = []
+    active_listings = []
+
+    n_users = len(active_users)
+    n_items = len(active_listings)
+
+    # Create mappings for user-index and listing-index
+    user_index = {user_id: idx for idx, user_id in enumerate(active_users)}
+    listing_index = {listing_id: idx for idx, listing_id in enumerate(active_listings)}
+    
+    # And the reverse
+    index_user = {idx: user_id for user_id, idx in user_index.items()}
+    index_listing = {idx: listing_id for listing_id, idx in listing_index.items()}
+
 
     # Jim is like, very funny. Here are the weights he decided to use a
     # random Saturday afternoon
@@ -18,9 +30,9 @@ def listing_recom():
     # Calculating R based on given data
     R = np.zeros((n_users, n_items))
     for apl in applications:
-        R[apl.user][apl.listing] += apply_weight
+        R[user_index[apl.user]][listing_index[apl.listing]] += apply_weight
     for view in views:
-        R[view.user][view.listing] += view_weight
+        R[user_index[apl.user]][listing_index[apl.listing]] += view_weight
 
     # Now we can finaly do matrix factorization on R, 
     # This implementation doesn't take the user's network into account, it rather creates recommentations for all users
@@ -35,12 +47,12 @@ def listing_recom():
     # Create a JSON object for each user containing their info
     for user in range(n_users):
         user_recommendations = {
-            "user_id": user,
+            "user_id": index_user[user],
             "top_items": []
         }
 
         for idx in range(n_recommendations):
-            user_recommendations["top_items"].append(top_recom[user, idx])
+            user_recommendations["top_items"].append(index_listing[top_recom[user, idx]])
 
         top_recommendations.append(user_recommendations)
 
