@@ -5,7 +5,8 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
-from .views import login, signup, update_profile, logout, fetch_user_info, update_user, update_user_password, get_post_by_id, \
+
+from .views import login, signup, update_profile, logout, fetch_user_info, update_user, update_user_password,\
     upload_post, like_post, comment_post, get_comments_by_post, get_dms_of_convo, \
     send_dm, fetch_convo_menu, retrive_convo, retrive_own_profile, retrive_profile, \
     upload_listing, show_listings, get_applied_by_listing_id, make_request, response_request, \
@@ -13,7 +14,7 @@ from .views import login, signup, update_profile, logout, fetch_user_info, updat
     admin_fetch_applications, admin_fetch_profile, admin_fetch_personal, admin_fetch_listings, \
     admin_fetch_posts, admin_fetch_comments, admin_fetch_likes, get_all_posts, check_if_applied, \
     update_listing, check_if_like_exist, get_post_by_user_id, fetch_searching_links, admin_fetch_users, \
-    fetch_notifications, dismiss_notification_by_id, retrive_header_info,get_posts_id
+    fetch_notifications, dismiss_notification_by_id, retrive_header_info, get_posts_id, get_post_by_id
 
 urlpatterns = [
     re_path('login', login),
@@ -28,7 +29,6 @@ urlpatterns = [
     re_path('profile/own/fetch', retrive_own_profile),
     re_path('profile/view/', retrive_profile),
     re_path('profile/fetch_searching',fetch_searching_links),
-
     re_path('posts/view/byid', get_post_by_id),
     re_path('posts/fetch/all', get_all_posts),
     re_path('posts/fetch/user', get_post_by_user_id),
@@ -75,3 +75,5 @@ urlpatterns = [
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'), 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+

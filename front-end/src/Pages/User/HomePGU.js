@@ -58,38 +58,66 @@ function HomePGU(props) {
     };
 
 
-    const fetchPosts = async () => {
-        const token = localStorage.getItem('access_token');
-        const response = await fetch("http://127.0.0.1:8000/posts/fetch/all", {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({})
-        });
 
-        if (response.ok) {
-            const data = await response.json();
-            setPosts(data);  
-        } else if(response.status === 403) {
-            setNoAuth(true);
-        } else if (response.status === 401) {
-            localStorage.removeItem('access_token');
-            await refreshAccessToken();
-            if(localStorage.getItem('access_token') !== null)
-            {
-                await fetchPosts();
-            }
-            else
-            {
-                console.log("no user logged in")
+const fetchPostid = async () => {
+    const token = localStorage.getItem('access_token');
+    const response = await fetch("http://127.0.0.1:8000/posts/getid", {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+    });
+
+    if (response.ok) {
+        const data = await response.json();
+        console.log("Fetched Post IDs:", data); 
+        return data;
+    } else {
+        throw new Error('Failed to fetch post IDs');
+    }
+};
+
+
+const fetchPosts = async () => {
+    const token = localStorage.getItem('access_token');
+    try {
+        const postIds = await fetchPostid();
+        console.log("POST ID IN FETCH",postIds)
+        if (postIds && postIds.length > 0) {
+            const response = await fetch("http://127.0.0.1:8000/posts/view/byid", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({"post_id" : postIds }) 
+            });
+            if (response.ok) {
+                const data = await response.json();
+                console.log("Fetched Posts:", data);
+                setPosts(data);  
+            } else if (response.status === 403) {
                 setNoAuth(true);
-            }   
+            } else if (response.status === 401) {
+                localStorage.removeItem('access_token');
+                await refreshAccessToken();
+                if (localStorage.getItem('access_token') !== null) {
+                    await fetchPosts(); 
+                } else {
+                    console.log("No user logged in");
+                    setNoAuth(true);
+                }   
+            } else {
+                throw new Error('Failed to fetch posts');
+            }
         } else {
-            throw new Error('Failed to fetch posts');
+            console.log("No post IDs found");
         }
-    };
+    } catch (error) {
+        console.error('Error:', error);
+    }
+};
 
     const handleUploadClick = async () => {
         const token = localStorage.getItem('access_token');
@@ -103,9 +131,6 @@ function HomePGU(props) {
         }
         
         postData.append('text', postText)
-    
-        const csrfToken = getCookie('csrftoken');
-        console.log(csrfToken)
 
         const response = await fetch("http://127.0.0.1:8000/posts/upload/", {
             method: "POST",
@@ -127,23 +152,6 @@ function HomePGU(props) {
             console.log("wrong");
         }
         
-    };
-
-    const fetchPostid = async () => {
-        const token = localStorage.getItem('access_token');
-        const response = await fetch("http://127.0.0.1:8000/posts/getid", {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            console.log("Fetched Post IDs:", data);
-            
-        }
     };
 
     useEffect(() => {

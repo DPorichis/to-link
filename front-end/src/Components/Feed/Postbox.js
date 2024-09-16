@@ -30,7 +30,7 @@ function Postbox(props) {
     const [likeCount, setLikeCount] = useState(props.post.like_cnt); 
     const [commentCount,setCommentCount]= useState(props.post.comment_cnt);
     
-
+    console.log("THE PROPS",props)
     useEffect(() => {
         const fetchLikes = async () => {
             const token = localStorage.getItem('access_token');
@@ -117,7 +117,7 @@ function Postbox(props) {
         <div className="postboxout">
             <div className="postboxin">
                 <ProfileTag name={props.post.user_info.name + " " + props.post.user_info.surname} relation={props.post.user_info.title} pfp={props.post.user_info.pfp}/>
-                <p>{props.post.text}</p>
+                <p>{props.post.text} </p>
                 {props.post.media?
                 (props.post.images.length === 1 ?
                     <img src={"http://127.0.0.1:8000" + props.post.images[0].image} style={{maxHeight: "100%"}} alt="" />

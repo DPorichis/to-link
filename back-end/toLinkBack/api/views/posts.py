@@ -9,22 +9,35 @@ from django.db.models import F
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def get_post_by_id(request):
-    # Retrieve post ID from the request data
-    post_id = request.data.get('post_id')
+    # Retrieve post IDs from the request data
+    post_ids = request.data.get('post_id')
 
-    # Validate input data
-    if not post_id:
-        return Response({"error": "Post ID is required."}, status=status.HTTP_400_BAD_REQUEST)
+    # Validate input data - post_ids should be a list
+    if not post_ids or not isinstance(post_ids, list):
+        return Response({"error": "Post IDs should be provided as a list."}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Ensure the post_ids list contains only numbers (in case dictionaries are passed)
+    try:
+        post_ids = [item['post_id'] if isinstance(item, dict) else item for item in post_ids]
+    except KeyError:
+        return Response({"error": "Each dictionary must contain 'post_id' key."}, status=status.HTTP_400_BAD_REQUEST)
 
     try:
-        # Try to find the post by ID
-        post = Post.objects.get(post_id=post_id)
-        serializer = PostSerializer(post)
+        # Get posts where the post_id is in the list of post_ids
+        posts = Post.objects.filter(post_id__in=post_ids)
+        
+        if not posts.exists():
+            return Response({"error": "No posts found for the given IDs."}, status=status.HTTP_404_NOT_FOUND)
+        
+        # Serialize and return the posts
+        serializer = PostSerializer(posts, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-    except Post.DoesNotExist:
-        # Return an error if the post does not exist
-        return Response({"error": "Post not found."}, status=status.HTTP_404_NOT_FOUND)
     
+    except Exception as e:
+        # Return a generic error if something goes wrong
+        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
