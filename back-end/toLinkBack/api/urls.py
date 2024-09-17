@@ -15,7 +15,7 @@ from .views import login, signup, update_profile, logout, fetch_user_info, updat
     admin_fetch_posts, admin_fetch_comments, admin_fetch_likes, get_all_posts, check_if_applied, \
     update_listing, check_if_like_exist, get_post_by_user_id, fetch_searching_links, admin_fetch_users, \
     fetch_notifications, dismiss_notification_by_id, retrive_header_info, get_posts_id, get_post_by_id, \
-    get_interactions
+    get_interactions, request_export
 
 urlpatterns = [
     re_path('login', login),
@@ -70,7 +70,8 @@ urlpatterns = [
     re_path('admin/fetch/comments', admin_fetch_comments),
     re_path('admin/fetch/likes', admin_fetch_likes),
     re_path('admin/fetch/connections', admin_fetch_connections),
-    re_path('admin/fetch/allusers', admin_fetch_users),   
+    re_path('admin/fetch/allusers', admin_fetch_users),
+    re_path('admin/export', request_export),   
 
     re_path('reco/init', get_interactions), 
 

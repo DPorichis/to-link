@@ -7,6 +7,12 @@ from api.serializers import ListingSerializer, LinkSerializer, UserSerializer, A
     AdminProfileSerializer, CommentSerializer, PostSerializer, LikedBySerializer
 from django.db.models import Q
 
+import json
+import dicttoxml
+from io import BytesIO
+from django.http import HttpResponse
+
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def admin_fetch_connections(request):
@@ -222,3 +228,108 @@ def admin_fetch_users(request):
         return Response(serializer.data, status=status.HTTP_200_OK)
     else:
         return Response({"message": "No users found."}, status=status.HTTP_200_OK)
+    
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def request_export(request):
+    # Get the user ID from the request data
+    user_ids = request.data.get('selectedUsers')
+    artifacts = request.data.get('selectedArtifacts')
+    export_type = request.data.get('format')
+    print(export_type)
+
+
+    response = {}
+    for user in user_ids:
+        user_data = {}
+        if not user:
+            break
+        
+        try:
+            user_profile = Profile.objects.get(user_id=user)
+        except Profile.DoesNotExist:
+            user_data["error"] = "User ID is required"
+            response[user.user_id] = user_data
+            break
+
+        for artif in artifacts:
+            if artif == "Personal Information":
+                try:
+                    pers = User.objects.get(user_id=user)
+                    serializer = UserSerializer(pers)
+                    user_data["personal"] = serializer.data
+
+                except User.DoesNotExist:
+                    user_data["personal"] = {"error": "personal info not found"}
+            elif artif == "Profile Information":                
+                serializer = AdminProfileSerializer(user_profile)
+                user_data["profile"] = serializer.data
+            elif artif == "Posts":
+                try:
+                    # Retrieve all comments for the post
+                    posts = Post.objects.filter(user=user_profile)
+                    serializer = PostSerializer(posts, many = True)
+                    user_data["posts"] = serializer.data
+                except Post.DoesNotExist:
+                    user_data["posts"] = []
+            elif artif == "Listings":
+                listings = Listing.objects.filter(user=user_profile)
+                
+                if listings.exists():
+                    serializer = ListingSerializer(listings, many=True)
+                    user_data["listings"] = serializer.data
+                else:
+                    user_data["listings"] = []
+                
+            elif artif == "Network":
+                
+                links = Link.objects.filter(Q(user_id_to=user_profile) | Q(user_id_from=user_profile))
+                # Check if any links are found
+                if links.exists():
+                    serializer = LinkSerializer(links, many=True)
+                    user_data["network"] = serializer.data
+                else:
+                    user_data["network"] = []
+            elif artif == "Comments":
+                try:
+                    # Retrieve all comments for the post
+                    comments = Comment.objects.filter(user=user_profile)
+                    serializer = CommentSerializer(comments, many=True)
+                    user_data["comments"] = serializer.data
+                except Comment.DoesNotExist:
+                    user_data["comments"] = {}
+            elif artif == "Likes":
+                try:
+                    likes = LikedBy.objects.filter(user=user_profile)
+                    serializer = LikedBySerializer(likes, many = True)
+                    user_data["likes"] = serializer.data
+                except LikedBy.DoesNotExist:
+                    user_data["likes"] = {}
+            elif artif == "Applications":
+                applications = Applied.objects.filter(user=user_profile)    
+                if applications.exists():
+                    serializer = AppliedSerializer(applications, many=True)
+                    user_data["applications"] = serializer.data
+                else:
+                    user_data["applications"] = {}
+        
+        response[user] = user_data
+    # Export in the requested format and sent it back to the user
+    if export_type == "XML":
+        # XML saving
+        xml_data = dicttoxml.dicttoxml(response)
+        xml_file = BytesIO(xml_data)
+
+        # File sent out
+        answer = HttpResponse(xml_file, content_type='application/xml')
+        answer['Content-Disposition'] = 'attachment; filename="user_data.xml"'
+    else:
+        # JSON saving
+        json_data = json.dumps(response, indent=4)
+        json_file = BytesIO(json_data.encode('utf-8'))
+
+        # File sent out
+        answer = HttpResponse(json_file, content_type='application/json')
+        answer['Content-Disposition'] = 'attachment; filename="user_data.json"'
+    return answer

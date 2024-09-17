@@ -117,7 +117,7 @@ function LandingPG(props) {
 
         const response = await fetch('http://127.0.0.1:8000/logout/', {
             method: 'POST',
-            credentials: 'include',  // Include cookies (sessionid, csrftoken)
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`

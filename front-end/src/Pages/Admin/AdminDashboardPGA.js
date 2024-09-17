@@ -125,6 +125,58 @@ function AdminDashboardPGA(props) {
         }
     }
 
+    const handleExport = async () => {
+        const token = localStorage.getItem('access_token');
+        console.log(exportSelection)
+        const response = await fetch("http://127.0.0.1:8000/admin/export", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            
+            body: JSON.stringify(exportSelection)
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to download file');
+        }
+    
+        // Manage the file download
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        
+        link.href = url;
+        
+        if(exportSelection.format === "XML")
+            {link.setAttribute('download', 'user_data.xml');}
+        else
+            {link.setAttribute('download', 'user_data.json');}
+        
+        document.body.appendChild(link);
+        link.click();
+    
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+        
+        setExportSelection({
+            selectedUsers: [],
+            format: "JSON",
+            selectedArtifacts: []
+        });
+        setExportMode(false);
+
+
+    }
+
+    const handleFormatChange = (e) => {
+        const {value} = e.target
+        setExportSelection({...exportSelection, format: value});
+        console.log(exportSelection)
+    }
+
+
     const handleCancel = () => {
         setExportSelection({
             selectedUsers: [],
@@ -254,7 +306,7 @@ function AdminDashboardPGA(props) {
                                     <div class="col-md-4" style={{marginBottom:"10px"}}>
                                         <label for="level" class="form-label" style={{marginBottom:"5px"}}>Export format</label>
                                         <select class="form-select" name="level" value={exportSelection.format}
-                                        onChange={(e) => {setExportSelection({...exportSelection, format: e.value});}}>
+                                        onChange={handleFormatChange}>
                                             <option value="JSON">JSON</option>
                                             <option value="XML">XML</option>
                                         </select>
@@ -280,7 +332,7 @@ function AdminDashboardPGA(props) {
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Back</button>
                                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
-                                    disabled={exportSelection.selectedArtifacts.length === 0}>Export</button>
+                                    disabled={exportSelection.selectedArtifacts.length === 0} onClick={handleExport}>Export</button>
                                 </div>
                                 </div>
                             </div>

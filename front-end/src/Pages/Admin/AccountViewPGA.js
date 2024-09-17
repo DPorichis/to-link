@@ -2,123 +2,23 @@ import React, {useState, useEffect} from "react";
 import Header from "../../Components/Header";
 import { useSearchParams } from 'react-router-dom';
 
-
-let dammylistings =
-    [
-        {
-            id:1002,
-            state:"Public",
-            title:"Junior Dev at ToLink",
-            user:"Makis",
-            relation:"In your network",
-            spot:"Remote",
-            time:"Full-time", 
-            location:"Athens, Greece", 
-            level:"Entry level",
-            desc:"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-            responses: []
-        },
-        {
-            id:1003,
-            state:"Public",
-            title:"Bet-builder agent",
-            user:"Uncle Nionios",
-            relation:"In your network",
-            spot:"On-site",
-            time:"Part-time", 
-            location:"Spiti tou, Spata, Greece", 
-            level:"Mid level",
-            desc:"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-            responses: []
-        }
-]
-
-const dummyNetwork = 
-[
-{
-    uid: "0",
-    name: "Theopoula Tziniiiiiiiiiiiiiiiiii",
-    title:"CEO of Ibizaaaaaaaaaaaaaaaaaa",
-    imgURL: "/logo192.png"
-},
-{
-    uid: "1",
-    name: "Theopoula Tzini",
-    title:"CEO of Ibizaaaaaaaaaaaaaaaa",
-    imgURL: "/logo192.png"
-},
-{
-    uid: "2",
-    name: "ANitsaaaaaaaaaaaaaa",
-    title:"CEO of Koup Skoup",
-    imgURL: "/logo192.png"
-}
-]
-
-
-
-const dummyprofile =
-{
-    pfname: "Lakis",
-    pfsurname: "Lalakis",
-    pfimgURL: "/logo192.png",
-    pfemail: "work@work.work",
-    pfphone: "2103333333",
-    pfwebsite: "google.com",
-    pfbio: "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?",
-    pfexperience: ["Important", "Important", "Important"],
-    pfeducation: ["Important", "Important"],
-    
-    id: 12,
-    name: "Lakis",
-    surname: "Lalakis",
-    email: "kati@kati.cy",
-    phone: "+306947589234",
-    birthdate: "10/10/10",
-    country: "Greece",
-    city: "Athens",
-    password: "...",
-
-    
-    listings: dammylistings,
-    network: dummyNetwork,
-    applications: [],
-    posts: [],
-    likes: [],
-    comments: [],
-
-}
-
-
-const getCookie = (name) => {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-      const cookies = document.cookie.split(';');
-      for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i].trim();
-        if (cookie.substring(0, name.length + 1) === `${name}=`) {
-          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-          break;
-        }
-      }
-    }
-    return cookieValue;
-};
-
 function AccountViewPGA(props) {
 
     const [activePosts, setActivePosts] = useState(false);
     const [selectedActivity, setActivity] = useState("network");
 
-    const [exportSelection, setExportSelection] = useState(
-    {
-        format: "JSON",
-        selectedArtifacts: []
-    });
+    
 
     const [searchParams] = useSearchParams();
 
     const id = searchParams.get('user_id');
+
+    const [exportSelection, setExportSelection] = useState(
+        {
+            selectedUsers: [id],
+            format: "JSON",
+            selectedArtifacts: []
+        });
 
 
     const [profile, setProfile] = useState({});
@@ -332,6 +232,52 @@ function AccountViewPGA(props) {
         }
     }
 
+
+    const handleExport = async () => {
+        const token = localStorage.getItem('access_token');
+        console.log(exportSelection)
+        const response = await fetch("http://127.0.0.1:8000/admin/export", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            
+            body: JSON.stringify(exportSelection)
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to download file');
+        }
+    
+        // Manage the file download
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        
+        link.href = url;
+        
+        if(exportSelection.format === "XML")
+            {link.setAttribute('download', 'user_data.xml');}
+        else
+            {link.setAttribute('download', 'user_data.json');}
+        
+        document.body.appendChild(link);
+        link.click();
+    
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+        
+    }
+
+    const handleFormatChange = (e) => {
+        const {value} = e.target
+        setExportSelection({...exportSelection, format: value});
+        console.log(exportSelection)
+    }
+
+
+
     if (loading) return <>Loading...</>
 
     return (
@@ -435,7 +381,7 @@ function AccountViewPGA(props) {
                             <div class="col-md-4" style={{marginBottom:"10px"}}>
                                 <label for="level" class="form-label" style={{marginBottom:"5px"}}>Export format</label>
                                 <select class="form-select" name="level" value={exportSelection.format}
-                                onChange={(e) => {setExportSelection({...exportSelection, format: e.value});}}>
+                                onChange={handleFormatChange}>
                                     <option value="JSON">JSON</option>
                                     <option value="XML">XML</option>
                                 </select>
@@ -448,7 +394,7 @@ function AccountViewPGA(props) {
                             <p style={{marginBottom:"0px"}}>You are about to export 
                                 {exportSelection.selectedArtifacts.map((art) => <>{" "+ art + ","}</>)}
                                 {" "} 
-                                from user #{dummyprofile.id} .
+                                from user #{id}.
                             </p>
                             :
                             <p style={{marginBottom:"0px"}}>
@@ -461,7 +407,7 @@ function AccountViewPGA(props) {
                         <div class="modal-footer">
                             <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Back</button>
                             <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
-                            disabled={exportSelection.selectedArtifacts.length === 0}>Export</button>
+                            disabled={exportSelection.selectedArtifacts.length === 0} onClick={handleExport}>Export</button>
                         </div>
                         </div>
                     </div>

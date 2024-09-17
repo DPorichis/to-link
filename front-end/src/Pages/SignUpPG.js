@@ -20,26 +20,6 @@ const emptyAccount =
 
 function SignUpPG(props) {
 
-    // useEffect(() => {
-        
-    //     const logout = async () => {
-    //     const response = await fetch("http://127.0.0.1:8000/logout", {
-    //         method: "POST",
-    //         credentials: "include",  // Include cookies in the request
-    //     });
-    //     if (response.ok) {
-    //         console.log("Logged out successfully");
-    //     } else {
-    //         console.error("Logout failed");
-    //     }
-    //     document.cookie = `csrftoken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-
-    // }
-
-    //     logout();
-    // }, []);
-
-
     const [image, setImages] = useState(null);
 
     const handleImageChange = (e) => {
