@@ -177,7 +177,7 @@ function Header(props) {
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li><a class="dropdown-item" href="/user/settings">Settings</a></li>
                         {jwtDecode(localStorage.getItem('access_token')).is_admin ?
-                            <li><a class="dropdown-item" href="/user">Switch to User</a></li>
+                            <li><a class="dropdown-item" href="/admin">Switch to Admin</a></li>
                             :
                             <></>
                         }

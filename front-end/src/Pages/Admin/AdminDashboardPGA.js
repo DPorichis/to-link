@@ -97,10 +97,6 @@ function AdminDashboardPGA(props) {
         });
     };
 
-
-    
-
-
     const handleSelectionChange = (e) => {
         const {id} = e.target;
         console.log(id)

@@ -9,15 +9,17 @@ function AccountViewPGA(props) {
     const [activePosts, setActivePosts] = useState(false);
     const [selectedActivity, setActivity] = useState("network");
     const [noAuth, setNoAuth] = useState(false)
+    
+    const [searchParams] = useSearchParams();
+
+    const id = searchParams.get('user_id');
     const [exportSelection, setExportSelection] = useState(
     {
+        selectedUsers: [id],
         format: "JSON",
         selectedArtifacts: []
     });
 
-    const [searchParams] = useSearchParams();
-
-    const id = searchParams.get('user_id');
 
     const [profile, setProfile] = useState({});
     const [personal, setPersonal] = useState({});
