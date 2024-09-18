@@ -1,24 +1,66 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../../Components/Header";
+import { refreshAccessToken } from "../../functoolbox";
+import NotFoundPG from "../NotFoundPG";
+import {jwtDecode} from "jwt-decode";
 
-const dummyprofile = {
-    id: 12,
-    name: "Lakis",
-    surname: "Lalakis",
-    email: "kati@kati.cy",
-    phone: "+306947589234",
-    birthdate: "10/10/10",
-    country: "Greece",
-    city: "Athens",
-    password: "...",
-};
-
-function SettingsPGA(props) {
-    const [savedProfile, setSavedProfile] = useState(dummyprofile);
-    const [editedProfile, setEditedProfile] = useState(savedProfile);
+function SettingsPGU(props) {
+    const [savedProfile, setSavedProfile] = useState({});
+    const [editedProfile, setEditedProfile] = useState({});
 
     const [personalEdit, setPersonalEdit] = useState(false);
     const [loginEdit, setLoginEdit] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [noAuth, setNoAuth] = useState(false);
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            const token = localStorage.getItem('access_token');
+            const response = await fetch("http://127.0.0.1:8000/user/fetch", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                })
+            })
+            
+            if (response.ok) {
+                let answer = await response.json();
+                setSavedProfile(answer);
+                setEditedProfile(answer);
+            } else if (response.status === 401) {
+                localStorage.removeItem('access_token');
+                await refreshAccessToken();
+                if(localStorage.getItem('access_token') !== null)
+                {
+                    await fetchUser();
+                }
+                else
+                {
+                    console.log("no user logged in")
+                    setNoAuth(true);
+                }
+                
+            }else{
+                setNoAuth(true);
+            }
+        };
+        const token = localStorage.getItem('access_token');        
+        // If no token, redirect to login
+        if (!token) {
+            setNoAuth(true);
+            return
+        }
+        const decodedToken = jwtDecode(token);
+        if (!decodedToken.is_admin) {
+            setNoAuth(true);
+            return
+        }
+        fetchUser();
+        setLoading(false);
+    }, []);
 
     const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
     const appendAlert = (message, type) => {
@@ -32,10 +74,10 @@ function SettingsPGA(props) {
     
       alertPlaceholder.append(wrapper)
     }
-
-    const validateForm = () =>
-        {
     
+
+    const validateForm = async () =>
+        {
         const errors = {};  
     
         if(editedProfile.name === "")
@@ -51,12 +93,11 @@ function SettingsPGA(props) {
         // Regular expression for validating an email
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-
         if (editedProfile.email === "" || !re.test(editedProfile.email))
         {
             errors.email = 'You must enter a valid email address'
         }
-    
+
         return errors;
     
     };
@@ -76,23 +117,70 @@ function SettingsPGA(props) {
         });
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const errors = validateForm();
+        const errors = await validateForm();
         setFormErrors(errors);
         if (Object.keys(errors).length === 0) {
-            console.log('Form submitted successfully:', passwordForm);
-            appendAlert("Personal Info have been successfully changed", 'success');
-            setSavedProfile({
-                ...editedProfile,
-                password: savedProfile.password
-            });
-            setPersonalEdit(false);
+            // Create a FormData object
+            const formData = new FormData();
+
+            const token = localStorage.getItem('access_token');
+            const response = await fetch("http://127.0.0.1:8000/user/update", {
+                method: "PUT",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(editedProfile
+                )
+            })
             
-        } else {
+            if (response.ok) {
+                let userData = await response.json();
+                setSavedProfile(userData);
+                setEditedProfile(userData);
+                console.log('Form submitted successfully:', passwordForm);
+                appendAlert("Personal Info have been successfully changed", 'success');
+                setSavedProfile({
+                    ...editedProfile,
+                });
+                setPersonalEdit(false);
+            } else if (response.status === 401) {
+                localStorage.removeItem('access_token');
+                await refreshAccessToken();
+                if(localStorage.getItem('access_token') !== null)
+                {
+                    await handleSubmit(e);
+                }
+                else
+                {
+                    console.log("no user logged in")
+                }
+                
+            }else{
+                let errormessages = await response.json();
+                if ("birthdate" in errormessages)
+                {
+                    setFormErrors(prevErrors => ({
+                        ...prevErrors,
+                        birthdate: "Please enter a valid date"
+                    }));    
+                }
+                else
+                {
+                    setFormErrors(prevErrors => ({
+                        ...prevErrors,
+                        email: "This email can't be used because it is associated with another account"
+                    }));     
+                }
+            }
+        }
+        else{
             setFormErrors(errors);
         }
-    };
+        
+        };
 
 
     const [passwordFormErrors, setPasswordFormErrors] = useState({
@@ -116,19 +204,49 @@ function SettingsPGA(props) {
         });
     }
 
-    const handlePasswordChange = (e) => {
+    const handlePasswordChange = async (e) => {
         e.preventDefault();
         const errors = validatePasswordForm();
         setPasswordFormErrors(errors);
         if (Object.keys(errors).length === 0) {
-            console.log('Form submitted successfully:', passwordForm);
-            setSavedProfile({
-                ...savedProfile,
-                password: passwordForm.password
-            });
-            setPersonalEdit(false);
-            appendAlert("Password has been successfully changed", 'success');
-        } else {
+            const token = localStorage.getItem('access_token');
+            const response = await fetch("http://127.0.0.1:8000/user/newPassword", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    current_password: passwordForm.oldPassoword,
+                    new_password: passwordForm.password
+                })
+            })
+            
+            if (response.ok) {
+                let userData = await response.json();
+                console.log('Form submitted successfully:', passwordForm);
+                appendAlert("Password Changed successfully", 'success');
+            } else if (response.status === 401) {
+                localStorage.removeItem('access_token');
+                await refreshAccessToken();
+                if(localStorage.getItem('access_token') !== null)
+                {
+                    await handlePasswordChange(e);
+                }
+                else
+                {
+                    console.log("no user logged in")
+                }
+                
+            }else 
+            {
+                setPasswordFormErrors(prevErrors => ({
+                    ...prevErrors,
+                    oldPassoword: "Incorrect Password"
+                }));
+            }
+        }
+        else{
             setPasswordFormErrors(errors);
         }
     };
@@ -137,11 +255,6 @@ function SettingsPGA(props) {
     {
 
     const errors = {};  
-
-    if(passwordForm.oldPassoword !== savedProfile.password)
-    {
-        errors.oldPassoword = 'Wrong Password';
-    }
 
     if (passwordForm.password !== passwordForm.passwordVal) {
         errors.passwordVal = 'Passwords do not match';
@@ -155,10 +268,18 @@ function SettingsPGA(props) {
 
     };
 
+    
+    if (loading) return <p>Loading</p>;
+
+
+    if(noAuth)
+        {
+            return (<NotFoundPG />)
+        }
 
     return (
         <div>
-            <Header log="user" act="settings" />
+            <Header log="admin" act="settings" />
             <div style={{ display: "flex", justifyContent: "left", alignItems: "left", flexDirection: "column", textAlign:"left",
                 marginLeft:"15%", width:"70%", marginTop:"10px"
             }}>
@@ -223,8 +344,15 @@ function SettingsPGA(props) {
                             </div>
                             <div class="col-md-3" style={{marginBottom:"5px"}}>
                                 <label class="form-label" style={{marginBottom:"2px"}}>Birthdate</label>
-                                <input type="text" class="form-control" value={editedProfile.birthdate} disabled={!personalEdit}
-                                onChange={handleFormChange} name="birthdate"/>
+                                <input type="date" 
+                                    className={`form-control ${formErrors.birthdate ? 'is-invalid' : ''}`}
+                                    value={editedProfile.birthdate} 
+                                    disabled={!personalEdit}
+                                    onChange={handleFormChange}
+                                    id="birthdate"
+                                    name="birthdate" 
+                                    required/>
+                                <div className="invalid-feedback">{formErrors.birthdate || 'Please enter a valid date.'}</div>
                             </div>
                         </div>
                     </div>
@@ -308,7 +436,7 @@ function SettingsPGA(props) {
                             </div>
                         </div>
                         <div style={{display:"flex", flexDirection:"row", justifyContent:"right"}}>
-                            <button class="btn btn-primary">
+                            <button class="btn btn-primary" id="liveAlertBtn">
                                 Change Password
                             </button>
                         </div>
@@ -319,7 +447,4 @@ function SettingsPGA(props) {
     );
 }
 
-export default SettingsPGA;
-
-
-
+export default SettingsPGU;
