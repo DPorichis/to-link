@@ -3,7 +3,7 @@ import Header from "../Components/Header";
 function NotFoundPG(props) {
     return (
         <div style={{backgroundColor:"#f2f5e9"}}>
-            <Header />
+            <Header log="404"/>
             <div style={{width:"70%", marginLeft:"15%", height:"100vh"}}>
                 <img src="/404.png" width={"80%"} style={{marginBottom:"20px"}}/>
                 <h5>That's a bummer</h5>

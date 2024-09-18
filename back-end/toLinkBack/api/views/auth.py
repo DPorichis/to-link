@@ -26,6 +26,7 @@ def login(request):
     if user is not None:
         # If authentication is successful, create JWT tokens
         refresh = RefreshToken.for_user(user)
+        refresh['is_admin'] = user.is_staff
 
         return Response({
             'refresh': str(refresh),
@@ -52,6 +53,7 @@ def signup(request):
         )
         
         refresh = RefreshToken.for_user(user)
+        refresh['is_admin'] = user.is_staff
 
         # Return tokens and user data
         return Response({
@@ -100,6 +102,7 @@ def update_user_password(request):
     user = authenticate(email=user.email, password=new_password)
 
     refresh = RefreshToken.for_user(user)
+    refresh['is_admin'] = user.is_staff
 
     return Response({
         "message": "Password updated successfully.",

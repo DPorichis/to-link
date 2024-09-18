@@ -589,7 +589,7 @@ function MyProfilePGU(props) {
                     <h4 style={{marginBottom:"2px"}}>
                         Experience
                     </h4>
-                    {savedProfile.experience.length !== 0? 
+                    {savedProfile.experience && savedProfile.experience.length !== 0? 
                         <ul>
                             {savedProfile.experience.map((exp) =>
                                 <li>{exp}</li>
@@ -602,7 +602,7 @@ function MyProfilePGU(props) {
                     <h4 style={{marginBottom:"2px"}}>
                         Education
                     </h4>
-                    {savedProfile.education.length !== 0? 
+                    {savedProfile.education && savedProfile.education.length !== 0? 
                         <ul>
                             {savedProfile.education.map((exp) =>
                                 <li>{exp}</li>
@@ -615,7 +615,7 @@ function MyProfilePGU(props) {
                     <h4 style={{marginBottom:"2px"}}>
                         Skills
                     </h4>
-                    {savedProfile.skills.length !== 0? 
+                    {savedProfile.skills && savedProfile.skills.length !== 0? 
                         <ul>
                             {savedProfile.skills.map((exp) =>
                                 <li>{exp}</li>

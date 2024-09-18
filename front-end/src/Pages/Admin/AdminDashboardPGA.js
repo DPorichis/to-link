@@ -5,12 +5,15 @@ import { useNavigate } from 'react-router-dom';
 import "./AdminDashboardPGA.css"
 import { useFormState } from "react-dom";
 import { refreshAccessToken } from "../../functoolbox";
+import NotFoundPG from '../NotFoundPG';
+import {jwtDecode} from "jwt-decode";
 
 
 function AdminDashboardPGA(props) {
 
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [noAuth, setNoAuth] = useState(false)
     const [filterParams, setFilterParams] = useState(
         {
             for: 'all',
@@ -18,9 +21,20 @@ function AdminDashboardPGA(props) {
         }
         );   
 
+    const [filteredData, setFilterdData] = useState(users);
+    const [exportMode, setExportMode] = useState(false);
+    const [exportSelection, setExportSelection] = useState(
+    {
+        selectedUsers: [],
+        format: "JSON",
+        selectedArtifacts: []
+    });
+
+
+
     useEffect(() => {
         const fetchUsers = async () => {
-            const token = localStorage.getItem('access_token');
+            const token = localStorage.getItem('access_token');        
             const response = await fetch("http://127.0.0.1:8000/admin/fetch/allusers", {
                 method: "POST",
                 headers: {
@@ -33,7 +47,6 @@ function AdminDashboardPGA(props) {
         
             if (response.ok) {
                 const data = await response.json();
-                console.log('API Response Data:', data); 
                 if (Array.isArray(data)) {
                     setUsers(data);
                     setFilterdData(data);
@@ -47,22 +60,29 @@ function AdminDashboardPGA(props) {
                 if (localStorage.getItem('access_token') !== null) {
                     await fetchUsers();
                 } else {
+                    setNoAuth(true);
                     console.log("no user logged in");
                 }
             } else {
-                throw new Error('Failed to fetch posts');
+                setNoAuth(true);
             }
         };
+        const token = localStorage.getItem('access_token');        
+        // If no token, redirect to login
+        if (!token) {
+            setNoAuth(true);
+            return
+        }
+        const decodedToken = jwtDecode(token);
+        if (!decodedToken.is_admin) {
+            setNoAuth(true);
+            return
+        }
         fetchUsers();
         setLoading(false);
     }, [filterParams]);
 
     const navigate = useNavigate();
-
-
-    const [filteredData, setFilterdData] = useState(users);
-    
-     
 
     const handleRowClick = (event) => {
         const { id } = event.currentTarget.dataset;
@@ -78,13 +98,7 @@ function AdminDashboardPGA(props) {
     };
 
 
-    const [exportMode, setExportMode] = useState(false);
-    const [exportSelection, setExportSelection] = useState(
-    {
-        selectedUsers: [],
-        format: "JSON",
-        selectedArtifacts: []
-    });
+    
 
 
     const handleSelectionChange = (e) => {
@@ -187,6 +201,8 @@ function AdminDashboardPGA(props) {
         
     };
 
+    
+    if (noAuth) return <NotFoundPG/>
     if (loading) return <>Loading</>
 
     return (

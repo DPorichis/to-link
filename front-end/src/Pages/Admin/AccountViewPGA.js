@@ -1,25 +1,23 @@
 import React, {useState, useEffect} from "react";
 import Header from "../../Components/Header";
 import { useSearchParams } from 'react-router-dom';
+import NotFoundPG from '../NotFoundPG';
+import {jwtDecode} from "jwt-decode";
 
 function AccountViewPGA(props) {
 
     const [activePosts, setActivePosts] = useState(false);
     const [selectedActivity, setActivity] = useState("network");
-
-    
+    const [noAuth, setNoAuth] = useState(false)
+    const [exportSelection, setExportSelection] = useState(
+    {
+        format: "JSON",
+        selectedArtifacts: []
+    });
 
     const [searchParams] = useSearchParams();
 
     const id = searchParams.get('user_id');
-
-    const [exportSelection, setExportSelection] = useState(
-        {
-            selectedUsers: [id],
-            format: "JSON",
-            selectedArtifacts: []
-        });
-
 
     const [profile, setProfile] = useState({});
     const [personal, setPersonal] = useState({});
@@ -202,6 +200,17 @@ function AccountViewPGA(props) {
         };
 
 
+        const token = localStorage.getItem('access_token');        
+        // If no token, redirect to login
+        if (!token) {
+            setNoAuth(true);
+            return
+        }
+        const decodedToken = jwtDecode(token);
+        if (!decodedToken.is_admin) {
+            setNoAuth(true);
+            return
+        }
         fetchProfile();
         fetchPersonal();
         fetchPosts();
@@ -231,7 +240,6 @@ function AccountViewPGA(props) {
             });
         }
     }
-
 
     const handleExport = async () => {
         const token = localStorage.getItem('access_token');
@@ -268,6 +276,13 @@ function AccountViewPGA(props) {
         document.body.removeChild(link);
         window.URL.revokeObjectURL(url);
         
+        setExportSelection({
+            selectedUsers: [],
+            format: "JSON",
+            selectedArtifacts: []
+        });
+
+
     }
 
     const handleFormatChange = (e) => {
@@ -277,7 +292,7 @@ function AccountViewPGA(props) {
     }
 
 
-
+    if (noAuth) return <NotFoundPG/>
     if (loading) return <>Loading...</>
 
     return (

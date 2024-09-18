@@ -1,7 +1,7 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAdminUser
 from api.models import Profile, Link, User, Listing, Applied, Comment, Post, LikedBy
 from api.serializers import ListingSerializer, LinkSerializer, UserSerializer, AppliedSerializer, \
     AdminProfileSerializer, CommentSerializer, PostSerializer, LikedBySerializer
@@ -14,7 +14,7 @@ from django.http import HttpResponse
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAdminUser])
 def admin_fetch_connections(request):
     # Get the user ID from the request data
     user_id = request.data.get('user_id')
@@ -37,7 +37,7 @@ def admin_fetch_connections(request):
         return Response([], status=status.HTTP_200_OK)
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAdminUser])
 def admin_fetch_personal(request):
     # Get the user ID from the request data
     user_id = request.data.get('user_id')
@@ -54,7 +54,7 @@ def admin_fetch_personal(request):
         return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAdminUser])
 def admin_fetch_listings(request):
     user_id = request.data.get('user_id')
     try:
@@ -72,7 +72,7 @@ def admin_fetch_listings(request):
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAdminUser])
 def admin_fetch_applications(request):
     user_id = request.data.get('user_id')
     try:
@@ -91,7 +91,7 @@ def admin_fetch_applications(request):
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAdminUser])
 def admin_fetch_profile(request):
     # Get the authenticated user
     user = request.user
@@ -108,7 +108,7 @@ def admin_fetch_profile(request):
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAdminUser])
 def admin_fetch_comments(request):
     # Get the user ID from the request data
     user_id = request.data.get('user_id')
@@ -131,7 +131,7 @@ def admin_fetch_comments(request):
         return Response([], status=status.HTTP_200_OK)
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAdminUser])
 def admin_fetch_likes(request):
     # Get the user ID from the request data
     user_id = request.data.get('user_id')
@@ -158,7 +158,7 @@ def admin_fetch_likes(request):
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAdminUser])
 def admin_fetch_posts(request):
 
     # Get the user ID from the request data
@@ -183,7 +183,7 @@ def admin_fetch_posts(request):
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAdminUser])
 def admin_fetch_users(request):
     search_term = request.data.get('search', '').strip()
     filter_by = request.data.get('filter_by', 'anything').strip()
@@ -231,7 +231,7 @@ def admin_fetch_users(request):
     
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAdminUser])
 def request_export(request):
     # Get the user ID from the request data
     user_ids = request.data.get('selectedUsers')

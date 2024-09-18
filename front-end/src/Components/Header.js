@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import {jwtDecode} from "jwt-decode";
 
 import "./Header.css"
 
@@ -119,6 +120,7 @@ function Header(props) {
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li><a class="dropdown-item" href="/admin/settings">Settings</a></li>
+                        <li><a class="dropdown-item" href="/user">Switch to User</a></li>
                         <li><a class="dropdown-item" href="/">Log Out</a></li>
                     </ul>
             </div>
@@ -174,12 +176,33 @@ function Header(props) {
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li><a class="dropdown-item" href="/user/settings">Settings</a></li>
-
+                        {jwtDecode(localStorage.getItem('access_token')).is_admin ?
+                            <li><a class="dropdown-item" href="/user">Switch to User</a></li>
+                            :
+                            <></>
+                        }
                         <li><a class="dropdown-item" href="/">Log Out</a></li>
                     </ul>
             </div>
             </nav>
         );   
+    }
+    else if(props.log === '404')
+    {
+        return (
+            <nav class="navbar navbar-expand-lg" style={{background:"rgb(161,174,206)", background: "linear-gradient(160deg, rgba(161,174,206,1) 0%, rgba(251,252,254,1) 100%)",
+                boxShadow: "0px 5px 15px -3px rgba(0,0,0,0.75)", marginBottom:"20px"
+            }}>
+            <div class="container-fluid" >
+                <img src="/cropedlogo.png" width="50px" height="50px" class="d-inline-block align-top" alt="" />
+                <a class="navbar-brand" href="/" style={{font:"Raleway Semi bold italic", margin: "0px 0px"}}>To Link</a>
+                
+                <div>
+                    <a type="button" class="btn btn-primary" href="/">Return Home</a>
+                </div>
+            </div>
+            </nav>
+        );
     }
     else 
     {

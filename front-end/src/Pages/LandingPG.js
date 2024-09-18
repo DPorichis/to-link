@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from "react";
 import Header from "../Components/Header";
 import {refreshAccessToken} from "../functoolbox"
+import {jwtDecode} from "jwt-decode";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
@@ -95,7 +96,13 @@ function LandingPG(props) {
             const data = await response.json();
             localStorage.setItem('access_token', data.access);
             localStorage.setItem('refresh_token', data.refresh);
-            navigate(`/user`);
+            const decodedToken = jwtDecode(data.access);
+            if (decodedToken.is_admin) {
+                navigate(`/admin`);
+            }
+            else
+            {navigate(`/user`);}
+            
         }
         else
         {
@@ -172,7 +179,7 @@ function LandingPG(props) {
                             </h5>
                             <img src={userLoggedIn.profile_info.pfp} style={{width:"100px", height:"100px", borderRadius:"50%"}} />
                             <div style={{display:"flex", width:"100%", marginTop:"10px", flexDirection:"column"}}>
-                                <a class="btn btn-primary" style={{width:"100%", marginTop:"10px"}} href="/user">Continue as {userLoggedIn.profile_info.name}</a>
+                                <a class="btn btn-primary" style={{width:"100%", marginTop:"10px"}} href={jwtDecode(localStorage.getItem('access_token')).is_admin ? "/admin" : "/user"}>Continue as {userLoggedIn.profile_info.name}</a>
                                 <button class="btn btn-outline-danger" style={{width:"100%", marginTop:"10px"}} onClick={handleLogout}>Logout</button>
                             </div>
                         </div>
