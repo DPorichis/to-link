@@ -1,3 +1,7 @@
+// NetworkPGU.js
+// Contains the network page, rendering your network and searching for new users
+// =======================================
+
 import React, { useState, useEffect } from "react";
 import Header from "../../Components/Header";
 import ProfileCard from "../../Components/Profile/ProfileCard";
@@ -7,26 +11,23 @@ import NotFoundPG from "../NotFoundPG";
 
 function NetworkPGU(props) {
   const [searchTerm, setSearchTerm] = useState("");
-  const [links, setLinks] = useState([]);
   const [filter, setFilter] = useState("all");
   const [searching, setSearching] = useState(false);
-  const [error, setError] = useState(null);
   const [noAuth, setNoAuth] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
-  const [loading, setLoading] = useState(true); // Set loading to true initially
+  const [loading, setLoading] = useState(true);
 
-  const cardsPerRow = 4; // Declare cardsPerRow here
-
+  // Fetch links according to search term
   const fetchSearchedLinks = async (searchTerm) => {
     const token = localStorage.getItem('access_token');
-    setLoading(true); // Set loading to true before fetching data
+    setLoading(true);
     const response = await fetch("http://127.0.0.1:8000/profile/fetch_searching_link", {
       method: "POST",
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       },
-      body: JSON.stringify({ 'search': searchTerm }) // Include searchTerm in the request body
+      body: JSON.stringify({ 'search': searchTerm })
     });
 
     if (response.ok) {
@@ -50,14 +51,16 @@ function NetworkPGU(props) {
         setNoAuth(true);
     }
     
-      setLoading(false); // Set loading to false after fetching data
+      setLoading(false);
   };
 
+  // Retrive search results
   useEffect(() => {
     setLoading(true);
     fetchSearchedLinks();
   }, []);
 
+  // After each change, refetch results
   const handleSearchChange = (event) => {
     const newSearchTerm = event.target.value;
     setSearchTerm(newSearchTerm);
@@ -67,7 +70,7 @@ function NetworkPGU(props) {
     
   };
 
-
+  // Handle changing search by
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
     setSearchTerm(""); // Clear search term when changing filter
@@ -76,18 +79,22 @@ function NetworkPGU(props) {
     fetchSearchedLinks(); // Clear search results when changing filter
   };
 
+
+  // Group by if they are friends or not
+
   const filteredUnknownResults = searchResults
   .filter((link) => link.relationship !== "Friends");
 
   const filteredFriendsResults = searchResults
   .filter((link) => link.relationship === "Friends");
 
-
+  // Prevent not Authenticated Users
   if(noAuth)
   {
     return (<NotFoundPG />)
   }
 
+  // No render when loading
   if(loading) return <>Loading</>
 
 
@@ -98,6 +105,7 @@ function NetworkPGU(props) {
         <div style={{border:"#ccc solid 1px", borderRadius: "10px",
         display:"flex", flexDirection:"row", marginBottom:"10px"
         }}>
+          {/* Searchbar Element */}
           <div style={{display:"flex", flexDirection:"column", justifyContent:"left", textAlign:"left", width:"15%", borderRight:"#333 solid 1px",
               borderEndStartRadius: "10px", borderStartStartRadius: "10px", padding:"3px 3px"
           }}>
@@ -118,9 +126,13 @@ function NetworkPGU(props) {
             </button>
         </div>
         <div style={{ textAlign: "left", marginTop: "10px" }}>
-          {searching ? (
+          {searching ? 
+          // If a term is present //
+          (
             <>
-              {filter === "all" && (
+              {filter === "all" 
+              // And searching for all //
+              && (
                 <>
                   <h5>Your Network {searchResults.length}</h5>
                   <div style={{ maxHeight: "57vh", overflowY: "auto", marginBottom: "10px" }}>
@@ -158,7 +170,9 @@ function NetworkPGU(props) {
                         </div>
                 </>
               )}
-              {filter === "net" && (
+              {filter === "net" && 
+              // And searching for network only //
+              (
                 <>
                   <h5>Your Network</h5>
                   <div style={{ maxHeight: "57vh", overflowY: "auto", marginBottom: "10px" }}>
@@ -182,7 +196,9 @@ function NetworkPGU(props) {
                   </div>
                 </>
               )}
-              {filter === "outnet" && (
+              {filter === "outnet" && 
+              // And searching for out of network //
+              (
                 <>
                   <h5>People you may know</h5>
                   <div style={{ maxHeight: "57vh", overflowY: "auto", marginBottom: "10px" }}>
@@ -207,9 +223,13 @@ function NetworkPGU(props) {
                 </>
               )}
             </>
-          ) : (
+          ) : 
+          // If no term is present //
+          (
             <>
-              {filter === "all" && (
+              {filter === "all" && 
+              // And searching for all //
+              (
                 <>
                   <h5>Your Network</h5>
                   <div style={{ maxHeight: "57vh", overflowY: "auto", marginBottom: "10px" }}>
@@ -244,7 +264,9 @@ function NetworkPGU(props) {
                 </div>
                 </>
               )}
-              {filter === "net" && (
+              {filter === "net" && 
+              // And searching for network only //
+              (
                 <>
                   <h5>Your Network</h5>
                   <div style={{ maxHeight: "65vh", overflowY: "auto", marginBottom: "10px" }}>
@@ -264,7 +286,9 @@ function NetworkPGU(props) {
                   </div>
                 </>
               )}
-              {filter === "outnet" && (
+              {filter === "outnet" && 
+              // And searching for out of network //
+              (
                 <>
                   <h5>People you may know</h5>
                   <div style={{ maxHeight: "65vh", overflowY: "auto", marginBottom: "10px" }}>

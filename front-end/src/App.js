@@ -1,3 +1,7 @@
+// App.js
+// Contains all the URL Routing of the App
+// =======================================
+
 import './App.css';
 import ReactDOM from "react-dom/client";
 import {BrowserRouter} from "react-router-dom";

@@ -1,6 +1,11 @@
+// ViewprofilePGU.js
+// Contains the page for displaying other user's profile
+// =======================================
+
+
 import React from "react";
 import Header from "../../Components/Header";
-import { redirect, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import Postbox from "../../Components/Feed/Postbox";
@@ -8,37 +13,27 @@ import JobTile from "../../Components/Jobs/JobTile";
 import { refreshAccessToken } from "../../functoolbox";
 import NotFoundPG from "../NotFoundPG";
 
-const getCookie = (name) => {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-      const cookies = document.cookie.split(';');
-      for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i].trim();
-        if (cookie.substring(0, name.length + 1) === `${name}=`) {
-          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-          break;
-        }
-      }
-    }
-    return cookieValue;
-};
-
 function ViewprofilePGU(props) {
     const navigate = useNavigate();
 
+    // Activated info screen
     const [mode, setMode] = useState("info");
+    
+    // Rendering Control
     const [loading, setLoading] = useState(true);
     const [noAuth, setNoAuth] = useState(false);
-    const [searchParams] = useSearchParams();
 
+    // Retrieve the userid from the url
+    const [searchParams] = useSearchParams();
     const id = searchParams.get('user_id');
     
+    // Profile Data
     const [viewProfile, setviewProfile] = useState({});
     const [relationship, setRelationship] = useState("No Connection");
-    
     const [listings, setListings] = useState([]);
     const [posts, setPosts] = useState([]);
 
+    // Fetch the requested user
     useEffect(() => {
         const fetchUser = async () => {
             const token = localStorage.getItem('access_token');
@@ -143,6 +138,9 @@ function ViewprofilePGU(props) {
         fetchUser();
     }, []);
     
+
+    // Handle Active section changes
+
     const handleInfo = () => {
         setMode("info");
     };
@@ -159,9 +157,15 @@ function ViewprofilePGU(props) {
         setMode("activity");
     };
 
+
+    // Redirect to a user's listing
+
     const goToJobListing = (listi) => {
         navigate(`/user/listings?listing_id=${listi.listing_id}`)
     };
+
+
+    // Handle connection request when user wants to issue one
 
     const handleRequestClick = async (userId) => {
         try {
@@ -193,6 +197,8 @@ function ViewprofilePGU(props) {
             alert("An error occurred while sending the request");
         }
     };
+
+    // Handle connection request when a request is present
 
     const handleResponseClick = async (answer) => {
         const token = localStorage.getItem('access_token');
@@ -228,18 +234,19 @@ function ViewprofilePGU(props) {
         }
     };
 
+    // Prevent not Authenticated Users
     if(noAuth){
         return (<NotFoundPG />)
     }
 
+    // Dont show anything when loading
     if(loading) return <>Loading...</>
 
     return (
         <div>
             <Header log="user" act=""/>
             <div style={{display:"flex", flexDirection:"column", width: "70%", marginLeft:"15%", marginTop:"20px"}}>
-                
-                
+                {/* relationship banner */}
                 <div style={{display:"flex", flexDirection:"row", justifyContent:"space-between", marginBottom:"5px"}}>
                     { relationship === "Friends" ?
                         <button type="button" class="btn btn-outline-dark" style={{paddingTop: "0px", paddingBottom: "0px", marginRight:"4px"}} onClick={()=>{navigate(`/user/Messages?user_id=${id}`);}}>
@@ -310,6 +317,7 @@ function ViewprofilePGU(props) {
                     </p>
                     }
                 </div>
+                {/* Profile Sections */}
                 <ul class="nav nav-tabs">
                     <li class="nav-item">
                         <a class={mode === "info" ? "nav-link active": "nav-link"} aria-current="page" onClick={handleInfo}>Info</a>
@@ -326,6 +334,7 @@ function ViewprofilePGU(props) {
                 </ul>
                 {mode === "info"
                 ?
+                // General Info Section //
                 <div style={{textAlign:"left", marginTop:"10px", padding: "5px 5px"}}>
                     <h4 style={{marginBottom:"2px"}}>
                         About {viewProfile.name}
@@ -387,6 +396,7 @@ function ViewprofilePGU(props) {
                 :
                 (mode === "posts"
                     ?
+                    // Posts Section //
                     (posts.length !== 0 ?
                         <>
                         {
@@ -402,6 +412,7 @@ function ViewprofilePGU(props) {
                     :
                     (mode === "listings"
                     ?
+                    // Listings Section //
                     <>
                         {listings.length !== 0  ? 
                         <>
@@ -418,6 +429,7 @@ function ViewprofilePGU(props) {
                     </>
 
                     :
+                    // Activity Section //
                     <>Activity</>
                     )
 

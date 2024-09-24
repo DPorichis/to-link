@@ -1,3 +1,7 @@
+// NotificationPGU.js
+// Contains the notification page, rendering requests and activity notifications
+// =======================================
+
 import React from "react";
 import Header from "../../Components/Header";
 import ProfileBannerNotificationsReq from "../../Components/Notifications/ProfileBannerNotificationsReq";
@@ -7,12 +11,15 @@ import { refreshAccessToken } from "../../functoolbox";
 import NotFoundPG from "../NotFoundPG";
 
 function NotificationsPGU(props) {
+    // Data
     const [Notifications, setNotifications] = useState([]);
     const [Requests, setRequests] = useState([]);
-    const [error, setError] = useState(null);
+    
+    // Rendering Control
     const [loading, setLoading] = useState(true);
     const [noAuth, setNoAuth] = useState(false);
 
+    // Fetch users data
     useEffect(() => {
         const fetchNotifications = async () => {
             const token = localStorage.getItem('access_token');
@@ -90,7 +97,7 @@ function NotificationsPGU(props) {
         fetchNotifications();
     }, []);
 
-
+    // Delete a Notification
     const handleDismiss = async (index) => {
 
         const token = localStorage.getItem('access_token');
@@ -118,9 +125,10 @@ function NotificationsPGU(props) {
         
     }
 
-
+    // No render when loading
     if (loading) return <p>Loading</p>;
 
+    // Prevent not Authenticated Users
     if(noAuth)
     {
         return (<NotFoundPG />)
@@ -133,6 +141,7 @@ function NotificationsPGU(props) {
                     <h3 style={{marginTop:"15px"}}>Your Notifications</h3>
                     <h4 style={{marginTop:"20px", marginBottom:"4px"}}>Link Requests</h4>
                     {Requests.length !== 0 ?
+                    // Requests Rendering //
                     <div style={{width:"80%", maxHeight:"50vh", overflow:"auto"}}>
                         {Requests.map((Notification) =>
                             <ProfileBannerNotificationsReq name = {Notification.user_info.name} surname={Notification.user_info.surname} title = {Notification.user_info.title} user_id_from={Notification.user_id_from} imgURL = {Notification.user_info.pfp} />
@@ -145,7 +154,9 @@ function NotificationsPGU(props) {
                     </div>
                     }
                     <h4>Clout Check</h4>
-                    {Notifications.length !== 0 ?
+                    {Notifications.length !== 0 
+                    // Notification Rendering //
+                    ?
                     <div style={{width:"80%", maxHeight:"50vh", overflow:"auto"}}>
                         {Notifications.map((notif, index) =>
                             <ProfileBannerClout clout = {notif.notification_content} dismiss={handleDismiss} item={index}/>

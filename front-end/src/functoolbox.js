@@ -1,3 +1,7 @@
+// functoolbox.js
+// Contains frequently used functions
+// =======================================
+
 export  const refreshAccessToken = async () => {
     const refresh_token = localStorage.getItem('refresh_token');
 

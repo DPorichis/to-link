@@ -1,3 +1,7 @@
+// MyProfilePGU.js
+// Contains the authenticated user's profile view, with editing option
+// =======================================
+
 import React from "react";
 import Header from "../../Components/Header";
 import { useState, useEffect } from "react";
@@ -332,6 +336,12 @@ function MyProfilePGU(props) {
     };
 
     if (loading) return <>Loading...</>
+
+    // Prevent not Authenticated Users
+    if(noAuth)
+    {
+      return (<NotFoundPG />)
+    }
 
     return (
         <div>

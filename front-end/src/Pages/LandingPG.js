@@ -1,3 +1,7 @@
+// LandingPG.js
+// Contains the Landing page
+// =======================================
+
 import React, {useState, useEffect} from "react";
 import Header from "../Components/Header";
 import {refreshAccessToken} from "../functoolbox"
@@ -6,13 +10,13 @@ import {jwtDecode} from "jwt-decode";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
-import Postbox from "../Components/Feed/Postbox";
 import { useNavigate } from 'react-router-dom';
 
 function LandingPG(props) {
 
     const navigate = useNavigate();
 
+    // Login Form
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -22,21 +26,7 @@ function LandingPG(props) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
 
-    const getCookie = (name) => {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-          const cookies = document.cookie.split(';');
-          for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === `${name}=`) {
-              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-              break;
-            }
-          }
-        }
-        return cookieValue;
-    };
-
+    // Check if a User is logged in already
     useEffect(() => {
         const fetchUser = async () => {
             const token = localStorage.getItem('access_token');
@@ -78,6 +68,7 @@ function LandingPG(props) {
     }, []);
 
 
+    // Check if the data corespond to a user
     const handleSubmit = async (e) => {
         const token = localStorage.getItem('access_token');
         e.preventDefault();
@@ -111,6 +102,7 @@ function LandingPG(props) {
         }
     };
 
+    // Update coresponding field with its new value
     const handleChange = (e) => {
         const {name, value} = e.target;
         setFormData({
@@ -119,6 +111,7 @@ function LandingPG(props) {
         });
     };
 
+    // Logout the authenticated user
     const handleLogout = async () => {
         const token = localStorage.getItem('refresh_token');
 
@@ -157,6 +150,7 @@ function LandingPG(props) {
         }
     };
 
+    // Don't show anything while we fetch data
     if (loading) return <p>Loading...</p>;
 
     return (
@@ -172,6 +166,7 @@ function LandingPG(props) {
                     <h3>Welcome to whatever this is</h3>
                     <p>All your favorite high ego friends are waiting inside!</p>
                     {userLoggedIn?
+                        // If a user is logged in, display him //
                         <div style={{textAlign:"left", background: "#e2d9d0", padding: "20px 10px", borderRadius: "5px",
                         border: "solid 1px", borderColor:"#ccc", height:"fit-content", textAlign: "center"}}>
                             <h5>
@@ -184,6 +179,7 @@ function LandingPG(props) {
                             </div>
                         </div>
                     :
+                        // If no user is logged in, ask for email and password //
                         <div style={{textAlign:"left", background: "#e2d9d0", padding: "20px 10px", borderRadius: "5px",
                             border: "solid 1px", borderColor:"#ccc", height:"fit-content"}}>
                             
@@ -223,6 +219,7 @@ function LandingPG(props) {
                     </div>
  
                 </div>
+                {/* Marketing Things (We find them kinda funny) */}
                 <div style={{marginTop:"2%", marginBottom: "2%"}}>
                 <h3>Redefining social-networking from the ground up</h3>
                 <p>Built by professionals, for professionals</p>

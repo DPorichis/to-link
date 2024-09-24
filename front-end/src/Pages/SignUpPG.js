@@ -1,4 +1,8 @@
-import React, { useState, useEffect} from "react";
+// SignUpPG.js
+// Sign Up page implementation (all 3 sub-steps are included here)
+// =======================================
+
+import React, { useState} from "react";
 import Header from "../Components/Header";
 
 import "./SignUp.css"
@@ -6,17 +10,6 @@ import "./SignUp.css"
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-
-
-const emptyAccount = 
-{
-    name: "",
-    surname: "",
-    email: "",
-    password: "",
-    passwordval: "",
-    accept: false
-}
 
 function SignUpPG(props) {
 
@@ -27,7 +20,8 @@ function SignUpPG(props) {
     };
 
     const [prog, setProg] = useState(0)
- 
+
+    // Initial form state for creating the account
     const [formData0, setFormData0] = useState({
         firstName: '',
         lastName: '',
@@ -37,6 +31,7 @@ function SignUpPG(props) {
         agreed: false,
     });
 
+    // Errors form state for creating the account
     const [formErrors0, setFormErrors0] = useState({
         email: '',
         password: '',
@@ -46,11 +41,8 @@ function SignUpPG(props) {
         agreed:''
     });
 
-    const [formErrors1, setFormErrors1] = useState({
-        pfFirstName:'',
-        pfLastName:''
-    });
-
+    
+    // Second form state for entering profile information
     const [formData1, setFormData1] = useState({
         birthdate: null,
         country: '',
@@ -72,6 +64,13 @@ function SignUpPG(props) {
         pfWebsite: ''
     });
 
+    // Errors form state for adding profile information
+    const [formErrors1, setFormErrors1] = useState({
+        pfFirstName:'',
+        pfLastName:''
+    });
+
+    // Update coresponding field with its new value
     const handleChange0 = (e) => {
         const { name, value, type, checked } = e.target;
         setFormData0({
@@ -80,6 +79,7 @@ function SignUpPG(props) {
         });
     };
 
+    // Handle next step
     const handleSubmit0 = async (e) => {
         e.preventDefault();
         const errors = await validateForm();
@@ -96,21 +96,8 @@ function SignUpPG(props) {
         }
     };
     
+    // Check if the data entered are ok to move to the next step
     const validateForm = async () => {
-
-        // try {
-        //     const response = await fetch("http://127.0.0.1:8000/logout", {
-        //         method: "POST",
-        //         credentials: "include",  // Include cookies in the request
-        //     });
-        //     if (response.ok) {
-        //         console.log("Logged out successfully");
-        //     } else {
-        //         console.error("Logout failed");
-        //     }
-        // } catch (error) {
-        //     console.error("Error:", error);
-        // }
 
         const errors = {};
         
@@ -158,7 +145,6 @@ function SignUpPG(props) {
             
             const data = await response.json();
 
-            // Check if the 'success' field is present
             if (response.ok) {
                 localStorage.setItem('access_token', data.access);
                 localStorage.setItem('refresh_token', data.refresh);
@@ -172,7 +158,7 @@ function SignUpPG(props) {
     };
 
 
-    
+    // Update coresponding field with its new value
     const handleChange1 = (e) => {
         const { name, value} = e.target;
         setFormData1({
@@ -181,17 +167,18 @@ function SignUpPG(props) {
         });
     };
 
+    // Functions for changing the Education List
     const addEdu = () => {
         setFormData1((prevProfile) => ({
           ...prevProfile,
-          pfEducation: [... prevProfile.pfEducation, ""],
+          pfEducation: [...prevProfile.pfEducation, ""],
         }));
     };
 
     const remEdu = (event) => {
         const {name} = event.target
         setFormData1({
-          ... formData1,
+          ...formData1,
           pfEducation: formData1.pfEducation.filter((_, i) => i != name)
         });
     };
@@ -211,6 +198,8 @@ function SignUpPG(props) {
         }));
     };
 
+    // Functions for changing the Experience List
+
     const remExp = (event) => {
         const {name} = event.target;
         setFormData1((prevProfile) => ({
@@ -222,7 +211,7 @@ function SignUpPG(props) {
     const addExp = () => {
         setFormData1((prevProfile) => ({
           ...prevProfile,
-          pfExperience: [... prevProfile.pfExperience, ""],
+          pfExperience: [...prevProfile.pfExperience, ""],
         }));
     };
 
@@ -239,6 +228,8 @@ function SignUpPG(props) {
       }));
     };
 
+    // Functions for changing the Skill List
+
     const remSkill = (event) => {
         const {name} = event.target;
         setFormData1((prevProfile) => ({
@@ -250,7 +241,7 @@ function SignUpPG(props) {
     const addSkill = () => {
         setFormData1((prevProfile) => ({
           ...prevProfile,
-          pfSkills: [... prevProfile.pfSkills, ""],
+          pfSkills: [...prevProfile.pfSkills, ""],
         }));
     };
 
@@ -267,6 +258,8 @@ function SignUpPG(props) {
       }));
     };
 
+
+    // Functions for changing the Education List
     const validateForm1 = () => {
 
         const errors = {};
@@ -288,7 +281,7 @@ function SignUpPG(props) {
         return errors;
     };
 
-
+    // Check if the data entered are ok to move to the next step
     const handleSubmit1 = async (e) => {
         e.preventDefault()
         
@@ -299,18 +292,16 @@ function SignUpPG(props) {
             return
         }
         
-        // Create a FormData object
         const readyForm = new FormData();
 
-        readyForm.append("name", formData1.pfFirstName);      // 'name' in serializer
-        readyForm.append("surname", formData1.pfLastName);    // 'surname' in serializer
-        readyForm.append("title", formData1.pfTitle);         // 'title' in serializer
-        readyForm.append("bio", formData1.pfBio);             // 'bio' in serializer
-        readyForm.append("phone", formData1.pfPhone);         // 'phone' in serializer
-        readyForm.append("website", formData1.pfWebsite);     // 'website' in serializer
-        readyForm.append("email", formData1.pfEmail);         // 'email' in serializer
+        readyForm.append("name", formData1.pfFirstName);
+        readyForm.append("surname", formData1.pfLastName);
+        readyForm.append("title", formData1.pfTitle);
+        readyForm.append("bio", formData1.pfBio);
+        readyForm.append("phone", formData1.pfPhone);
+        readyForm.append("website", formData1.pfWebsite);
+        readyForm.append("email", formData1.pfEmail);
 
-        // Experience and Education are likely arrays, so you need to stringify them
         readyForm.append("experience", JSON.stringify(formData1.pfExperience));
         readyForm.append("education", JSON.stringify(formData1.pfEducation));
         readyForm.append("skills", JSON.stringify(formData1.pfSkills));
@@ -320,6 +311,8 @@ function SignUpPG(props) {
         }
 
         const token = localStorage.getItem('access_token');
+        
+        // Update the profile info
 
         const response = await fetch("http://127.0.0.1:8000/profile/own/update/", {
             method: "PUT",
@@ -336,6 +329,8 @@ function SignUpPG(props) {
             console.log("no user logged in")
         }
         
+        // Update the personal info
+
         const response1 = await fetch("http://127.0.0.1:8000/user/update", {
             method: "PUT",
             headers: {
@@ -350,7 +345,7 @@ function SignUpPG(props) {
             })
         })
         
-        if (response.ok) {
+        if (response1.ok) {
             console.log("skibidi yes")
         } else {
             console.log("no user logged in")
@@ -363,6 +358,7 @@ function SignUpPG(props) {
             <Header />
             <div style={{width:"70%", marginLeft:"15%"}}>
             {prog === 0 ? 
+            // First Step Screen //
             <>
             <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"
             style={{marginBottom:"10px"}}>
@@ -468,7 +464,8 @@ function SignUpPG(props) {
                 </div>
         </div>
         </>
-        : (prog === 1 ? 
+        : (prog === 1 ?
+            // Second Step Screen //
             <>
             <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"
             style={{marginBottom:"10px"}}>
@@ -658,6 +655,7 @@ function SignUpPG(props) {
         </div>
         </>   
         :
+            // Third Step Screen //
             <>
             <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"
             style={{marginBottom:"10px"}}>

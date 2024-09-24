@@ -1,17 +1,25 @@
+// SettingsPGU.js
+// Contains the page for user settings, changing personal info and password
+// =======================================
+
 import React, { useState, useEffect } from "react";
 import Header from "../../Components/Header";
 import { refreshAccessToken } from "../../functoolbox";
 import NotFoundPG from "../NotFoundPG";
 
 function SettingsPGU(props) {
+    // Before and after to track changes and discard
     const [savedProfile, setSavedProfile] = useState({});
     const [editedProfile, setEditedProfile] = useState({});
 
+    // Check for changes
     const [personalEdit, setPersonalEdit] = useState(false);
-    const [loginEdit, setLoginEdit] = useState(false);
+
+    // Rendering Control
     const [loading, setLoading] = useState(true);
     const [noAuth, setNoAuth] = useState(false);
 
+    // Bring the users data
     useEffect(() => {
         const fetchUser = async () => {
             const token = localStorage.getItem('access_token');
@@ -51,6 +59,8 @@ function SettingsPGU(props) {
         setLoading(false);
     }, []);
 
+
+    // Alert pop-up logic
     const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
     const appendAlert = (message, type) => {
       const wrapper = document.createElement('div')
@@ -64,7 +74,7 @@ function SettingsPGU(props) {
       alertPlaceholder.append(wrapper)
     }
     
-
+    // Check if the new personal data are valid
     const validateForm = async () =>
         {
         const errors = {};  
@@ -91,13 +101,14 @@ function SettingsPGU(props) {
     
     };
     
+    // Possible form errors
     const [formErrors, setFormErrors] = useState({
         name: '',
         surname: '',
         email: '',
     });
 
-
+    // Update coresponding field with its new value
     const handleFormChange = (e) => {
         const { name, value} = e.target;
         setEditedProfile({
@@ -106,6 +117,7 @@ function SettingsPGU(props) {
         });
     }
 
+    // Submit Personal Info changes
     const handleSubmit = async (e) => {
         e.preventDefault();
         const errors = await validateForm();
@@ -171,20 +183,21 @@ function SettingsPGU(props) {
         
         };
 
-
+    // Password errors
     const [passwordFormErrors, setPasswordFormErrors] = useState({
         oldPassoword: '',
         password: '',
         passwordVal: '',
     });
 
+    // Password Form
     const [passwordForm, setPasswordForm] = useState({
         oldPassoword: '',
         password: '',
         passwordVal: '',
     });
 
-
+    // Update coresponding field with its new value
     const handlePasswordFormChange = (e) => {
         const { name, value} = e.target;
         setPasswordForm({
@@ -192,7 +205,8 @@ function SettingsPGU(props) {
             [name]: value,
         });
     }
-
+    
+    // Set new password
     const handlePasswordChange = async (e) => {
         e.preventDefault();
         const errors = validatePasswordForm();
@@ -240,31 +254,33 @@ function SettingsPGU(props) {
         }
     };
 
+    // Check if the values are legit
     const validatePasswordForm = () =>
     {
 
-    const errors = {};  
+        const errors = {};  
 
-    if (passwordForm.password !== passwordForm.passwordVal) {
-        errors.passwordVal = 'Passwords do not match';
-    }
-    
-    if (passwordForm.password === ""){
-        errors.password = 'You must enter a password'
-    }
+        if (passwordForm.password !== passwordForm.passwordVal) {
+            errors.passwordVal = 'Passwords do not match';
+        }
+        
+        if (passwordForm.password === ""){
+            errors.password = 'You must enter a password'
+        }
 
-    return errors;
+        return errors;
 
     };
 
     
+    // No render when loading
     if (loading) return <p>Loading</p>;
 
-
+    // Prevent not Authenticated Users
     if(noAuth)
-        {
-            return (<NotFoundPG />)
-        }
+    {
+        return (<NotFoundPG />)
+    }
 
     return (
         <div>
