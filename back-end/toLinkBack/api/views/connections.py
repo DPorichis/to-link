@@ -7,9 +7,13 @@ from api.serializers import RequestSerializer,LinkSerializer,ProfileSerializer,U
 
 from django.db.models import F,Q
 
+from rest_framework.pagination import PageNumberPagination
+
+class CustomPagination(PageNumberPagination):
+    page_size = 4
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-
 def make_request(request):
 
     user_id_from = request.user.profile
@@ -102,7 +106,6 @@ def fetch_connections(request):
     user_profile = request.user.profile
     
     links = Link.objects.filter(Q(user_id_to=user_profile) | Q(user_id_from=user_profile))
-    
 
     print(links)
 
@@ -124,33 +127,84 @@ def fetch_searching_links(request):
     # Get the user's profile
     user_profile = request.user.profile
 
+    links = list(Link.objects.filter(user_id_to=user_profile).values_list('user_id_from', flat=True)) + \
+    list(Link.objects.filter(user_id_from=user_profile).values_list('user_id_to', flat=True))
+
     # Fetch all profiles, excluding the current user, and order alphabetically by name and surname
-    all_profiles = Profile.objects.filter(~Q(user_id=user_profile.user_id)).order_by('name', 'surname')
+    all_profiles = Profile.objects.filter(Q(user_id__in=links)).order_by('name', 'surname')
 
     # If no search term is provided, return all profiles sorted alphabetically
     if not search_term:
-        serializer = ProfileBannerSerializer(all_profiles, many=True, context={'authenticated_user': user_profile})
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    # Split the search term into possible first name and surname parts
-    search_terms = search_term.split()
-
-    # Apply the search filter based on the number of search terms
-    if len(search_terms) == 2:
-        first_name, last_name = search_terms
-        filtered_profiles = all_profiles.filter(
-            Q(name__icontains=first_name) & Q(surname__icontains=last_name)
-        ).order_by('name', 'surname')  # Add sorting here
+        filtered_profiles = all_profiles
     else:
-        # If only one term is provided, search by either name or surname
-        filtered_profiles = all_profiles.filter(
-            Q(name__icontains=search_term) | 
-            Q(surname__icontains=search_term)
-        ).order_by('name', 'surname')  # Add sorting here
+        # Split the search term into possible first name and surname parts
+        search_terms = search_term.split()
 
-    # Return the filtered profiles if they exist
-    if filtered_profiles.exists():
-        serializer = ProfileBannerSerializer(filtered_profiles, many=True, context={'authenticated_user': user_profile})
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        # Apply the search filter based on the number of search terms
+        if len(search_terms) == 2:
+            first_name, last_name = search_terms
+            filtered_profiles = all_profiles.filter(
+                Q(name__icontains=first_name) & Q(surname__icontains=last_name)
+            ).order_by('name', 'surname')  # Add sorting here
+        else:
+            # If only one term is provided, search by either name or surname
+            filtered_profiles = all_profiles.filter(
+                Q(name__icontains=search_term) | 
+                Q(surname__icontains=search_term)
+            ).order_by('name', 'surname')  # Add sorting here
+
+    # Custom pagination - use your custom pagination class
+    paginator = CustomPagination()
+    paginated_profiles = paginator.paginate_queryset(filtered_profiles, request)
+
+    # Serialize the paginated profiles
+    serializer = ProfileBannerSerializer(paginated_profiles, many=True, context={'authenticated_user': user_profile})
+
+    # Return paginated response
+    return paginator.get_paginated_response(serializer.data)
+    
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def fetch_searching_non_links(request):
+    search_term = request.data.get('search', '').strip()
+
+    # Get the user's profile
+    user_profile = request.user.profile
+
+    links = list(Link.objects.filter(user_id_to=user_profile).values_list('user_id_from', flat=True)) + \
+    list(Link.objects.filter(user_id_from=user_profile).values_list('user_id_to', flat=True)) + [request.user.user_id]
+    
+    # Fetch all profiles, excluding the current user, and order alphabetically by name and surname
+    all_profiles = Profile.objects.filter(~Q(user_id__in=links)).order_by('name', 'surname')
+
+    # If no search term is provided, return all profiles sorted alphabetically
+    if not search_term:
+        filtered_profiles = all_profiles
     else:
-        return Response([], status=status.HTTP_200_OK)
+        # Split the search term into possible first name and surname parts
+        search_terms = search_term.split()
+
+        # Apply the search filter based on the number of search terms
+        if len(search_terms) == 2:
+            first_name, last_name = search_terms
+            filtered_profiles = all_profiles.filter(
+                Q(name__icontains=first_name) & Q(surname__icontains=last_name)
+            ).order_by('name', 'surname')  # Add sorting here
+        else:
+            # If only one term is provided, search by either name or surname
+            filtered_profiles = all_profiles.filter(
+                Q(name__icontains=search_term) | 
+                Q(surname__icontains=search_term)
+            ).order_by('name', 'surname')  # Add sorting here
+
+    # Custom pagination - use your custom pagination class
+    paginator = CustomPagination()
+    paginated_profiles = paginator.paginate_queryset(filtered_profiles, request)
+
+    # Serialize the paginated profiles
+    serializer = ProfileBannerSerializer(paginated_profiles, many=True, context={'authenticated_user': user_profile})
+
+    # Return paginated response
+    return paginator.get_paginated_response(serializer.data)

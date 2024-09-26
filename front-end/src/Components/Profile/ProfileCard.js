@@ -91,7 +91,7 @@ function ProfileCard(props){
     return(
     <>
         { relationship === "Friends" ? 
-        <div className="Box" style={{backgroundColor: "#96b9e459", border:"1px solid #ccc", borderRadius:"10px", width:"23%", minHeight:"100%",flexDirection:"column",padding:"5px 10px", display:"flex", justifyContent:"flex-start",flexWrap: "wrap",marginTop:"9px",marginBottom:"9px",justifyContent:"space-between",maxWidth:"23%",maxHeight:"100%",overflow:"hidden"}}>
+        <div className="Box" style={{backgroundColor: "#96b9e459", border:"1px solid #ccc", borderRadius:"10px", width:"22%", minHeight:"100%",flexDirection:"column",padding:"5px 10px", display:"flex", justifyContent:"flex-start",flexWrap: "wrap",marginTop:"9px",marginBottom:"9px",justifyContent:"space-between",maxWidth:"23%",maxHeight:"100%",overflow:"hidden"}}>
             <div style={{flexDirection:"row",display:"flex",justifyContent:"flex-start"}}>
                 <img src={props.link.profile_info.pfp} alt="Avatar" style={{width :"64px",height:"64px"}} className="link-image" />
                 <div className="Name" style={{position:"top", textAlign: "left",justifyContent: "center",marginLeft: "20px", width:"75%",wordBreak:"break-all"}}>
@@ -114,7 +114,7 @@ function ProfileCard(props){
         </div> 
         :
         (relationship === "Pending Request Sent"?
-        <div className="Box" style={{backgroundColor: "#96b9e459", border:"1px solid #ccc", borderRadius:"10px", width:"23%", minHeight:"100%",flexDirection:"column",padding:"5px 10px", display:"flex", justifyContent:"flex-start",flexWrap: "wrap",marginTop:"9px",marginBottom:"9px",justifyContent:"space-between",maxWidth:"23%",maxHeight:"100%",overflow:"hidden"}}>
+        <div className="Box" style={{backgroundColor: "#96b9e459", border:"1px solid #ccc", borderRadius:"10px", width:"22%", minHeight:"100%",flexDirection:"column",padding:"5px 10px", display:"flex", justifyContent:"flex-start",flexWrap: "wrap",marginTop:"9px",marginBottom:"9px",justifyContent:"space-between",maxWidth:"23%",maxHeight:"100%",overflow:"hidden"}}>
             <div style={{flexDirection:"row",display:"flex",justifyContent:"flex-start"}}>
                 <img src={props.link.profile_info.pfp} alt="Avatar" style={{width :"64px",height:"64px"}} className="link-image" />
                 <div className="Name" style={{position:"top", textAlign: "left",justifyContent: "center",marginLeft: "20px",width:"75%", wordBreak:"break-all"}}>
@@ -137,7 +137,7 @@ function ProfileCard(props){
         </div>
         :
         (relationship === "Pending Request Received"?
-            <div className="Box" style={{backgroundColor: "#96b9e459", border:"1px solid #ccc", borderRadius:"10px", width:"23%", minHeight:"100%",flexDirection:"column",padding:"5px 10px", display:"flex", justifyContent:"flex-start",flexWrap: "wrap",marginTop:"9px",marginBottom:"9px",justifyContent:"space-between",maxWidth:"23%",maxHeight:"100%",overflow:"hidden"}}>
+            <div className="Box" style={{backgroundColor: "#96b9e459", border:"1px solid #ccc", borderRadius:"10px", width:"22%", minHeight:"100%",flexDirection:"column",padding:"5px 10px", display:"flex", justifyContent:"flex-start",flexWrap: "wrap",marginTop:"9px",marginBottom:"9px",justifyContent:"space-between",maxWidth:"23%",maxHeight:"100%",overflow:"hidden"}}>
             <div style={{flexDirection:"row",display:"flex",justifyContent:"flex-start"}}>
                 <img src={props.link.profile_info.pfp} alt="Avatar" style={{width :"64px",height:"64px"}} className="link-image" />
                 <div className="Name" style={{position:"top", textAlign: "left",justifyContent: "center",marginLeft: "20px",width:"75%", wordBreak:"break-all"}}>
@@ -162,7 +162,7 @@ function ProfileCard(props){
                 </button>
         </div>
         :
-        <div className="Box" style={{backgroundColor: "#96b9e459", border:"1px solid #ccc", borderRadius:"10px", width:"23%", minHeight:"100%",flexDirection:"column",padding:"5px 10px", display:"flex", justifyContent:"flex-start",flexWrap: "wrap",marginTop:"9px",marginBottom:"9px",justifyContent:"space-between",maxWidth:"23%",maxHeight:"100%",overflow:"hidden"}}>
+        <div className="Box" style={{backgroundColor: "#96b9e459", border:"1px solid #ccc", borderRadius:"10px", width:"22%", minHeight:"100%",flexDirection:"column",padding:"5px 10px", display:"flex", justifyContent:"flex-start",flexWrap: "wrap",marginTop:"9px",marginBottom:"9px",justifyContent:"space-between",maxWidth:"23%",maxHeight:"100%",overflow:"hidden"}}>
             <div style={{flexDirection:"row",display:"flex",justifyContent:"flex-start"}}>
                 <img src={props.link.profile_info.pfp} alt="Avatar" style={{width :"64px",height:"64px"}} className="link-image" />
                 <div className="Name" style={{position:"top", textAlign: "left",justifyContent: "center",marginLeft: "20px",width:"75%", wordBreak:"break-all"}}>

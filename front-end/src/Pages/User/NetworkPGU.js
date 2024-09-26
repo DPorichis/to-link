@@ -14,14 +14,17 @@ function NetworkPGU(props) {
   const [filter, setFilter] = useState("all");
   const [searching, setSearching] = useState(false);
   const [noAuth, setNoAuth] = useState(false);
-  const [searchResults, setSearchResults] = useState([]);
+  const [friendsResults, setFriendsResults] = useState({});
+  const [outResults, setOutResults] = useState({});
   const [loading, setLoading] = useState(true);
+  const [friendsLoading, setFriendsLoading] = useState(true);
+  const [outLoading, setOutLoading] = useState(true);
 
   // Fetch links according to search term
-  const fetchSearchedLinks = async (searchTerm) => {
+  const fetchSearchedLinks = async (searchTerm, page) => {
     const token = localStorage.getItem('access_token');
-    setLoading(true);
-    const response = await fetch("http://127.0.0.1:8000/profile/fetch_searching_link", {
+    setFriendsLoading(true);
+    const response = await fetch(page ? page : "http://127.0.0.1:8000/profile/fetch_searching_link", {
       method: "POST",
       headers: {
         'Content-Type': 'application/json',
@@ -32,7 +35,7 @@ function NetworkPGU(props) {
 
     if (response.ok) {
       const data = await response.json();
-      setSearchResults(data);
+      setFriendsResults(data);
       console.log("Fetched Search Results:", data);
     } else if (response.status === 401) {
       localStorage.removeItem('access_token');
@@ -50,7 +53,44 @@ function NetworkPGU(props) {
         console.log("Problems with fetching your results")
         setNoAuth(true);
     }
-    
+    setFriendsLoading(false);
+    setLoading(false);
+  };
+
+  // Fetch links according to search term
+  const fetchSearchedOut = async (searchTerm, page) => {
+    const token = localStorage.getItem('access_token');
+    setOutLoading(true);
+    const response1 = await fetch(page ? page : "http://127.0.0.1:8000/profile/fetch_searchout", {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ 'search': searchTerm })
+    });
+
+    if (response1.ok) {
+      const data = await response1.json();
+      setOutResults(data);
+      console.log("Fetched Search Results:", data);
+    } else if (response1.status === 401) {
+      localStorage.removeItem('access_token');
+      await refreshAccessToken();
+      if(localStorage.getItem('access_token') !== null)
+      {
+          await fetchSearchedOut();
+      }
+      else
+      {
+          console.log("Problems with fetching your results")
+          setNoAuth(true);
+      } 
+    } else {
+        console.log("Problems with fetching your results")
+        setNoAuth(true);
+    }
+      setOutLoading(false);
       setLoading(false);
   };
 
@@ -58,6 +98,7 @@ function NetworkPGU(props) {
   useEffect(() => {
     setLoading(true);
     fetchSearchedLinks();
+    fetchSearchedOut();
   }, []);
 
   // After each change, refetch results
@@ -75,18 +116,32 @@ function NetworkPGU(props) {
     setFilter(event.target.value);
     setSearchTerm(""); // Clear search term when changing filter
     setSearching(false);
-    setSearchResults([]);
+    setOutResults({});
+    setFriendsResults({});
     fetchSearchedLinks(); // Clear search results when changing filter
   };
 
 
+  const handleMovement = (direction, target) => {
+    if (direction === "prev" && target === "out")
+    {
+      fetchSearchedOut(searchTerm, outResults.previous)
+    }
+    else if (direction === "next" && target === "out")
+    {
+      fetchSearchedOut(searchTerm, outResults.next)
+    }
+    else if (direction === "prev" && target === "friends")
+    {
+      fetchSearchedLinks(searchTerm, friendsResults.previous)
+    }
+    else if (direction === "next" && target === "friends")
+    {
+      fetchSearchedLinks(searchTerm, friendsResults.next)
+    }
+  }
   // Group by if they are friends or not
 
-  const filteredUnknownResults = searchResults
-  .filter((link) => link.relationship !== "Friends");
-
-  const filteredFriendsResults = searchResults
-  .filter((link) => link.relationship === "Friends");
 
   // Prevent not Authenticated Users
   if(noAuth)
@@ -134,14 +189,14 @@ function NetworkPGU(props) {
               // And searching for all //
               && (
                 <>
-                  <h5>Your Network {searchResults.length}</h5>
+                  <h5>Your Network</h5>
                   <div style={{ maxHeight: "57vh", overflowY: "auto", marginBottom: "10px" }}>
                     {loading ? (
                       <div>Loading Search Results...</div> // Loading indicator for search results
                     ) : (
                       <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
-                          {filteredFriendsResults.length > 0 ?
-                            filteredFriendsResults
+                          {friendsResults.results && friendsResults.results.length > 0 ?
+                            friendsResults.results
                             .map((link) => (
                               <ProfileBanner key={link.user_id} link={link}/>
                             ))
@@ -156,8 +211,8 @@ function NetworkPGU(props) {
                   </div>
                   <h5>People you may know</h5>
                   <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
-                          {filteredUnknownResults.length > 0 ?
-                            filteredUnknownResults
+                          {outResults.results && outResults.results.length > 0 ?
+                            outResults.results
                             .map((link) => (
                               <ProfileBanner key={link.user_id} link={link}/>
                             ))
@@ -180,8 +235,8 @@ function NetworkPGU(props) {
                       <div>Loading Search Results...</div> // Loading indicator for search results
                     ) : (
                       <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
-                          {filteredFriendsResults.length > 0 ?
-                            filteredFriendsResults
+                          {friendsResults.results && friendsResults.results.length > 0 ?
+                            friendsResults.results
                             .map((link) => (
                               <ProfileBanner key={link.user_id} link={link}/>
                             ))
@@ -206,8 +261,8 @@ function NetworkPGU(props) {
                       <div>Loading Search Results...</div> // Loading indicator for search results
                     ) : (
                       <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
-                          {filteredUnknownResults.length > 0 ?
-                            filteredUnknownResults
+                          {outResults.results && outResults.results.length > 0 ?
+                            outResults.results
                             .map((link) => (
                               <ProfileBanner key={link.user_id} link={link}/>
                             ))
@@ -234,11 +289,19 @@ function NetworkPGU(props) {
                   <h5>Your Network</h5>
                   <div style={{ maxHeight: "57vh", overflowY: "auto", marginBottom: "10px" }}>
                   <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
-                  {filteredFriendsResults.length > 0 ?
-                    filteredFriendsResults.slice(0, 4)
+                  {friendsResults.results && friendsResults.results.length > 0 ?
+                    <>
+                    <div style={{alignSelf:"center"}}>
+                      <button onClick={() => {handleMovement("prev", "friends")}} disabled={!friendsResults.previous} type="button" class="btn btn-primary">{"<"}</button>
+                    </div>
+                    {friendsResults.results.slice(0, 4)
                     .map((link) => (
                       <ProfileCard key={link.user_id} link={link}/>
-                    ))
+                    ))}
+                    <div style={{alignSelf:"center"}}>
+                      <button onClick={() => {handleMovement("next", "friends")}} disabled={!friendsResults.next} type="button" class="btn btn-primary">{">"}</button>
+                    </div>
+                    </>
                     :
                     <div style={{width:"100%", padding:"10px 10px", borderRadius:"5px", border:"1px #aaa solid", marginBottom:"10px"}}>
                       <h5 style={{marginBottom:"3px"}}>You have no users in your Network</h5>
@@ -250,11 +313,19 @@ function NetworkPGU(props) {
                   </div>
                   <h5>People you may know</h5>
                   <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
-                  {filteredUnknownResults.length > 0 ?
-                    filteredUnknownResults.slice(0, 4)
+                  {outResults.results && outResults.results.length > 0 ?
+                    <>
+                    <div style={{alignSelf:"center"}}>
+                      <button onClick={() => {handleMovement("prev", "out")}} disabled={!outResults.previous} type="button" class="btn btn-primary">{"<"}</button>
+                    </div>
+                    {outResults.results.slice(0, 4)
                     .map((link) => (
                       <ProfileCard key={link.user_id} link={link}/>
-                    ))
+                    ))}
+                    <div style={{alignSelf:"center"}}>
+                      <button onClick={() => {handleMovement("next", "out")}} disabled={!outResults.next} type="button" class="btn btn-primary">{">"}</button>
+                    </div>
+                    </>
                     :
                     <div style={{width:"100%", padding:"10px 10px", borderRadius:"5px", border:"1px #aaa solid", marginBottom:"10px"}}>
                       <h5 style={{marginBottom:"3px"}}>No users found</h5>
@@ -271,11 +342,19 @@ function NetworkPGU(props) {
                   <h5>Your Network</h5>
                   <div style={{ maxHeight: "65vh", overflowY: "auto", marginBottom: "10px" }}>
                     <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
-                    {filteredFriendsResults.length > 0 ?
-                    filteredFriendsResults.slice(0, 4)
-                    .map((link) => (
-                      <ProfileCard key={link.user_id} link={link}/>
-                    ))
+                    {friendsResults.results && friendsResults.results.length > 0 ?
+                      <>
+                      <div style={{alignSelf:"center"}}>
+                        <button onClick={() => {handleMovement("prev", "friends")}} disabled={!friendsResults.previous} type="button" class="btn btn-primary">{"<"}</button>
+                      </div>
+                      {friendsResults.results.slice(0, 4)
+                      .map((link) => (
+                        <ProfileCard key={link.user_id} link={link}/>
+                      ))}
+                      <div style={{alignSelf:"center"}}>
+                        <button onClick={() => {handleMovement("next", "friends")}} disabled={!friendsResults.next} type="button" class="btn btn-primary">{">"}</button>
+                      </div>
+                    </>
                     :
                     <div style={{width:"100%", padding:"10px 10px", borderRadius:"5px", border:"1px #aaa solid", marginBottom:"10px"}}>
                       <h5 style={{marginBottom:"3px"}}>You have no users in your Network</h5>
@@ -293,11 +372,19 @@ function NetworkPGU(props) {
                   <h5>People you may know</h5>
                   <div style={{ maxHeight: "65vh", overflowY: "auto", marginBottom: "10px" }}>
                   <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "10px", marginTop: "9px", marginBottom: "9px" }}>
-                  {filteredUnknownResults.length > 0 ?
-                    filteredUnknownResults.slice(0, 4)
+                  {outResults.results && outResults.results.length > 0 ?
+                    <>
+                    <div style={{alignSelf:"center"}}>
+                      <button onClick={() => {handleMovement("prev", "out")}} disabled={!outResults.previous} type="button" class="btn btn-primary">{"<"}</button>
+                    </div>
+                    {outResults.results.slice(0, 4)
                     .map((link) => (
                       <ProfileCard key={link.user_id} link={link}/>
-                    ))
+                    ))}
+                    <div style={{alignSelf:"center"}}>
+                      <button onClick={() => {handleMovement("next", "out")}} disabled={!outResults.next} type="button" class="btn btn-primary">{">"}</button>
+                    </div>
+                    </>
                     :
                     <div style={{width:"100%", padding:"10px 10px", borderRadius:"5px", border:"1px #aaa solid", marginBottom:"10px"}}>
                       <h5 style={{marginBottom:"3px"}}>No users found</h5>

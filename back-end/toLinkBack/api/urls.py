@@ -13,7 +13,7 @@ from .views import login, signup, update_profile, logout, fetch_user_info, updat
     apply_by_id, fetch_request, fetch_connections, get_listing_by_id, admin_fetch_connections, \
     admin_fetch_applications, admin_fetch_profile, admin_fetch_personal, admin_fetch_listings, \
     admin_fetch_posts, admin_fetch_comments, admin_fetch_likes, get_all_posts, check_if_applied, \
-    update_listing, check_if_like_exist, get_post_by_user_id, fetch_searching_links, admin_fetch_users, \
+    update_listing, check_if_like_exist, get_post_by_user_id, fetch_searching_links, fetch_searching_non_links ,admin_fetch_users, \
     fetch_notifications, dismiss_notification_by_id, retrive_header_info, get_posts_id, get_post_by_id, \
     get_interactions, request_export, delete_post,delete_profile
 
@@ -29,6 +29,7 @@ urlpatterns = [
     re_path('profile/own/fetch', retrive_own_profile),
     re_path('profile/view/', retrive_profile),
     re_path('profile/fetch_searching',fetch_searching_links),
+    re_path('profile/fetch_searchout', fetch_searching_non_links),
     re_path('profile/delete',delete_profile),
 
 
