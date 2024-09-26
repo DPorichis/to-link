@@ -100,6 +100,8 @@ class Command(BaseCommand):
                             user=profile,
                             post=post
                         )
+                        post.like_cnt = F('like_cnt') + 1
+                        post.save(update_fields=['like_cnt'])
                     except IntegrityError:
                         # Handle the case where the like already exists or other integrity issues occur
                         print("Like could not be created. Integrity error encountered. (Most likely bad luck)")
@@ -115,6 +117,8 @@ class Command(BaseCommand):
                         post=post,
                         text="This is so me"
                     )
+                    post.comment_cnt = F('comment_cnt') + 1
+                    post.save(update_fields=['comment_cnt'])
                     
 
         self.stdout.write(f'Data from Post_MOCK.json loaded successfully.')
