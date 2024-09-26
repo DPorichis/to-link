@@ -95,9 +95,8 @@ def delete_profile(request):
 
     try:
         profile = Profile.objects.get(user=user)
-        profile.post_set.all().delete()
-        profile.delete()
-        return Response({"message": "Profile and associated user deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
+        user.delete()
+        return Response({"message": "User deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
 
     except Profile.DoesNotExist:
         return Response({"error": "Profile does not exist."}, status=status.HTTP_404_NOT_FOUND)

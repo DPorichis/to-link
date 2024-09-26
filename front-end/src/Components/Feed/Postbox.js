@@ -120,7 +120,7 @@ function Postbox(props) {
                     />
                     <div className="dropdown">
                         <img 
-                            src={"more-horizontal (1).svg"}
+                            src="/more-horizontal (1).svg"
                             alt="more options" 
                             style={{ cursor: "pointer" }} 
                             id="dropdownMenuButton"

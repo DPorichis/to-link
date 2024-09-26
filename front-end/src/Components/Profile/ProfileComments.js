@@ -8,7 +8,7 @@ function ProfileComments(props){
                                 <img src={props.pfp} alt="Avatar" style={{width :"48px", height :"48px",flexDirection: "column"}} className="link-image" />
                                 <div style={{display:"flex", flexDirection:"column", justifyContent:"flex-start"}}>
                                     <p style={{margin: "0px 0px"}}>
-                                        <span className="linkcomms-name" style={{possition:"top",textAlign: "start", fontWeight: "bold",flexDirection: "column", marginLeft: "3px", marginBottom: "1px" }}>{props.name}</span>
+                                        <span className="linkcomms-name" style={{possition:"top",textAlign: "start", fontWeight: "bold",flexDirection: "column", marginLeft: "3px", marginBottom: "1px" }}>{props.name}  </span>
                                         <span className="linkcomms-title" style={{possition:"top",textAlign: "start", marginBottom: "1px" }}>{props.title}</span>
                                     </p>
                                     <span style={{marginLeft:"3px", marginTop:"0px", padding:"0px 0px"}}>{props.comments}</span>

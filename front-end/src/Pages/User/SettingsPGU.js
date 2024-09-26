@@ -479,9 +479,9 @@ function SettingsPGU(props) {
                         </div>
                     </form>
                 </div>  
-                <button class="btn btn-primary" id="liveAlertBtn" onClick={handleDeleteProfile}>
-                                delete profile
-                </button>          
+                <button class="btn btn-danger" id="liveAlertBtn" onClick={handleDeleteProfile} style={{width:"20%"}}>
+                                Delete Profile
+                </button>        
                 </div>
         </div>
     );

@@ -31,16 +31,16 @@ function HomePGU(props) {
     const [error, setError] = useState(null);
     const [noAuth, setNoAuth] = useState(false);
     const [profile, setProfile] = useState({});
-    const [PostCount, setPostCount] = useState(); 
-    
-    
+    const [PostCount, setPostCount] = useState();     
     const [postText, setpostText] = useState("");
     const [postMedia, setpostMedia] = useState([]);
+    const [postsToShow, setPostsToShow] = useState(5);
 
     const handleTextChange = (e) => {
         const {value} = e.target
         setpostText(value)
     }
+
 
 
     // Handle selection
@@ -84,6 +84,16 @@ function HomePGU(props) {
         setpostMedia(prevMedia => prevMedia.filter((img, imgIndex) => imgIndex !== index));
     };
 
+    const PostsList = ({ posts }) => {
+        // Set initial state for number of posts to display
+        const [postsToShow, setPostsToShow] = useState(5);
+    
+        // Function to handle loading more posts
+        const loadMorePosts = () => {
+            setPostsToShow(prevPostsToShow => prevPostsToShow + 5);
+        };
+    }
+
 
 
 const fetchPostid = async () => {
@@ -122,11 +132,7 @@ const fetchPosts = async () => {
             });
             if (response.ok) {
                 const data = await response.json();
-                console.log("Fetched Posts:", data);
-
-                const sortedPosts = data.sort((a, b) => b.post_id - a.post_id);
-
-                setPosts(sortedPosts);  
+                setPosts(data);  
             } else if (response.status === 403) {
                 setNoAuth(true);
             } else if (response.status === 401) {
@@ -148,6 +154,8 @@ const fetchPosts = async () => {
         console.error('Error:', error);
     }
 };
+
+
 
     const handleUploadClick = async () => {
         const token = localStorage.getItem('access_token');
@@ -261,6 +269,11 @@ const fetchPosts = async () => {
         fetchLinks();
         setLoading(false);
     }, []);
+
+    const loadMorePosts = () => {
+        setPostsToShow(prev => prev + 5);  // Load 5 more posts
+    };
+
 
     
     if (loading) return <>Loading</>
@@ -380,7 +393,7 @@ const fetchPosts = async () => {
                 <hr style={{ border: "1px solid black", margin: "5px 0px" }} />
                 <div>
                 {posts.length > 0 ? (
-                    posts.map(post => (
+                    posts.slice(0, postsToShow).map(post => (
                         <Postbox post={post}/> 
                     ))
                 ) : (
@@ -391,6 +404,15 @@ const fetchPosts = async () => {
                     </div>
                 )}
                 </div>
+                {posts.length > postsToShow && (
+                    <button 
+                        style={{ marginTop: "10px" }}
+                        className="btn btn-primary"
+                        onClick={loadMorePosts}
+                    >
+                        Load More
+                    </button>
+                )}
             </div>
         </div>
         </div>
