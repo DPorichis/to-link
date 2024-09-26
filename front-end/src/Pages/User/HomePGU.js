@@ -52,6 +52,33 @@ function HomePGU(props) {
         event.target.value = '';
     };
 
+
+    const deletePost = async (postId) => {
+        const token = localStorage.getItem('access_token');
+        try {
+            const response = await fetch("http://127.0.0.1:8000/posts/delete/", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ post_id: postId })  // Sending the post ID in the request body
+            });
+    
+            if (response.ok) {
+                console.log("Post deleted successfully");
+                setPosts(posts.filter(post => post.post_id !== postId));  // Remove post from the frontend
+                setPostCount(PostCount - 1);  // Update the post count in the frontend
+            } else if (response.status === 403) {
+                console.log("You don't have permission to delete this post.");
+            } else {
+                console.log("Failed to delete post");
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
     // Handle removal
     const removeImage = (index) => {
         setpostMedia(prevMedia => prevMedia.filter((img, imgIndex) => imgIndex !== index));
@@ -83,7 +110,7 @@ const fetchPosts = async () => {
     const token = localStorage.getItem('access_token');
     try {
         const postIds = await fetchPostid();
-        console.log("POST ID IN FETCH",postIds)
+        console.log("POST ID IN FETCH", postIds);
         if (postIds && postIds.length > 0) {
             const response = await fetch("http://127.0.0.1:8000/posts/view/byid", {
                 method: "POST",
@@ -96,7 +123,10 @@ const fetchPosts = async () => {
             if (response.ok) {
                 const data = await response.json();
                 console.log("Fetched Posts:", data);
-                setPosts(data);  
+
+                const sortedPosts = data.sort((a, b) => b.post_id - a.post_id);
+
+                setPosts(sortedPosts);  
             } else if (response.status === 403) {
                 setNoAuth(true);
             } else if (response.status === 401) {

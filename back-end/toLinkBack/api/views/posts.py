@@ -219,3 +219,36 @@ def get_post_by_user_id(request):
     except Post.DoesNotExist:
         # Return an error if the post does not exist
         return Response([], status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def delete_post(request):
+    post_id = request.data.get('post_id')
+
+    if not post_id:
+        return Response({"error": "Post ID is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        post = Post.objects.get(post_id=post_id)
+    except Post.DoesNotExist:
+        return Response({"error": "Post not found."}, status=status.HTTP_404_NOT_FOUND)
+
+    if post.user != request.user.profile:
+        return Response({"error": "You do not have permission to delete this post."}, status=status.HTTP_403_FORBIDDEN)
+
+    try:
+        # Delete related media
+        PostMedia.objects.filter(post=post).delete()
+
+        # Delete the post
+        post.delete()
+
+        # Optionally, update the user's profile post count
+        profile = Profile.objects.get(user_id=post.user.user_id)
+        profile.post_cnt = F('post_cnt') - 1
+        profile.save(update_fields=['post_cnt'])
+
+        return Response({"message": "Post deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

@@ -73,6 +73,38 @@ function SettingsPGU(props) {
     
       alertPlaceholder.append(wrapper)
     }
+
+    const handleDeleteProfile = async () => {
+        const token = localStorage.getItem('access_token');
+        const response = await fetch("http://127.0.0.1:8000/profile/delete", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+    
+        if (response.ok) {
+            // Profile deleted successfully
+            appendAlert("Profile deleted successfully.", 'success');
+            // Optionally, redirect the user or log them out
+            localStorage.removeItem('access_token');
+            // You might want to redirect to a login page or home page
+            window.location.href = '/login'; // Change this to your desired route
+        } else if (response.status === 401) {
+            localStorage.removeItem('access_token');
+            await refreshAccessToken();
+            if (localStorage.getItem('access_token') !== null) {
+                await handleDeleteProfile();
+            } else {
+                appendAlert("You are not authorized. Please log in again.", 'danger');
+            }
+        } else {
+            const errorData = await response.json();
+            appendAlert(errorData.error || "Failed to delete profile.", 'danger');
+        }
+    };
+    
     
     // Check if the new personal data are valid
     const validateForm = async () =>
@@ -446,7 +478,10 @@ function SettingsPGU(props) {
                             </button>
                         </div>
                     </form>
-                </div>            
+                </div>  
+                <button class="btn btn-primary" id="liveAlertBtn" onClick={handleDeleteProfile}>
+                                delete profile
+                </button>          
                 </div>
         </div>
     );

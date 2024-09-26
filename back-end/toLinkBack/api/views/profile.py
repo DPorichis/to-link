@@ -86,3 +86,20 @@ def retrive_header_info(request):
     
     serializer = ProfileHeaderSerializer(profile)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def delete_profile(request):
+    user = request.user
+    print(f"Attempting to delete profile for user: {user}")
+
+    try:
+        profile = Profile.objects.get(user=user)
+        profile.post_set.all().delete()
+        profile.delete()
+        return Response({"message": "Profile and associated user deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
+
+    except Profile.DoesNotExist:
+        return Response({"error": "Profile does not exist."}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
