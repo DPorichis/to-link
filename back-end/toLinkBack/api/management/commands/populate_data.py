@@ -3,8 +3,9 @@ import os
 import random
 from django.core.management.base import BaseCommand
 from api.serializers import UserSerializer, ListingSerializer
-from api.models import User, Profile, Post, LikedBy, Listing, Applied  # Import your models
+from api.models import User, Profile, Post, LikedBy, Listing, Applied, Link, Convo, Comment  # Import your models
 from django.db.models import F
+from django.db import IntegrityError
 
 class Command(BaseCommand):
     help = 'Populates the database with data from JSON files'
@@ -19,7 +20,7 @@ class Command(BaseCommand):
 
         self.stdout.write(f'Loading data from User_Profile_MOCK.json ...')
 
-        with open("./mockdata/User_Profile_MOCK.json", 'r') as file:
+        with open("./api/management/commands/mockdata/User_Profile_MOCK.json", 'r', encoding='utf-8') as file:
             data = json.load(file)
 
             # Iterate through the data and create models
@@ -28,9 +29,9 @@ class Command(BaseCommand):
                 request = {
                     'name': entry['name'],
                     'surname': entry['surname'],
+                    'email': entry['email'],
                     'country': entry['country'],
                     'city': entry['city'],
-                    'phone': entry['phone'],
                     'birthdate': entry['birthdate'],
                     'password': entry['password']
                 }
@@ -50,11 +51,31 @@ class Command(BaseCommand):
                         education=entry['education'],
                         experience=entry['experience']
                     )
+                    print("user created")
+                else:
+                    print(user_serializer.errors)
+
+            for u1 in range(100):
+                profile_from = Profile.objects.get(user_id=u1+1)
+                for u2 in range(5):
+                    user_id = (u2 + u1) % 100  + 2
+                    print(user_id)
+                    profile_to = Profile.objects.get(user_id=user_id)
+                    if (profile_to != profile_from):
+                        Link.objects.create(user_id_from=profile_from, user_id_to=profile_to)
+                        Convo.objects.create(user_id1=profile_from, user_id2=profile_to)
+
+                        profile_to.link_cnt = F('link_cnt') + 1
+                        profile_to.save(update_fields=['link_cnt'])
+
+                        profile_from.link_cnt = F('link_cnt') + 1
+                        profile_from.save(update_fields=['link_cnt'])
+                
         self.stdout.write(f'Data from User_Profile_MOCK.json loaded successfully.')
 
         self.stdout.write(f'Loading data from Post_MOCK.json ...')
 
-        with open("./mockdata/Post_MOCK.json", 'r') as file:
+        with open("./api/management/commands/mockdata/Post_MOCK.json", 'r', encoding='utf-8') as file:
             data = json.load(file)
 
             # Iterate through the data and create models
@@ -65,16 +86,23 @@ class Command(BaseCommand):
                     user=profile,
                     text=entry['text']
                 )
+                
+                profile.post_cnt = F('post_cnt') + 1
+                profile.save(update_fields=['post_cnt'])
 
                 random_likes = random.randint(0, 66)
 
                 for i in range(random_likes):
                     user = random.randint(2, 101)
                     profile = Profile.objects.get(user_id=user)
-                    LikedBy.objects.create(
-                        user=profile,
-                        post=post
-                    )
+                    try:
+                        LikedBy.objects.create(
+                            user=profile,
+                            post=post
+                        )
+                    except IntegrityError:
+                        # Handle the case where the like already exists or other integrity issues occur
+                        print("Like could not be created. Integrity error encountered. (Most likely bad luck)")
                 
 
                 random_comments = random.randint(0, 23)
@@ -82,7 +110,7 @@ class Command(BaseCommand):
                 for i in range(random_comments):
                     user = random.randint(2, 101)
                     profile = Profile.objects.get(user_id=user)
-                    LikedBy.objects.create(
+                    Comment.objects.create(
                         user=profile,
                         post=post,
                         text="This is so me"
@@ -94,14 +122,14 @@ class Command(BaseCommand):
 
         self.stdout.write(f'Loading data from Listing_MOCK.json ...')
 
-        with open("./mockdata/Listing_MOCK.json", 'r') as file:
+        with open("./api/management/commands/mockdata/Listings_MOCK.json", 'r', encoding='utf-8') as file:
             data = json.load(file)
 
             # Iterate through the data and create models
             for entry in data:
 
                 profile = Profile.objects.get(user_id=entry["user"])
-                listing = Listing.object.create(
+                listing = Listing.objects.create(
                     user=profile,
                     title=entry['title'],
                     visible=entry['visible'],
@@ -116,7 +144,7 @@ class Command(BaseCommand):
                 profile.listings_cnt = F('listings_cnt') + 1
                 profile.save(update_fields=['listings_cnt'])
 
-                self.stdout.write(self.style.SUCCESS(f'Created post of {user.email}'))
+                self.stdout.write(self.style.SUCCESS(f'Created post of {profile.email}'))
 
                 random_apl = random.randint(0, 22)
 
@@ -124,25 +152,13 @@ class Command(BaseCommand):
                     user = random.randint(2, 101)
                     if user != entry['user']:
                         profile = Profile.objects.get(user_id=user)
-                        Applied.objects.create(
-                            user=profile,
-                            listing=listing
-                        )
-                
-
-
-                # Optionally create a profile for each user
-                Profile.objects.get_or_create(
-                    user=user,
-                    defaults={
-                        'name': user.name,
-                        'surname': user.surname,
-                        'email': user.email,
-                        'title': entry['title'],
-                        'skills': entry['skills'],
-                        'education': entry['education'],
-                        'experience': entry['experience']
-                    }
-                )
-
+                        try:
+                            Applied.objects.create(
+                                user=profile,
+                                listing=listing
+                            )
+                        except IntegrityError:
+                            # Handle the case where the like already exists or other integrity issues occur
+                            print("Like could not be created. Integrity error encountered. (Most likely bad luck)")
+      
         self.stdout.write(f'Data from Listing_MOCK.json loaded successfully.')
