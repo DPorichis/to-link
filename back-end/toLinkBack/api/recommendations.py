@@ -1,9 +1,10 @@
 from api.models import Applied, ListingViews, Link, Profile, Listing, \
-      PostViews, LikedBy, Post, Comment
+      PostViews, LikedBy, Post, Comment, PostRecom, ListingRecom
 import numpy as np
 import json
 
 def listing_recom():
+    print("Listing recom started...")
     user_views = []
     user_applications = []
     users_network = []
@@ -56,6 +57,7 @@ def listing_recom():
     for view in views:
         R[user_index[view['user']]][listing_index[view['listing']]] += view_weight
 
+    print("Data recieved, doing Matrix Factorization...")
     # Now we can finaly do matrix factorization on R, 
     # This implementation doesn't take the user's network into account, it rather creates recommentations for all users
     recom = matrix_factorization(R, n_users, n_items)
@@ -65,26 +67,17 @@ def listing_recom():
         n_recommendations = n_items
     top_recom = np.argsort(recom, axis=1)[:, -n_recommendations:] # Get the top n_recommendations
     top_recom = np.flip(top_recom, axis=1)
-
-    # Create a response of the populated data to the server
-    top_recommendations = []
-    # Create a JSON object for each user containing their info
+    
+    print("Matrix Factorization completed, entering data to the DB")
+    
     for user in range(n_users):
-        user_recommendations = {
-            "user_id": index_user[user],
-            "top_items": []
-        }
-
+        prf = Profile.objects.get(user=index_user[user])
         for idx in range(n_recommendations):
-            user_recommendations["top_items"].append(index_listing[top_recom[user, idx]])
-        top_recommendations.append(user_recommendations)
+            lst = Listing.objects.get(listing_id=index_listing[top_recom[user, idx]])
+            ListingRecom.objects.create(user=prf, listing=lst)
 
+    print("Listing Recom Completed.")
 
-    # Convert to JSON
-    top_recom_json = json.dumps(top_recommendations, indent=4)
-
-    # Print the JSON
-    print(top_recom_json)
 
     return
 
@@ -118,6 +111,7 @@ def listing_recom():
     
 
 def post_recom():
+    print("Posts recom started...")
     user_views = []
     user_likes = []
     users_comments = []
@@ -173,9 +167,13 @@ def post_recom():
     for comment in comments:
         R[user_index[comment['user']]][post_index[comment['post']]] += comment_weight
 
+
+    print("Data recieved, doing Matrix Factorization...")
     # Now we can finaly do matrix factorization on R, 
     # This implementation doesn't take the user's network into account, it rather creates recommentations for all users
     recom = matrix_factorization(R, n_users, n_items)
+
+    print("Matrix Factorization completed, entering data to the DB")
 
     n_recommendations = 5
     if n_recommendations > n_items:
@@ -183,25 +181,13 @@ def post_recom():
     top_recom = np.argsort(recom, axis=1)[:, -n_recommendations:] # Get the top n_recommendations
     top_recom = np.flip(top_recom, axis=1)
 
-    # Create a response of the populated data to the server
-    top_recommendations = []
-    # Create a JSON object for each user containing their info
     for user in range(n_users):
-        user_recommendations = {
-            "user_id": index_user[user],
-            "top_items": []
-        }
-
+        prf = Profile.objects.get(user=index_user[user])
         for idx in range(n_recommendations):
-            user_recommendations["top_items"].append(index_post[top_recom[user, idx]])
-        top_recommendations.append(user_recommendations)
-
-
-    # Convert to JSON
-    top_recom_json = json.dumps(top_recommendations, indent=4)
-
-    # Print the JSON
-    print(top_recom_json)
+            pst = Post.objects.get(post_id=index_post[top_recom[user, idx]])
+            PostRecom.objects.create(user=prf, post=pst)
+    
+    print("Posts Recom Completed.")
 
     return
 
@@ -250,6 +236,7 @@ def matrix_factorization(R, n_users, n_items):
         if prev * 0.9999 <= rmse and round != 0:
             break
         prev = rmse
+        print("Round Completed " + str(round))
 
     recom_R = aprox_R
 

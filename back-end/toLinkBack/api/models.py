@@ -124,6 +124,9 @@ class Applied(models.Model):
     class Meta:
         unique_together = (('user', 'listing'),)
 
+class ListingRecom(models.Model):
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, db_column='Listing_ID')  
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE, db_column='User_ID')
 
 class Post(models.Model):
     post_id = models.AutoField(db_column='Post_ID', primary_key=True)  # Field name made lowercase.
@@ -153,6 +156,10 @@ class LikedBy(models.Model):
 
     class Meta:
         unique_together = (('post', 'user'),)
+
+class PostRecom(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, db_column='Post_ID')  
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE, db_column='User_ID')  
 
 class Convo(models.Model):
     convo_id = models.AutoField(db_column='Convo_ID', primary_key=True)  # Field name made lowercase.

@@ -2,9 +2,11 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-from api.models import Post, LikedBy, Profile, Comment, PostMedia, Notification
+from api.models import Post, LikedBy, Profile, Comment, PostMedia, Notification, Link, PostRecom
 from api.serializers import PostSerializer, CommentSerializer, LikedBySerializer,PostIdSerializer
-from django.db.models import F
+from django.db.models import F, Q
+from django.db.models import Max
+from itertools import chain
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -177,9 +179,45 @@ def get_all_posts(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def get_posts_id(request):
-    posts = Post.objects.all().order_by('-post_id')
-    serializer = PostIdSerializer(posts, many=True) 
-    return Response(serializer.data, status=status.HTTP_200_OK)
+
+    user_profile = request.user.profile
+
+    # Networks Posts
+    links = list(Link.objects.filter(user_id_to=user_profile).values_list('user_id_from', flat=True)) + \
+    list(Link.objects.filter(user_id_from=user_profile).values_list('user_id_to', flat=True)) + [request.user.user_id]
+    
+    print(links)
+
+    network_posts = list(Post.objects.filter(user__in=links).values('post_id').annotate(timestamp=Max('timestamp')).distinct())
+
+    network_posts = [{'post_id': post['post_id'], 'timestamp': post['timestamp'], 'priority': 3} for post in network_posts]
+
+
+    # User's Recommendation Posts
+    recom_posts_no_tmstp = list(PostRecom.objects.filter(user=user_profile).values_list('post_id', flat=True))
+    recom_posts = list(Post.objects.filter(post_id__in=recom_posts_no_tmstp).values('post_id', 'timestamp'))
+
+    recom_posts = [{'post_id': post['post_id'], 'timestamp': post['timestamp'], 'priority': 2} for post in recom_posts]
+    
+
+    # Network reacts posts
+    network_like_posts = list(LikedBy.objects.filter(user__in=links).values_list('post', flat=True).distinct())
+    network_comment_posts = list(Comment.objects.exclude(post__in=network_like_posts).values_list('post', flat=True).distinct())
+    react_posts_no_tmstp = network_comment_posts + network_like_posts
+
+    react_posts = list(Post.objects.filter(post_id__in=react_posts_no_tmstp).values('post_id', 'timestamp'))
+    react_posts = [{'post_id': post['post_id'], 'timestamp': post['timestamp'], 'priority': 1} for post in react_posts]
+
+    # Compine posts for sorting
+    all_posts = list(chain(network_posts, recom_posts, react_posts))
+
+    # Sort posts by priority and timestamp (descending)
+    sorted_posts = sorted(all_posts, key=lambda post: (post['priority'], post['timestamp']), reverse=True)
+    sorted_post_ids = [post['post_id'] for post in sorted_posts]
+
+    return Response(sorted_post_ids, status=status.HTTP_200_OK)
+#    serializer = PostIdSerializer(posts, many=True) 
+#    return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
