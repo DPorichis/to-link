@@ -7,31 +7,16 @@ import ProfileSmall from "../../Components/Profile/ProfileSmall";
 import NotFoundPG from '../NotFoundPG';
 import Postbox from "../../Components/Feed/Postbox";
 
-const getCookie = (name) => {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-      const cookies = document.cookie.split(';');
-      for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i].trim();
-        if (cookie.substring(0, name.length + 1) === `${name}=`) {
-          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-          break;
-        }
-      }
-    }
-    return cookieValue;
-};
-
-
-
 function HomePGU(props) {
     const [loading, setLoading] = useState(true);
+    const [LoadingPosts, setLoadingPosts] = useState(true);
     const [posts, setPosts] = useState([]);
     const [links, setLinks] = useState([]);
     const [error, setError] = useState(null);
     const [noAuth, setNoAuth] = useState(false);
     const [profile, setProfile] = useState({});
-    const [PostCount, setPostCount] = useState();     
+    const [PostIDList, setPostIdList] = useState([]);
+    const [PostCount, setPostCount] = useState();   
     const [postText, setpostText] = useState("");
     const [postMedia, setpostMedia] = useState([]);
     const [postsToShow, setPostsToShow] = useState(5);
@@ -40,8 +25,6 @@ function HomePGU(props) {
         const {value} = e.target
         setpostText(value)
     }
-
-
 
     // Handle selection
     const handleMediaChange = (event) => {
@@ -52,110 +35,71 @@ function HomePGU(props) {
         event.target.value = '';
     };
 
-
-    const deletePost = async (postId) => {
-        const token = localStorage.getItem('access_token');
-        try {
-            const response = await fetch("http://127.0.0.1:8000/posts/delete/", {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({ post_id: postId })  // Sending the post ID in the request body
-            });
-    
-            if (response.ok) {
-                console.log("Post deleted successfully");
-                setPosts(posts.filter(post => post.post_id !== postId));  // Remove post from the frontend
-                setPostCount(PostCount - 1);  // Update the post count in the frontend
-            } else if (response.status === 403) {
-                console.log("You don't have permission to delete this post.");
-            } else {
-                console.log("Failed to delete post");
-            }
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    };
-
     // Handle removal
     const removeImage = (index) => {
         setpostMedia(prevMedia => prevMedia.filter((img, imgIndex) => imgIndex !== index));
     };
 
-    const PostsList = ({ posts }) => {
-        // Set initial state for number of posts to display
-        const [postsToShow, setPostsToShow] = useState(5);
-    
-        // Function to handle loading more posts
-        const loadMorePosts = () => {
-            setPostsToShow(prevPostsToShow => prevPostsToShow + 5);
-        };
-    }
+    const fetchPostList = async () => {
+        setLoadingPosts(true);
+        const token = localStorage.getItem('access_token');
+        const response = await fetch("http://127.0.0.1:8000/posts/getid", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        });
 
-
-
-const fetchPostid = async () => {
-    const token = localStorage.getItem('access_token');
-    const response = await fetch("http://127.0.0.1:8000/posts/getid", {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        },
-    });
-
-    if (response.ok) {
-        const data = await response.json();
-        console.log("Fetched Post IDs:", data); 
-        return data;
-    } else {
-        throw new Error('Failed to fetch post IDs');
-    }
-};
-
-
-const fetchPosts = async () => {
-    const token = localStorage.getItem('access_token');
-    try {
-        const postIds = await fetchPostid();
-        console.log("POST ID IN FETCH", postIds);
-        if (postIds && postIds.length > 0) {
-            const response = await fetch("http://127.0.0.1:8000/posts/view/byid", {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({"post_id" : postIds }) 
-            });
-            if (response.ok) {
-                const data = await response.json();
-                setPosts(data);  
-            } else if (response.status === 403) {
-                setNoAuth(true);
-            } else if (response.status === 401) {
-                localStorage.removeItem('access_token');
-                await refreshAccessToken();
-                if (localStorage.getItem('access_token') !== null) {
-                    await fetchPosts(); 
-                } else {
-                    console.log("No user logged in");
-                    setNoAuth(true);
-                }   
-            } else {
-                throw new Error('Failed to fetch posts');
-            }
+        if (response.ok) {
+            const data = await response.json();
+            setPostIdList(data)
+            console.log("Fetched Post IDs:", data); 
+            return data;
         } else {
-            console.log("No post IDs found");
+            throw new Error('Failed to fetch post IDs');
         }
-    } catch (error) {
-        console.error('Error:', error);
-    }
-};
+    };
 
 
+    const fetchPosts = async () => {
+        const token = localStorage.getItem('access_token');
+        try {
+            // const postIds = await fetchPostList();
+            if (PostIDList && PostIDList.length > 0) {
+                const response = await fetch("http://127.0.0.1:8000/posts/view/byid", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({"post_id" : PostIDList.slice(posts.length, postsToShow)}) 
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    setPosts([...posts, ...data]);  
+                } else if (response.status === 403) {
+                    setNoAuth(true);
+                } else if (response.status === 401) {
+                    localStorage.removeItem('access_token');
+                    await refreshAccessToken();
+                    if (localStorage.getItem('access_token') !== null) {
+                        await fetchPosts(); 
+                    } else {
+                        console.log("No user logged in");
+                        setNoAuth(true);
+                    }   
+                } else {
+                    throw new Error('Failed to fetch posts');
+                }
+            } else {
+                console.log("No post IDs found");
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+        setLoadingPosts(false);
+    };
 
     const handleUploadClick = async () => {
         const token = localStorage.getItem('access_token');
@@ -181,8 +125,10 @@ const fetchPosts = async () => {
         if (response.ok) 
         {
             console.log("Post Uploaded");
-            fetchPosts();
-            setPostCount(PostCount +1);
+            setPostCount(PostCount + 1);
+            setPosts([]);
+            await fetchPostList();
+            await fetchPosts();
             setpostText("");
             setpostMedia([]);
         }
@@ -262,13 +208,28 @@ const fetchPosts = async () => {
                 throw new Error('Failed to fetch posts');
             }
         };
-        fetchPostid();      
+
+        const loadFeed = async () => {
+            await fetchPostList();
+            await fetchPosts();
+        };
+
+     
         fetchProfile();
-        console.log(profile)
-        fetchPosts();
+        
+        loadFeed();
+        
         fetchLinks();
         setLoading(false);
     }, []);
+
+    useEffect(() => {
+        fetchPosts();
+    }, [PostIDList]);
+
+    useEffect(() => {
+        fetchPosts();
+    }, [postsToShow]);
 
     const loadMorePosts = () => {
         setPostsToShow(prev => prev + 5);  // Load 5 more posts
@@ -392,19 +353,28 @@ const fetchPosts = async () => {
                 </div>
                 <hr style={{ border: "1px solid black", margin: "5px 0px" }} />
                 <div>
-                {posts.length > 0 ? (
-                    posts.slice(0, postsToShow).map(post => (
-                        <Postbox post={post}/> 
+                    {!LoadingPosts ? 
+                    (posts.length > 0 ? (
+                        posts.map(post => (
+                            <Postbox post={post}/> 
+                        ))
+                    ) : (
+                        <div style={{ backgroundColor: "#fff", border: "1px solid #ccc", borderRadius:"3px", padding:"20px 10px"}}>
+                            <h5>This place is awfully quiet...</h5>
+                            <p style={{marginBottom:"0px"}}>We are a new app ok? Don't judge us that hard. <br/>
+                            Instead, post something, the box is up there!</p>
+                        </div>
                     ))
-                ) : (
+                    :
                     <div style={{ backgroundColor: "#fff", border: "1px solid #ccc", borderRadius:"3px", padding:"20px 10px"}}>
-                        <h5>This place is awfully quiet...</h5>
-                        <p style={{marginBottom:"0px"}}>We are a new app ok? Don't judge us that hard. <br/>
-                        Instead, post something, the box is up there!</p>
+                        <h5>Something amazing is underway</h5>
+                        <p style={{marginBottom:"0px"}}>Hold Tight! Your feed will be here sortly</p>
                     </div>
-                )}
+
+                    }
+                    
                 </div>
-                {posts.length > postsToShow && (
+                {PostIDList.length > postsToShow && (
                     <button 
                         style={{ marginTop: "10px" }}
                         className="btn btn-primary"

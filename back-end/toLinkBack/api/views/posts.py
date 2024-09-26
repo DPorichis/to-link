@@ -26,7 +26,7 @@ def get_post_by_id(request):
 
     try:
         # Get posts where the post_id is in the list of post_ids
-        posts = Post.objects.filter(post_id__in=post_ids)
+        posts = Post.objects.filter(post_id__in=post_ids).order_by("-timestamp")
         
         if not posts.exists():
             return Response({"error": "No posts found for the given IDs."}, status=status.HTTP_404_NOT_FOUND)
@@ -251,7 +251,7 @@ def get_post_by_user_id(request):
 
     try:
         # Try to find the post by ID
-        posts = Post.objects.filter(user_id=user_id)
+        posts = Post.objects.filter(user_id=user_id).order_by('-timestamp')
         serializer = PostSerializer(posts, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     except Post.DoesNotExist:
