@@ -1,3 +1,4 @@
+from rest_framework.pagination import PageNumberPagination 
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -8,12 +9,16 @@ from django.db.models import F, Q
 from django.utils import timezone
 
 
+class CustomPagination(PageNumberPagination):
+    page_size = 20  
+
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def get_dms_of_convo(request):
     # Retrieve post ID from the request data
     convo_id = request.data.get('convo')
-    user=request.user
+    user = request.user
 
     # Validate input data
     if not convo_id:
@@ -24,30 +29,34 @@ def get_dms_of_convo(request):
     except Profile.DoesNotExist:
         return Response({"error": "Profile does not exist."}, status=status.HTTP_404_NOT_FOUND)
 
+    # Check if the account is authorized to view the convo
+    try:
+        conv = Convo.objects.get(convo_id=convo_id)
+    except Convo.DoesNotExist:
+        return Response({"error": "Convo not found."}, status=status.HTTP_404_NOT_FOUND)
 
-    # Check if the account is authorized to see
-    conv =  Convo.objects.get(convo_id=convo_id)
     if conv.user_id1 != profile and conv.user_id2 != profile:
         return Response({"message": "You are not authorized to view this convo"}, status=status.HTTP_400_BAD_REQUEST)
-      
-
+    
     try:
-        # Retrieve all comments for the post
-        dms = Dm.objects.filter(convo_id=convo_id).order_by('timestamp')
-        
-        # Serialize the comments
-        serializer = DMSerializer(dms, many=True)
-        
+        # Fetch and order the DMs (direct messages) by timestamp
+        dms = Dm.objects.filter(convo_id=convo_id).order_by('-timestamp')
+
+        # Use the paginator to paginate the DMs
+        paginator = CustomPagination()
+        paginated_dms = paginator.paginate_queryset(dms, request)
+        serializer = DMSerializer(paginated_dms, many=True)
+
         if conv.user_id1 == profile:
             conv.user_id1_last = timezone.now()
         else:
             conv.user_id2_last = timezone.now()
         conv.save()
 
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return paginator.get_paginated_response(serializer.data)
+
     except Dm.DoesNotExist:
         return Response({"error": "Dms not found."}, status=status.HTTP_404_NOT_FOUND)
-    
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -107,7 +116,6 @@ def fetch_convo_menu(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def retrive_convo(request):
-    # Check if the like already exists
     user = request.user.profile
     other_user = request.data.get('other_user')
     

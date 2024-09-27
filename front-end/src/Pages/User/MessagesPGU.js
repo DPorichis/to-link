@@ -53,7 +53,6 @@ function MessagesPGU(props) {
                 body: JSON.stringify({
                 })
             })
-            
             if (response.ok) {
                 // Fetch user account details if authenticated
                 const convos = await response.json();
@@ -71,13 +70,11 @@ function MessagesPGU(props) {
                     console.log("couldn't fetch convos")
                     setNoAuth(true);
                 }
-                
             } else {
                 console.log("couldn't fetch convos")
                 setNoAuth(true);
             }
         };
-
         const fetchprofilepic = async () => {
             const token = localStorage.getItem('access_token');
             const response = await fetch("http://127.0.0.1:8000/profile/own/fetch", {
@@ -157,9 +154,6 @@ function MessagesPGU(props) {
         {
             restoreDM()
         }
-
-
-
         setLoading(false);
     }, [id]);
 
