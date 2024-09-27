@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from api.models import Request, Profile,Link, Convo,User
-from api.serializers import RequestSerializer,LinkSerializer,ProfileSerializer,UserSerializer, ProfileBannerSerializer
+from api.serializers import RequestSerializer,LinkSerializer,ProfileSerializer,UserSerializer, ProfileBannerSerializer, ConnectionSerializer
 
 from django.db.models import F,Q
 
@@ -117,6 +117,38 @@ def fetch_connections(request):
     else:
         return Response([], status=status.HTTP_200_OK)
     
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])    
+def fetch_others_connections(request):
+
+    user_profile = request.user.profile
+    other_user = request.data.get('other_user')
+    
+    if other_user == "own":
+        user_req = user_profile
+    else:
+        try:
+            user_req = Profile.objects.get(user_id=other_user)
+        except Profile.DoesNotExist:
+            return Response({"error": "User id not found."}, status=status.HTTP_404_NOT_FOUND)
+
+    if Link.objects.filter(Q(user_id_to=user_profile, user_id_from=user_req) | Q(user_id_to=user_req, user_id_from=user_profile)).exists() \
+    or user_profile == user_req:
+
+        links = Link.objects.filter(Q(user_id_to=user_req) | Q(user_id_from=user_req))
+
+        print(links)
+        # Check if any links are found
+        if links.exists():
+            serializer = ConnectionSerializer(links, many=True, context={'authenticated_user': user_profile, 'other_user': user_req})
+            print(serializer.data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response([], status=status.HTTP_200_OK)
+
+    else:
+        return Response({"error": "You are not connected with that user bro"}, status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['POST'])

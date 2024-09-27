@@ -95,9 +95,6 @@ class Profile(models.Model):
     vis_act = models.IntegerField(blank=True, default=1)
     vis_cont = models.IntegerField(blank=True, default=1)
 
-
-
-
 class Listing(models.Model):
     listing_id = models.AutoField(primary_key=True)  # Field name made lowercase.
     user = models.ForeignKey(Profile, on_delete=models.CASCADE, db_column='User_ID')  # Field name made lowercase.

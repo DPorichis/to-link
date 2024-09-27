@@ -29,6 +29,8 @@ function ListingsPGU(props) {
 
     const [selectedListing, setSelectedListing] = useState({listing_id: "empty"});
     const [yourListingsView, setYourListingsView] = useState(false);
+    const [responseListing, setResponseListings] = useState({});
+    const [responseOwn, setResponseOwn] = useState({});
     const [listings, setListings] = useState([]);
     const [yourlistings, setYourListings] = useState([]);
     const [youApplied, setYouApplied] = useState("forbiden");
@@ -51,116 +53,135 @@ function ListingsPGU(props) {
         setSelectedListing(list);
     };
 
+    const fetchOwnListings = async (page) => {
+        const token = localStorage.getItem('access_token');
+        const response0 = await fetch(page ? page :"http://127.0.0.1:8000/listings/list", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                "specify_user": "own"
+            })
+        })
+        
+        if (response0.ok) {
+            let answer = await response0.json();
+            setResponseOwn(answer);
+            if(page)
+            {
+                setYourListings([...yourlistings, ...answer.results])
+            }
+            else
+            {
+                setYourListings(answer.results) 
+            }
+        } else if (response0.status === 401) {
+            localStorage.removeItem('access_token');
+            await refreshAccessToken();
+            if(localStorage.getItem('access_token') !== null)
+            {
+                await fetchListings(page);
+            }
+            else if(response0.status === 403) {
+                setNoAuth(true);
+            }else
+            {
+                console.log("no user logged in")
+                setNoAuth(true);
+            }
+            
+        }else {
+            console.log("Problems with fetching your listings info")
+            setNoAuth(true);
+        }
+        setLoading(false);
+    };
+
+
+    const fetchListings = async (page) => {
+        const token = localStorage.getItem('access_token');
+        const response1 = await fetch(page ? page :"http://127.0.0.1:8000/listings/list", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+            })
+        })
+        
+        if (response1.ok) {
+            let answer = await response1.json();
+            setResponseListings(answer);
+            if(page)
+            {
+                setListings([...listings, ...answer.results])
+            }
+            else
+            {
+                setListings(answer.results) 
+            }
+        } else if (response1.status === 401) {
+            localStorage.removeItem('access_token');
+            await refreshAccessToken();
+            if(localStorage.getItem('access_token') !== null)
+            {
+                await fetchOwnListings();
+            }
+            else
+            {
+                console.log("no user logged in")
+            }
+            
+        }else {
+            console.log("Problems with fetching your listings info")
+            setNoAuth(true);
+        }
+        setLoading(false);
+    };
+
+    const restoreListing = async () => {
+        const token = localStorage.getItem('access_token');
+        const response = await fetch("http://127.0.0.1:8000/listing/fetch", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                "listing_id": id
+            })
+        })
+        
+        if (response.ok) {
+            // Fetch user account details if authenticated
+            const listi = await response.json();
+            changeSelection(listi);
+        } else if (response.status === 401) {
+            localStorage.removeItem('access_token');
+            await refreshAccessToken();
+            if(localStorage.getItem('access_token') !== null)
+            {
+                await restoreListing();
+            }
+            else
+            {
+                console.log("no user logged in")
+                setNoAuth(true);
+            }
+            
+        }else {
+            console.log("Problems with fetching your listings info")
+            setNoAuth(true);
+        }
+    };
+
+
     useEffect(() => {
-        const fetchListings = async () => {
-            const token = localStorage.getItem('access_token');
-            const response0 = await fetch("http://127.0.0.1:8000/listings/list", {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    "specify_user": "own"
-                })
-            })
-            
-            if (response0.ok) {
-                let answer = await response0.json();
-                setYourListings(answer);
-            } else if (response0.status === 401) {
-                localStorage.removeItem('access_token');
-                await refreshAccessToken();
-                if(localStorage.getItem('access_token') !== null)
-                {
-                    await fetchListings();
-                }
-                else if(response0.status === 403) {
-                    setNoAuth(true);
-                }else
-                {
-                    console.log("no user logged in")
-                    setNoAuth(true);
-                }
-                
-            }else {
-                console.log("Problems with fetching your listings info")
-                setNoAuth(true);
-            }
-
-
-            const response1 = await fetch("http://127.0.0.1:8000/listings/list", {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                })
-            })
-            
-            if (response1.ok) {
-                let answer = await response1.json();
-                setListings(answer);
-            } else if (response0.status === 401) {
-                localStorage.removeItem('access_token');
-                await refreshAccessToken();
-                if(localStorage.getItem('access_token') !== null)
-                {
-                    await fetchListings();
-                }
-                else
-                {
-                    console.log("no user logged in")
-                }
-                
-            }else {
-                console.log("Problems with fetching your listings info")
-                setNoAuth(true);
-            }
-            setLoading(false);
-        };
-
-        const restoreListing = async () => {
-            const token = localStorage.getItem('access_token');
-            const response = await fetch("http://127.0.0.1:8000/listing/fetch", {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    "listing_id": id
-                })
-            })
-            
-            if (response.ok) {
-                // Fetch user account details if authenticated
-                const listi = await response.json();
-                changeSelection(listi);
-            } else if (response.status === 401) {
-                localStorage.removeItem('access_token');
-                await refreshAccessToken();
-                if(localStorage.getItem('access_token') !== null)
-                {
-                    await restoreListing();
-                }
-                else
-                {
-                    console.log("no user logged in")
-                    setNoAuth(true);
-                }
-                
-            }else {
-                console.log("Problems with fetching your listings info")
-                setNoAuth(true);
-            }
-        };
-
-
-
         fetchListings();
-
+        fetchOwnListings();
         if(id)
         {
             restoreListing()
@@ -168,6 +189,18 @@ function ListingsPGU(props) {
 
     }, []);
 
+
+    const handleLoadMore = async (target) =>
+    {
+        if(target === "own")
+        {
+            fetchOwnListings(responseOwn.next)
+        }
+        else if(target === "all")
+        {
+            fetchListings(responseListing.next)
+        }
+    }
 
     useEffect(() => {
         const checkApplied = async () => {
@@ -272,36 +305,7 @@ function ListingsPGU(props) {
             })
         })
 
-        const response0 = await fetch("http://127.0.0.1:8000/listings/list", {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            credentials: "include",
-            body: JSON.stringify({
-                "specify_user": "own"
-            })
-        })
-        
-        if (response0.ok) {
-            let answer = await response0.json();
-            setYourListings(answer);
-        } else if (response0.status === 401) {
-            localStorage.removeItem('access_token');
-            await refreshAccessToken();
-            if(localStorage.getItem('access_token') !== null)
-            {
-                await createNewListing();
-            }
-            else
-            {
-                console.log("no user logged in")
-            }
-            
-        }else {
-            console.log("Problems with fetching your listings info")
-        }
+        fetchOwnListings();
     }
 
     const updateListing = async (id, updatedListingData) => {
@@ -355,36 +359,8 @@ function ListingsPGU(props) {
     const viewBrowse = async () => 
     {
         setSelectedListing({listing_id: "empty"});
-        const token = localStorage.getItem('access_token');
         setLoading(true);
-        const response1 = await fetch("http://127.0.0.1:8000/listings/list", {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({
-            })
-        })
-        
-        if (response1.ok) {
-            let answer = await response1.json();
-            setListings(answer);
-        } else if (response1.status === 401) {
-            localStorage.removeItem('access_token');
-            await refreshAccessToken();
-            if(localStorage.getItem('access_token') !== null)
-            {
-                await viewBrowse();
-            }
-            else
-            {
-                console.log("no user logged in")
-            }
-            
-        }else {
-            console.log("Problems with fetching your listings info")
-        }
+        fetchListings();
         setLoading(false);
         setYourListingsView(false);
     }
@@ -423,7 +399,20 @@ function ListingsPGU(props) {
                         {yourlistings.length!==0?
                             <>{yourlistings.map((listi) =>
                                 <JobTile listing={listi} handleSelect={changeSelection} active={selectedListing.listing_id === listi.listing_id} />
-                            )}</>
+                            )}
+                            {responseOwn.next?
+                            <div style={{display:"flex", justifyContent:"center", flexDirection:"row",
+                            width:"100%", marginTop:"2px", marginBottom:"2px"}}>
+                                <button disabled={!responseOwn.next} 
+                                    onClick={() => {handleLoadMore("own")}}
+                                    class="btn btn-primary" type="button">
+                                    Load More
+                                </button>
+                            </div>
+                            :
+                            <></>
+                            }
+                            </>
                             :
                             <div style={{textAlign:"center", padding:"10px 10px", borderRadius:"5px", backgroundColor:"#fff", marginTop:"10px"}}>
                                 <h5>You have no listings...</h5>
@@ -456,6 +445,18 @@ function ListingsPGU(props) {
                             {listings.map((listi) =>
                                 <JobTile listing={listi} handleSelect={changeSelection} active={selectedListing.listing_id === listi.listing_id} />
                             )}
+                            {responseListing.next?
+                            <div style={{display:"flex", justifyContent:"center", flexDirection:"row",
+                            width:"100%", marginTop:"2px", marginBottom:"2px"}}>
+                                <button disabled={!responseListing.next} 
+                                    onClick={() => {handleLoadMore("all")}}
+                                    class="btn btn-primary" type="button">
+                                    Load More
+                                </button>
+                            </div>
+                            :
+                            <></>
+                            }
                             </>
                             :
                             <div style={{textAlign:"center", padding:"10px 10px", borderRadius:"5px", backgroundColor:"#fff"}}>

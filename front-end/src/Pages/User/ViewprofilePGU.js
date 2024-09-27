@@ -12,6 +12,7 @@ import Postbox from "../../Components/Feed/Postbox";
 import JobTile from "../../Components/Jobs/JobTile";
 import { refreshAccessToken } from "../../functoolbox";
 import NotFoundPG from "../NotFoundPG";
+import ProfileBanner from "../../Components/Profile/ProfileBanner";
 
 function ViewprofilePGU(props) {
     const navigate = useNavigate();
@@ -32,6 +33,7 @@ function ViewprofilePGU(props) {
     const [relationship, setRelationship] = useState("No Connection");
     const [listings, setListings] = useState([]);
     const [posts, setPosts] = useState([]);
+    const [network, setNetwork] = useState([]);
 
     // Fetch the requested user
     useEffect(() => {
@@ -132,6 +134,38 @@ function ViewprofilePGU(props) {
             } else {
                 console.log("Problems with fetching profile info")
             }
+
+            const response3 = await fetch("http://127.0.0.1:8000/links/other", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    "other_user": id
+                })
+
+            })
+
+            if (response3.ok) {
+                let answer = await response3.json();
+                setNetwork(answer);
+            } else if (response3.status === 401) {
+                localStorage.removeItem('access_token');
+                await refreshAccessToken();
+                if(localStorage.getItem('access_token') !== null)
+                {
+                    await fetchUser();
+                }
+                else
+                {
+                    console.log("Problems with fetching your listings info")
+                }
+                
+            } else {
+                console.log("Problems with fetching your listings info")
+            }
             setLoading(false);
         };
 
@@ -153,8 +187,8 @@ function ViewprofilePGU(props) {
         setMode("listings");
     };
 
-    const handleActivity = () => {
-        setMode("activity");
+    const handleNetwork = () => {
+        setMode("network");
     };
 
 
@@ -329,7 +363,7 @@ function ViewprofilePGU(props) {
                         <a class={mode === "listings" ? "nav-link active": "nav-link"} onClick={handleListings}>Listings</a>
                     </li>
                     <li class="nav-item">
-                        <a class={mode === "activity" ? "nav-link active": "nav-link"} onClick={handleActivity}>Activity</a>
+                        <a class={mode === "network" ? "nav-link active": "nav-link"} onClick={handleNetwork}>Network</a>
                     </li>
                 </ul>
                 {mode === "info"
@@ -414,9 +448,9 @@ function ViewprofilePGU(props) {
                     ?
                     // Listings Section //
                     <>
-                        {listings.length !== 0  ? 
+                        {listings.count !== 0  ? 
                         <>
-                        {listings.map((listi) =>
+                        {listings.results.map((listi) =>
                             <JobTile listing={listi} handleSelect={goToJobListing} active={false} />
                         )}
                         </>
@@ -429,8 +463,19 @@ function ViewprofilePGU(props) {
                     </>
 
                     :
-                    // Activity Section //
-                    <>Activity</>
+                    (network.length > 0
+                        ?
+                            network.map((link) => (
+                                <ProfileBanner key={link.user_id} link={link}/>
+                            )) 
+                        :
+                            <div style={{ backgroundColor: "#fff", border: "1px solid #ccc", borderRadius:"3px", padding:"20px 10px", marginTop:"10px"}}>
+                                <h5>Network not Available</h5>
+                            <p style={{marginBottom:"0px"}}>
+                                Connect with user to be able to see their network
+                            </p>
+                            </div>
+                    )
                     )
 
                 )

@@ -10,6 +10,7 @@ import Postbox from "../../Components/Feed/Postbox";
 import JobTile from "../../Components/Jobs/JobTile";
 import { refreshAccessToken } from "../../functoolbox";
 import NotFoundPG from "../NotFoundPG";
+import ProfileBanner from "../../Components/Profile/ProfileBanner";
 
 function MyProfilePGU(props) {
     const navigate = useNavigate();
@@ -22,6 +23,7 @@ function MyProfilePGU(props) {
     const [editedProfile, setEditedProfile] = useState({});
     const [listings, setListings] = useState([]);
     const [posts, setPosts] = useState([]);
+    const [network, setNetwork] = useState([]);
     const [image, setImages] = useState(null);
     const [noAuth, setNoAuth] = useState(false);
 
@@ -137,6 +139,37 @@ function MyProfilePGU(props) {
                 console.log("Problems with fetching your listings info")
             }
 
+            const response3 = await fetch("http://127.0.0.1:8000/links/other", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    "other_user": "own"
+                })
+
+            })
+
+            if (response3.ok) {
+                let answer = await response3.json();
+                setNetwork(answer);
+            } else if (response3.status === 401) {
+                localStorage.removeItem('access_token');
+                await refreshAccessToken();
+                if(localStorage.getItem('access_token') !== null)
+                {
+                    await fetchUser();
+                }
+                else
+                {
+                    console.log("Problems with fetching your listings info")
+                }
+                
+            } else {
+                console.log("Problems with fetching your listings info")
+            }
 
             setLoading(false);
         };
@@ -156,8 +189,8 @@ function MyProfilePGU(props) {
         setMode("listings");
     };
 
-    const handleActivity = () => {
-        setMode("activity");
+    const handleNetwork = () => {
+        setMode("network");
     };
 
     const goToJobListing = (listi) => {
@@ -578,7 +611,7 @@ function MyProfilePGU(props) {
                         <a class={mode === "listings" ? "nav-link active": "nav-link"} onClick={handleListings}>Listings</a>
                     </li>
                     <li class="nav-item">
-                        <a class={mode === "activity" ? "nav-link active": "nav-link"} onClick={handleActivity}>Activity</a>
+                        <a class={mode === "network" ? "nav-link active": "nav-link"} onClick={handleNetwork}>Network</a>
                     </li>
                 </ul>
                 {mode === "info"
@@ -660,7 +693,7 @@ function MyProfilePGU(props) {
                     <>
                         {listings.length !== 0  ? 
                         <>
-                        {listings.map((listi) =>
+                        {listings.results.map((listi) =>
                             <JobTile listing={listi} handleSelect={goToJobListing} active={false} />
                         )}
                         </>
@@ -675,12 +708,23 @@ function MyProfilePGU(props) {
                     </>
 
                     :
-                    <div style={{ backgroundColor: "#fff", border: "1px solid #ccc", borderRadius:"3px", padding:"20px 10px", marginTop:"10px"}}>
-                        <h5>Jim forgot to code this one</h5>
-                        <p style={{marginBottom:"0px"}}>
-                            Come back later, maybe our developers will create something amazing here
-                        </p>
-                    </div>
+                    (network.length > 0
+                    ?
+                        network.map((link) => (
+                            <ProfileBanner key={link.user_id} link={link}/>
+                        )) 
+                    :
+                        <div style={{ backgroundColor: "#fff", border: "1px solid #ccc", borderRadius:"3px", padding:"20px 10px", marginTop:"10px"}}>
+                            <h5>Network not Available</h5>
+                            <p style={{marginBottom:"0px"}}>
+                                Connect with user to be able to see their network
+                            </p>
+                        </div>
+                    )
+
+
+
+                    
                     )
 
                 )

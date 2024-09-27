@@ -5,12 +5,17 @@ from rest_framework import status
 from rest_framework.authtoken.models import Token
 
 from api.serializers import ListingSerializer, ListingUpdateSerializer, AppliedSerializer
-from api.models import Listing, Applied, Profile, Link, Notification, ListingViews
+from api.models import Listing, Applied, Profile, Link, Notification, ListingViews, ListingRecom
 
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
 from django.db.models import F, Q
+
+from rest_framework.pagination import PageNumberPagination
+
+class ListingPagination(PageNumberPagination):
+    page_size = 15
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
@@ -168,9 +173,55 @@ def show_listings(request):
         )
         # Combine public listings and allowed network listings
         listings = publiclistings | allowedlistings  # Combine QuerySets
+    
+    
+                # Listings now contains ONLY LISTINGS THAT ARE ALLOWED TO BE SEEN
 
+        # Priority based on three factors
+        # For same network: + 1
+        # For listing inside matrix Fact. recommendatinos: + 1
+        # For listing with same skills: + 1
+
+        links = list(Link.objects.filter(user_id_to=user).values_list('user_id_from', flat=True)) + \
+        list(Link.objects.filter(user_id_from=user).values_list('user_id_to', flat=True)) + [request.user.user_id]
+    
+        networkListings = listings.filter(user__in=links)
+
+        recommended = ListingRecom.objects.filter(user=user)
+        recommendedListings = listings.filter(listing_id__in=recommended)
+
+        if user.skills:
+            # Query listings where the skills match any of the profile's skills
+            skillListings = Listing.objects.filter(
+                Q(skills__overlap=user.skills)
+            ).distinct()            
+        else:
+            skillListings = []
+
+        prioritized_listings = []
+        # 5. Iterate over all the listings and assign priority based on the three factors
+        for listing in listings:
+            priority = 0
+
+            if listing in networkListings:
+                priority += 1
+            if listing in recommendedListings:
+                priority += 1
+            if listing in skillListings:
+                priority += 1
+
+            prioritized_listings.append({
+                'listing': listing,
+                'priority': priority
+            })
+
+        prioritized_listings.sort(key=lambda x: x['priority'], reverse=True)
+        listings = [item['listing'] for item in prioritized_listings]    
+
+    
     elif target_user == "own":
-        listings = Listing.objects.filter(user=user)
+        listings = Listing.objects.filter(user=user).order_by('-timestamp')
+    
     else:
         try:
             target_user = Profile.objects.get(user_id=target_user)
@@ -184,12 +235,12 @@ def show_listings(request):
             allowedlistings = Listing.objects.filter(user=target_user, visible='2')
             listings = listings | allowedlistings
 
-    if listings.exists():
-        serializer = ListingSerializer(listings, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    else:
-        return Response([], status=status.HTTP_200_OK)
+    paginator = ListingPagination()
+    paginated_listings = paginator.paginate_queryset(listings, request)
+    serializer = ListingSerializer(paginated_listings, many=True)
 
+    # Return the paginated response
+    return paginator.get_paginated_response(serializer.data)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])

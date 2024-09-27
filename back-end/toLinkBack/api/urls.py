@@ -15,7 +15,7 @@ from .views import login, signup, update_profile, logout, fetch_user_info, updat
     admin_fetch_posts, admin_fetch_comments, admin_fetch_likes, get_all_posts, check_if_applied, \
     update_listing, check_if_like_exist, get_post_by_user_id, fetch_searching_links, fetch_searching_non_links ,admin_fetch_users, \
     fetch_notifications, dismiss_notification_by_id, retrive_header_info, get_posts_id, get_post_by_id, \
-    get_interactions, request_export, delete_post,delete_profile
+    get_interactions, request_export, delete_post, delete_profile, fetch_others_connections
 
 urlpatterns = [
     re_path('login', login),
@@ -65,6 +65,7 @@ urlpatterns = [
     re_path('request/list', fetch_request),
     re_path('request/respond', response_request),
     re_path('links/list', fetch_connections),
+    re_path('links/other', fetch_others_connections),
 
     re_path('admin/fetch/listings', admin_fetch_listings),
     re_path('admin/fetch/personal', admin_fetch_personal),
