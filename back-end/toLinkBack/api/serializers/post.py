@@ -7,18 +7,30 @@ from rest_framework import serializers
 from api.models import Profile, Post, LikedBy, Comment, PostMedia
 
 
-class PostMediaSerializer(serializers.ModelSerializer):
+class PostImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = PostMedia
-        fields = ['image']
+        fields = ['image', 'media_type']
+
+class PostVideoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PostMedia
+        fields = ['video', 'media_type']
+
+class PostAudioSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PostMedia
+        fields = ['audio', 'media_type']
 
 class PostSerializer(serializers.ModelSerializer):
     user_info = serializers.SerializerMethodField()
     images = serializers.SerializerMethodField()
+    videos = serializers.SerializerMethodField()
+    audios = serializers.SerializerMethodField()
     class Meta:
         model = Post
-        fields = ['post_id', 'text', 'media', 'links', 'like_cnt', 'comment_cnt', 'user', 'images', 'user_info']
-        read_only_fields = ['post_id', 'like_cnt', 'comment_cnt', 'user', 'images', 'user_info']
+        fields = ['post_id', 'text', 'media', 'links', 'like_cnt', 'comment_cnt', 'user', 'images', 'videos', 'audios', 'user_info']
+        read_only_fields = ['post_id', 'like_cnt', 'comment_cnt', 'user', 'images', 'videos', 'audios', 'user_info']
         # Add any other fields you want to be updatable
     
     def create(self, validated_data):
@@ -50,12 +62,31 @@ class PostSerializer(serializers.ModelSerializer):
     
     def get_images(self, obj):
         if(obj.media):
-            images = PostMedia.objects.filter(post_id=obj.post_id)         
-            serializer = PostMediaSerializer(images, many=True)
+            images = PostMedia.objects.filter(post_id=obj.post_id, media_type="image")         
+            serializer = PostImageSerializer(images, many=True)
             
             return serializer.data
         else:
-            return {}
+            return []
+    
+    def get_videos(self, obj):
+        if(obj.media):
+            videos = PostMedia.objects.filter(post_id=obj.post_id, media_type="video")         
+            serializer = PostVideoSerializer(videos, many=True)
+            
+            return serializer.data
+        else:
+            return []
+
+    def get_audios(self, obj):
+        if(obj.media):
+            audios = PostMedia.objects.filter(post_id=obj.post_id, media_type="audio")         
+            serializer = PostAudioSerializer(audios, many=True)
+            
+            return serializer.data
+        else:
+            return []
+
 
 
 class LikedBySerializer(serializers.ModelSerializer):

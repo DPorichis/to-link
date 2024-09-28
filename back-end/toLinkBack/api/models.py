@@ -10,6 +10,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.utils.deconstruct import deconstructible
+from django.core.exceptions import ValidationError
 import os
 import uuid
 from django.utils.timezone import now
@@ -184,10 +185,28 @@ class PathAndRename:
 
 
 class PostMedia(models.Model):
+    MEDIA_TYPE_CHOICES = (
+        ('image', 'Image'),
+        ('video', 'Video'),
+        ('audio', 'Audio'),
+    )
+
     post_media_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(Profile, on_delete=models.CASCADE)  # Link the picture to a user
     post = models.ForeignKey(Post, on_delete=models.CASCADE)  # Link the picture to a user
-    image = models.ImageField(upload_to=PathAndRename('post-media/'))  # Store the uploaded image
+    media_type = models.CharField(max_length=5, choices=MEDIA_TYPE_CHOICES)
+    image = models.ImageField(upload_to=PathAndRename('post-media/images'), blank=True, null=True)  # Store the uploaded image
+    video = models.FileField(upload_to=PathAndRename('post-media/videos/'), blank=True, null=True)
+    audio = models.FileField(upload_to=PathAndRename('post-media/audios/'), blank=True, null=True)
+
+    def clean(self):
+        media_fields = [self.image, self.video, self.audio]
+        media_count = sum(1 for field in media_fields if field)
+
+        if media_count > 1:
+            raise ValidationError("Multiple Media Types are not allowed")
+        elif media_count == 0:
+            raise ValidationError("No media uploaded.")
 
 class Dm(models.Model):
     dm_id = models.AutoField(db_column='DM_ID', primary_key=True)  # Field name made lowercase.

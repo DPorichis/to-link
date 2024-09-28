@@ -23,9 +23,14 @@ function HomePGU(props) {
     const [profile, setProfile] = useState({});
     const [PostIDList, setPostIdList] = useState([]);
     const [PostCount, setPostCount] = useState();   
-    const [postText, setpostText] = useState("");
-    const [postMedia, setpostMedia] = useState([]);
     const [postsToShow, setPostsToShow] = useState(5);
+
+
+    const [postText, setpostText] = useState("");
+    const [postImageMedia, setpostImageMedia] = useState([]);
+    const [postVideoMedia, setpostVideoMedia] = useState([]);
+    const [postAudioMedia, setpostAudioMedia] = useState([]);
+
 
     const handleTextChange = (e) => {
         const {value} = e.target
@@ -33,17 +38,46 @@ function HomePGU(props) {
     }
 
     // Handle selection
-    const handleMediaChange = (event) => {
+    const handleImageChange = (event) => {
         const files = event.target.files;
         const fileArray = Array.from(files);
         // Update both the state for files and the images
-        setpostMedia(prevMedia => [...prevMedia, ...fileArray]);
+        setpostImageMedia(prevMedia => [...prevMedia, ...fileArray]);
         event.target.value = '';
     };
 
     // Handle removal
     const removeImage = (index) => {
-        setpostMedia(prevMedia => prevMedia.filter((img, imgIndex) => imgIndex !== index));
+        setpostImageMedia(prevMedia => prevMedia.filter((img, imgIndex) => imgIndex !== index));
+    };
+
+
+    // Handle selection
+    const handleVideoChange = (event) => {
+        const files = event.target.files;
+        const fileArray = Array.from(files);
+        // Update both the state for files and the videos
+        setpostVideoMedia(prevMedia => [...prevMedia, ...fileArray]);
+        event.target.value = '';
+    };
+
+    // Handle removal
+    const removeVideo = (index) => {
+        setpostVideoMedia(prevMedia => prevMedia.filter((img, imgIndex) => imgIndex !== index));
+    };
+
+    // Handle selection
+    const handleAudioChange = (event) => {
+        const files = event.target.files;
+        const fileArray = Array.from(files);
+        // Update both the state for files and the audios
+        setpostAudioMedia(prevMedia => [...prevMedia, ...fileArray]);
+        event.target.value = '';
+    };
+
+    // Handle removal
+    const removeAudio = (index) => {
+        setpostAudioMedia(prevMedia => prevMedia.filter((img, imgIndex) => imgIndex !== index));
     };
 
     const fetchPostList = async () => {
@@ -110,13 +144,30 @@ function HomePGU(props) {
         const token = localStorage.getItem('access_token');
         const postData = new FormData();
 
-        if (postMedia.length !== 0) {
-            postMedia.forEach((file, index) => {
-                postData.append('image_uploads', file);
-            });
+        if (postImageMedia.length !== 0 || 
+            postAudioMedia.length !== 0 || 
+            postVideoMedia.length !== 0) 
+        {
             postData.append('media', true);
         }
-        
+
+        if (postImageMedia.length !== 0) {
+            postImageMedia.forEach((file, index) => {
+                postData.append('image_uploads', file);
+            });
+        }
+
+        if (postAudioMedia.length !== 0) {
+            postAudioMedia.forEach((file, index) => {
+                postData.append('audio_uploads', file);
+            });
+        }
+
+        if (postVideoMedia.length !== 0) {
+            postVideoMedia.forEach((file, index) => {
+                postData.append('video_uploads', file);
+            });
+        }
         postData.append('text', postText)
 
         const response = await fetch("http://127.0.0.1:8000/posts/upload/", {
@@ -135,7 +186,9 @@ function HomePGU(props) {
             await fetchPostList();
             await fetchPosts();
             setpostText("");
-            setpostMedia([]);
+            setpostImageMedia([]);
+            setpostAudioMedia([]);
+            setpostVideoMedia([]);
         }
         else{
             console.log("wrong");
@@ -316,25 +369,73 @@ function HomePGU(props) {
                                     type="file"
                                     accept="image/*"
                                     style={{ display:'none'}}  
-                                    onChange={handleMediaChange}
+                                    onChange={handleImageChange}
                                 />
                                 <img src="/upload.svg" style={{}} />
-                                Upload Media
+                                Upload Images
+                            </label>
+                        </div>
+
+                        <div>
+                            <label type="button" class="btn btn-light">
+                                <input
+                                    type="file"
+                                    accept="video/mp4"
+                                    style={{ display:'none'}}  
+                                    onChange={handleVideoChange}
+                                />
+                                <img src="/upload.svg" style={{}} />
+                                Upload Videos
+                            </label>
+                        </div>
+
+                        <div>
+                            <label type="button" class="btn btn-light">
+                                <input
+                                    type="file"
+                                    accept="audio/mp3"
+                                    style={{ display:'none'}}  
+                                    onChange={handleAudioChange}
+                                />
+                                <img src="/upload.svg" style={{}} />
+                                Upload Audio
                             </label>
                         </div>
                         <button type="button" class="btn btn-primary" onClick={handleUploadClick}>
                             Upload
                         </button>
                     </div>
-                    {postMedia.length !== 0 ?
+                    {postImageMedia.length + postAudioMedia.length + postVideoMedia.length !== 0 ?
                     <div style={{display:"flex", flexDirection:"column", justifyContent:"left", marginTop:"8px", marginRight:"4px", marginLeft:"4px"}}>
                         <p>Attached Media</p>
-                        {postMedia.map((image, index) => (
+                        {postImageMedia.map((image, index) => (
                             <div key={index} style={{display:"flex", border:"1px solid #ddd", justifyContent:"space-between",
                                 borderRadius:"5px", backgroundColor:"#fff"
                             }}>
-                                <p style={{padding:"0px 0px", margin:"3px 3px"}}>Media Attached: {image.name}</p>
+                                <p style={{padding:"0px 0px", margin:"3px 3px"}}>Image Attached: {image.name}</p>
                                 <button onClick={() => removeImage(index)}
+                                type="button" class="btn btn-danger btn-sm">
+                                    X
+                                </button>
+                            </div>
+                        ))}
+                        {postVideoMedia.map((video, index) => (
+                            <div key={index} style={{display:"flex", border:"1px solid #ddd", justifyContent:"space-between",
+                                borderRadius:"5px", backgroundColor:"#fff"
+                            }}>
+                                <p style={{padding:"0px 0px", margin:"3px 3px"}}>Video Attached: {video.name}</p>
+                                <button onClick={() => removeVideo(index)}
+                                type="button" class="btn btn-danger btn-sm">
+                                    X
+                                </button>
+                            </div>
+                        ))}
+                        {postAudioMedia.map((audio, index) => (
+                            <div key={index} style={{display:"flex", border:"1px solid #ddd", justifyContent:"space-between",
+                                borderRadius:"5px", backgroundColor:"#fff"
+                            }}>
+                                <p style={{padding:"0px 0px", margin:"3px 3px"}}>Audio Attached: {audio.name}</p>
+                                <button onClick={() => removeAudio(index)}
                                 type="button" class="btn btn-danger btn-sm">
                                     X
                                 </button>

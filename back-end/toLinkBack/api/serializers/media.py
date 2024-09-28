@@ -8,5 +8,16 @@ from api.models import PostMedia
 class MediaSerializer(serializers.ModelSerializer):
     class Meta:
         model = PostMedia
-        fields = ['media_id', 'user', 'image', 'uploaded_at', 'post']
-        read_only_fields = ['id', 'user', 'uploaded_at']
+        fields = ['media_id', 'user', 'post', 'media_type', 'image', 'video', 'audio', 'uploaded_at']
+
+    def validate(self, data):
+        # Ensure that only one media type is uploaded
+        media_fields = ['image', 'video', 'audio']
+        media_count = sum(1 for field in media_fields if data.get(field))
+
+        if media_count > 1:
+            raise serializers.ValidationError("Only one type of media (image, video, or audio) is allowed.")
+        elif media_count == 0:
+            raise serializers.ValidationError("At least one media (image, video, or audio) must be uploaded.")
+        
+        return data

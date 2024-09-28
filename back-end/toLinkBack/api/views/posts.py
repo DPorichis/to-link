@@ -70,8 +70,21 @@ def upload_post(request):
 
         # Create a PostImage instance for each uploaded image
         for image in images:
-            PostMedia.objects.create(post=post, image=image, user=profile)
+            PostMedia.objects.create(post=post, image=image, user=profile, media_type="image")
+        # Handle the images
+        videos = request.FILES.getlist('video_uploads')  # 'video_uploads' is the field name for multiple images
+
+        # Create a PostImage instance for each uploaded image
+        for video in videos:
+            PostMedia.objects.create(post=post, video=video, user=profile, media_type="video")
         
+        # Handle the images
+        audios = request.FILES.getlist('audio_uploads')  # 'audio_uploads' is the field name for multiple images
+
+        # Create a PostImage instance for each uploaded image
+        for audio in audios:
+            PostMedia.objects.create(post=post, audio=audio, user=profile, media_type="audio")
+
         profile.post_cnt = F('post_cnt') + 1
         profile.save(update_fields=['post_cnt'])
 
