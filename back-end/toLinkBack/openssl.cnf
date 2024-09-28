@@ -1,0 +1,19 @@
+[ req ]
+default_bits        = 2048
+distinguished_name  = req_distinguished_name
+x509_extensions     = v3_ca
+prompt              = no
+string_mask         = utf8only
+
+[ req_distinguished_name ]
+C                    = GR
+ST                   = Attica
+L                    = Athens
+O                    = My Company
+CN                   = localhost
+
+[ v3_ca ]
+subjectAltName       = @alt_names
+
+[ alt_names ]
+DNS.1                = localhost

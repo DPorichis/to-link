@@ -45,7 +45,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
         if obj.pfp:
             # Access the file if it exists
-            file_url = "http://127.0.0.1:8000" + obj.pfp.url
+            file_url = "https://127.0.0.1:8000" + obj.pfp.url
         else:
             # Handle the case where no file is uploaded
             file_url = "/default.png"  # or set a default image
@@ -175,7 +175,7 @@ class ProfileHeaderSerializer(serializers.ModelSerializer):
     def get_profile_info(self, obj):
         if obj.pfp:
             # Access the file if it exists
-            file_url = "http://127.0.0.1:8000" + obj.pfp.url
+            file_url = "https://127.0.0.1:8000" + obj.pfp.url
         else:
             # Handle the case where no file is uploaded
             file_url = "/default.png"  # or set a default image
@@ -213,7 +213,7 @@ class ProfileBannerSerializer(serializers.ModelSerializer):
         
         if obj.pfp:
             # Access the file if it exists
-            file_url = "http://127.0.0.1:8000" + obj.pfp.url
+            file_url = "https://127.0.0.1:8000" + obj.pfp.url
         else:
             # Handle the case where no file is uploaded
             file_url = "/default.png"  # or set a default image

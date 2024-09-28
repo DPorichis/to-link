@@ -5,7 +5,7 @@
 export  const refreshAccessToken = async () => {
     const refresh_token = localStorage.getItem('refresh_token');
 
-    const response = await fetch("http://127.0.0.1:8000/api/token/refresh/", {
+    const response = await fetch("https://127.0.0.1:8000/api/token/refresh/", {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',

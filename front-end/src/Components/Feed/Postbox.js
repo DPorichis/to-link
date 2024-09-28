@@ -23,7 +23,7 @@ function Postbox(props) {
     useEffect(() => {
         const fetchLikes = async () => {
             const token = localStorage.getItem('access_token');
-            const response = await fetch("http://127.0.0.1:8000/posts/like/exists", {
+            const response = await fetch("https://127.0.0.1:8000/posts/like/exists", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -47,7 +47,7 @@ function Postbox(props) {
     const toggleLiked = async () => {
         setLoading(true);
         const token = localStorage.getItem('access_token');
-        const response = await fetch("http://127.0.0.1:8000/posts/like/new", {
+        const response = await fetch("https://127.0.0.1:8000/posts/like/new", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -71,7 +71,7 @@ function Postbox(props) {
         if (!confirmDelete) return;
 
         const token = localStorage.getItem('access_token');
-        const response = await fetch("http://127.0.0.1:8000/posts/delete", {
+        const response = await fetch("https://127.0.0.1:8000/posts/delete", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -92,7 +92,7 @@ function Postbox(props) {
 
     const handleCommentUpload = async () => {
         const token = localStorage.getItem('access_token');
-        const response = await fetch("http://127.0.0.1:8000/posts/comment/new", {
+        const response = await fetch("https://127.0.0.1:8000/posts/comment/new", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -142,15 +142,15 @@ function Postbox(props) {
                 <p style={{marginBottom:"0px"}}>{props.post.text} </p>
                 {media.length === 1 ? (
                     (media[0].media_type === "image" ?
-                        <img src={"http://127.0.0.1:8000" + media[0].image} style={{maxHeight: "100%"}} alt="" />
+                        <img src={"https://127.0.0.1:8000" + media[0].image} style={{maxHeight: "100%"}} alt="" />
                     :
                     (media[0].media_type === "video"?
                         <video controls>
-                            <source src={"http://127.0.0.1:8000" + media[0].video} type="video/mp4"/>
+                            <source src={"https://127.0.0.1:8000" + media[0].video} type="video/mp4"/>
                         </video>
                     :
                     <audio controls>
-                        <source src={"http://127.0.0.1:8000" + media[0].audio} type="audio/mp3" />
+                        <source src={"https://127.0.0.1:8000" + media[0].audio} type="audio/mp3" />
                         Your browser does not support the audio element.
                     </audio>
                     )
@@ -160,20 +160,20 @@ function Postbox(props) {
                         <div className="carousel-inner">
                             <div className="carousel-item active">
                                 {media[0].media_type === "image" ?
-                                        <img src={"http://127.0.0.1:8000" + media[0].image} className="d-block w-100"
+                                        <img src={"https://127.0.0.1:8000" + media[0].image} className="d-block w-100"
                                         style={{ maxHeight: "500px", objectFit: "contain" }} alt="" />
                                     :
                                     (media[0].media_type === "video"?
                                         <video controls
                                         className="d-block w-100"
                                         style={{ maxHeight: "500px", objectFit: "contain" }}>
-                                            <source src={"http://127.0.0.1:8000" + media[0].video} type="video/mp4"/>
+                                            <source src={"https://127.0.0.1:8000" + media[0].video} type="video/mp4"/>
                                         </video>
                                     :
                                     <audio controls
                                     className="d-block"
                                     style={{ width: "70%", margin: "0 auto", height: "80px" }}>
-                                        <source src={"http://127.0.0.1:8000" + media[0].audio} type="audio/mp3" />
+                                        <source src={"https://127.0.0.1:8000" + media[0].audio} type="audio/mp3" />
                                         Your browser does not support the audio element.
                                     </audio>
                                     )
@@ -182,20 +182,20 @@ function Postbox(props) {
                             {media.slice(1).map((med, index) =>
                                 <div className="carousel-item" key={index}>
                                     {med.media_type === "image" ?
-                                        <img src={"http://127.0.0.1:8000" + med.image} className="d-block w-100"
+                                        <img src={"https://127.0.0.1:8000" + med.image} className="d-block w-100"
                                         style={{ maxHeight: "500px", objectFit: "contain" }} alt="" />
                                     :
                                     (med.media_type === "video"?
                                         <video controls
                                         className="d-block w-100"
                                         style={{ maxHeight: "500px", objectFit: "contain" }}>
-                                            <source src={"http://127.0.0.1:8000" + med.video} type="video/mp4"/>
+                                            <source src={"https://127.0.0.1:8000" + med.video} type="video/mp4"/>
                                         </video>
                                     :
                                     <audio controls
                                     className="d-block"
                                     style={{ width: "70%", margin: "0 auto", height: "80px" }}>
-                                        <source src={"http://127.0.0.1:8000" + med.audio} type="audio/mp3" />
+                                        <source src={"https://127.0.0.1:8000" + med.audio} type="audio/mp3" />
                                         Your browser does not support the audio element.
                                     </audio>
                                     )

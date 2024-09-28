@@ -37,7 +37,7 @@ function AccountViewPGA(props) {
         const fetchProfile = async () => {
 
             const token = localStorage.getItem('access_token');
-            const response = await fetch("http://127.0.0.1:8000/admin/fetch/profile", {
+            const response = await fetch("https://127.0.0.1:8000/admin/fetch/profile", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -58,7 +58,7 @@ function AccountViewPGA(props) {
         const fetchPersonal = async () => {
 
             const token = localStorage.getItem('access_token');
-            const response = await fetch("http://127.0.0.1:8000/admin/fetch/personal", {
+            const response = await fetch("https://127.0.0.1:8000/admin/fetch/personal", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -79,7 +79,7 @@ function AccountViewPGA(props) {
         const fetchListings = async () => {
 
             const token = localStorage.getItem('access_token');
-            const response = await fetch("http://127.0.0.1:8000/admin/fetch/listings", {
+            const response = await fetch("https://127.0.0.1:8000/admin/fetch/listings", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -100,7 +100,7 @@ function AccountViewPGA(props) {
         const fetchApplications = async () => {
 
             const token = localStorage.getItem('access_token');
-            const response = await fetch("http://127.0.0.1:8000/admin/fetch/applications", {
+            const response = await fetch("https://127.0.0.1:8000/admin/fetch/applications", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -121,7 +121,7 @@ function AccountViewPGA(props) {
         const fetchPosts = async () => {
 
             const token = localStorage.getItem('access_token');
-            const response = await fetch("http://127.0.0.1:8000/admin/fetch/posts", {
+            const response = await fetch("https://127.0.0.1:8000/admin/fetch/posts", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -142,7 +142,7 @@ function AccountViewPGA(props) {
         const fetchComments = async () => {
 
             const token = localStorage.getItem('access_token');
-            const response = await fetch("http://127.0.0.1:8000/admin/fetch/comments", {
+            const response = await fetch("https://127.0.0.1:8000/admin/fetch/comments", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -162,7 +162,7 @@ function AccountViewPGA(props) {
         const fetchLikes = async () => {
 
             const token = localStorage.getItem('access_token');
-            const response = await fetch("http://127.0.0.1:8000/admin/fetch/likes", {
+            const response = await fetch("https://127.0.0.1:8000/admin/fetch/likes", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -183,7 +183,7 @@ function AccountViewPGA(props) {
         const fetchConnections = async () => {
 
             const token = localStorage.getItem('access_token');
-            const response = await fetch("http://127.0.0.1:8000/admin/fetch/connections", {
+            const response = await fetch("https://127.0.0.1:8000/admin/fetch/connections", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -246,7 +246,7 @@ function AccountViewPGA(props) {
     const handleExport = async () => {
         const token = localStorage.getItem('access_token');
         console.log(exportSelection)
-        const response = await fetch("http://127.0.0.1:8000/admin/export", {
+        const response = await fetch("https://127.0.0.1:8000/admin/export", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -437,7 +437,7 @@ function AccountViewPGA(props) {
                         <div class="col-md-8">
                             <div class="row">
                                 <div class="col-md-4" style={{display:"flex", justifyContent:"center"}}>
-                                    <img src={"http://127.0.0.1:8000" + profile.pfp} width={"125px"} height={"125px"} style={{borderRadius:"25%", marginTop:"10px"}}/>
+                                    <img src={"https://127.0.0.1:8000" + profile.pfp} width={"125px"} height={"125px"} style={{borderRadius:"25%", marginTop:"10px"}}/>
                                 </div>
                                 <div class="col-md-8" style={{marginBottom:"5px"}}>
                                     <div class="row">
@@ -604,7 +604,7 @@ function AccountViewPGA(props) {
                                     <td>{post.media?
                                         <>
                                         {post.images.map((image, index) => (
-                                        <a key={index} href={"http://127.0.0.1:8000" + image.image}>image #{index}</a>
+                                        <a key={index} href={"https://127.0.0.1:8000" + image.image}>image #{index}</a>
                                         ))
                                         }
                                         </>

@@ -20,7 +20,7 @@ class NotificationSerializer(serializers.ModelSerializer):
 
         if other_user_profile.pfp:
             # Access the file if it exists
-            file_url = "http://127.0.0.1:8000" + other_user_profile.pfp.url
+            file_url = "https://127.0.0.1:8000" + other_user_profile.pfp.url
         else:
             # Handle the case where no file is uploaded
             file_url = "/default.png"

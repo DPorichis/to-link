@@ -63,7 +63,7 @@ function Message(props){
                 <> 
                     <div style={{display:"flex", flexDirection:"column",textAlign:"left", marginTop:"0px",marginBottom:"2px", marginLeft:"4px"}}>
                         {props.message.media? (
-                            <img src={"http://127.0.0.1:8000" + props.message.media} alt="Message content" style={{maxWidth:"500px", marginLeft:"50px"}} />
+                            <img src={"https://127.0.0.1:8000" + props.message.media} alt="Message content" style={{maxWidth:"500px", marginLeft:"50px"}} />
                         ) : (
                             <p style={{marginTop:"0px",marginLeft:"50px",marginBottom:"0px"}}>{props.message.text}</p>
                         )}
@@ -75,7 +75,7 @@ function Message(props){
                     <div style={{display:"flex", flexDirection:"column", textAlign:"left", marginBottom:"2px", marginLeft:"4px"}}>
                     <p style={{marginBottom: "2px"}}>You · {formattedDate}</p>
                     {props.message.media? (
-                        <img src={"http://127.0.0.1:8000" + props.message.media} alt="Message content" style={{maxWidth:"500px", marginLeft:"50px"}} />
+                        <img src={"https://127.0.0.1:8000" + props.message.media} alt="Message content" style={{maxWidth:"500px", marginLeft:"50px"}} />
                     ) : (
                         <p style={{marginTop:"0px",marginBottom:"2px"}}>{props.message.text}</p>
                     )}
@@ -88,7 +88,7 @@ function Message(props){
                     {props.same ? 
                     <div style={{display:"flex", flexDirection:"column",textAlign:"left",marginTop:"0px",marginBottom:"5px", marginLeft:"4px"}}>
                         {props.message.media ? (
-                            <img src={"http://127.0.0.1:8000" + props.message.media} alt="Message content" style={{maxWidth:"500px", marginLeft:"50px"}} />
+                            <img src={"https://127.0.0.1:8000" + props.message.media} alt="Message content" style={{maxWidth:"500px", marginLeft:"50px"}} />
                         ) : (
                             <p style={{marginTop:"0px",marginLeft:"50px",marginBottom:"0px"}}>{props.message.text}</p>
                         )}
@@ -99,7 +99,7 @@ function Message(props){
                     <div style={{display:"flex", flexDirection:"column",textAlign:"left",marginBottom:"0px", marginLeft:"4px", marginBottom:"2px"}}>
                     <p style={{marginBottom: "2px"}}>{props.other_name} · {formattedDate}</p>
                     {props.message.media ? (
-                    <img src={"http://127.0.0.1:8000" + props.message.media} alt="Message content" style={{maxWidth:"500px", marginLeft:"50px"}} />
+                    <img src={"https://127.0.0.1:8000" + props.message.media} alt="Message content" style={{maxWidth:"500px", marginLeft:"50px"}} />
                 ) : (
                     <p style={{marginTop:"0px",marginBottom:"2px"}}>{props.message.text}</p>
                 )}

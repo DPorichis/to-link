@@ -30,7 +30,7 @@ function ProfileBanner(props){
     const handleRequestClick = async (userId) => {
         const token = localStorage.getItem('access_token');
         try {
-            const response = await fetch("http://127.0.0.1:8000/request/new", {
+            const response = await fetch("https://127.0.0.1:8000/request/new", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -60,7 +60,7 @@ function ProfileBanner(props){
     const handleResponseClick = async (answer) => {
         const token = localStorage.getItem('access_token');
         try {
-            const response = await fetch("http://127.0.0.1:8000/request/respond", {
+            const response = await fetch("https://127.0.0.1:8000/request/respond", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',

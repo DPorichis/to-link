@@ -11,7 +11,7 @@ function MessageCont(props) {
 
     const fetchDms = async (page) => {
         const token = localStorage.getItem('access_token');
-        const response = await fetch(page ? page : "http://127.0.0.1:8000/convo/dm/fetch", {
+        const response = await fetch(page ? page : "https://127.0.0.1:8000/convo/dm/fetch", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',

@@ -60,7 +60,7 @@ function ListingsPGU(props) {
 
     const fetchOwnListings = async (page) => {
         const token = localStorage.getItem('access_token');
-        const response0 = await fetch(page ? page :"http://127.0.0.1:8000/listings/list", {
+        const response0 = await fetch(page ? page :"https://127.0.0.1:8000/listings/list", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -107,7 +107,7 @@ function ListingsPGU(props) {
 
     const fetchListings = async (page) => {
         const token = localStorage.getItem('access_token');
-        const response1 = await fetch(page ? page :"http://127.0.0.1:8000/listings/list", {
+        const response1 = await fetch(page ? page :"https://127.0.0.1:8000/listings/list", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -149,7 +149,7 @@ function ListingsPGU(props) {
 
     const restoreListing = async () => {
         const token = localStorage.getItem('access_token');
-        const response = await fetch("http://127.0.0.1:8000/listing/fetch", {
+        const response = await fetch("https://127.0.0.1:8000/listing/fetch", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -210,7 +210,7 @@ function ListingsPGU(props) {
     useEffect(() => {
         const checkApplied = async () => {
             const token = localStorage.getItem('access_token');
-            const response = await fetch("http://127.0.0.1:8000/listings/applied/check", {
+            const response = await fetch("https://127.0.0.1:8000/listings/applied/check", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -247,7 +247,7 @@ function ListingsPGU(props) {
     const toggleApply = () => {
         const apply = async () => {
             const token = localStorage.getItem('access_token');
-            const response = await fetch("http://127.0.0.1:8000/listings/applied/new", {
+            const response = await fetch("https://127.0.0.1:8000/listings/applied/new", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -293,7 +293,7 @@ function ListingsPGU(props) {
     const createNewListing = async () =>
     {
         const token = localStorage.getItem('access_token');
-        const response = await fetch("http://127.0.0.1:8000/listings/new", {
+        const response = await fetch("https://127.0.0.1:8000/listings/new", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -315,7 +315,7 @@ function ListingsPGU(props) {
 
     const updateListing = async (id, updatedListingData) => {
         const token = localStorage.getItem('access_token');
-        const response = await fetch("http://127.0.0.1:8000/listings/update", {
+        const response = await fetch("https://127.0.0.1:8000/listings/update", {
             method: "PUT",
             headers: {
                 'Content-Type': 'application/json',

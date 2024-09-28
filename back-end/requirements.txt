@@ -7,3 +7,6 @@ Pillow
 django-cors-headers
 djangorestframework-simplejwt
 dicttoxml
+django-extensions
+Werkzeug
+pyOpenSSL

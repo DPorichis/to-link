@@ -49,7 +49,7 @@ function MessagesPGU(props) {
     useEffect(() => {
         const fetchconvos = async () => {
             const token = localStorage.getItem('access_token');
-            const response = await fetch("http://127.0.0.1:8000/convo/list/", {
+            const response = await fetch("https://127.0.0.1:8000/convo/list/", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -83,7 +83,7 @@ function MessagesPGU(props) {
         };
         const fetchprofilepic = async () => {
             const token = localStorage.getItem('access_token');
-            const response = await fetch("http://127.0.0.1:8000/profile/own/fetch", {
+            const response = await fetch("https://127.0.0.1:8000/profile/own/fetch", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -119,7 +119,7 @@ function MessagesPGU(props) {
 
         const restoreDM = async () => {
             const token = localStorage.getItem('access_token');
-            const response = await fetch("http://127.0.0.1:8000/convo/find/", {
+            const response = await fetch("https://127.0.0.1:8000/convo/find/", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -199,7 +199,7 @@ function MessagesPGU(props) {
             messageData.append('convo', selected_dm.convo_id)
         
             const token = localStorage.getItem('access_token');
-            const response = await fetch("http://127.0.0.1:8000/convo/dm/new/", {
+            const response = await fetch("https://127.0.0.1:8000/convo/dm/new/", {
                 method: "POST",
                 headers: {
                     'Authorization': `Bearer ${token}`

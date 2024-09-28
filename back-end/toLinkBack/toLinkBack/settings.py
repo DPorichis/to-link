@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     "api",
     "rest_framework",
     'rest_framework_simplejwt',
-    'rest_framework_simplejwt.token_blacklist'
+    'rest_framework_simplejwt.token_blacklist',
+    'django_extensions'
 ]
 
 REST_FRAMEWORK = {
@@ -78,19 +79,19 @@ ROOT_URLCONF = 'toLinkBack.urls'
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # Add your React frontend URL
-    "http://127.0.0.1:3000",
-    "http://127.0.0.1:8000",
+    "https://127.0.0.1:3000",
+    "https://127.0.0.1:8000",
     "http://localhost:8000"
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",  # Your React app URL
-    "http://127.0.0.1:3000"
+    "https://127.0.0.1:3000"
 ]
 
 SESSION_TRUSTED_ORIGINS = [
     "http://localhost:3000",  # Your React app URL
-    "http://127.0.0.1:3000"
+    "https://127.0.0.1:3000"
 ]
 
 # Secure cookie settings

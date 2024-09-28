@@ -23,7 +23,7 @@ function SettingsPGU(props) {
     useEffect(() => {
         const fetchUser = async () => {
             const token = localStorage.getItem('access_token');
-            const response = await fetch("http://127.0.0.1:8000/user/fetch", {
+            const response = await fetch("https://127.0.0.1:8000/user/fetch", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -76,7 +76,7 @@ function SettingsPGU(props) {
 
     const handleDeleteProfile = async () => {
         const token = localStorage.getItem('access_token');
-        const response = await fetch("http://127.0.0.1:8000/profile/delete", {
+        const response = await fetch("https://127.0.0.1:8000/profile/delete", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -159,7 +159,7 @@ function SettingsPGU(props) {
             const formData = new FormData();
 
             const token = localStorage.getItem('access_token');
-            const response = await fetch("http://127.0.0.1:8000/user/update", {
+            const response = await fetch("https://127.0.0.1:8000/user/update", {
                 method: "PUT",
                 headers: {
                     'Content-Type': 'application/json',
@@ -245,7 +245,7 @@ function SettingsPGU(props) {
         setPasswordFormErrors(errors);
         if (Object.keys(errors).length === 0) {
             const token = localStorage.getItem('access_token');
-            const response = await fetch("http://127.0.0.1:8000/user/newPassword", {
+            const response = await fetch("https://127.0.0.1:8000/user/newPassword", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',

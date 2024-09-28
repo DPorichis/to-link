@@ -23,7 +23,7 @@ function NotificationsPGU(props) {
     useEffect(() => {
         const fetchNotifications = async () => {
             const token = localStorage.getItem('access_token');
-            const response = await fetch("http://127.0.0.1:8000/notification/fetch", {
+            const response = await fetch("https://127.0.0.1:8000/notification/fetch", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -58,7 +58,7 @@ function NotificationsPGU(props) {
 
         const fetchRequests = async () => {
             const token = localStorage.getItem('access_token');
-            const response = await fetch("http://127.0.0.1:8000/request/list", {
+            const response = await fetch("https://127.0.0.1:8000/request/list", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -104,7 +104,7 @@ function NotificationsPGU(props) {
 
         const notif = Notifications[index]
 
-        const response = await fetch("http://127.0.0.1:8000/notification/dismiss", {
+        const response = await fetch("https://127.0.0.1:8000/notification/dismiss", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',

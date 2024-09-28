@@ -48,7 +48,7 @@ class PostSerializer(serializers.ModelSerializer):
 
         if profile.pfp:
             # Access the file if it exists
-            file_url = "http://127.0.0.1:8000" + profile.pfp.url
+            file_url = "https://127.0.0.1:8000" + profile.pfp.url
         else:
             # Handle the case where no file is uploaded
             file_url = "/default.png"
@@ -111,7 +111,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
         if profile.pfp:
             # Access the file if it exists
-            file_url = "http://127.0.0.1:8000" + profile.pfp.url
+            file_url = "https://127.0.0.1:8000" + profile.pfp.url
         else:
             # Handle the case where no file is uploaded
             file_url = "/default.png"

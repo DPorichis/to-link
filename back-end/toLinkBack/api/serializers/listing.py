@@ -78,7 +78,7 @@ class AppliedSerializer(serializers.ModelSerializer):
     def get_profile_info(self, obj):
         if obj.user.pfp:
             # Access the file if it exists
-            file_url = "http://127.0.0.1:8000" + obj.user.pfp.url
+            file_url = "https://127.0.0.1:8000" + obj.user.pfp.url
         else:
             # Handle the case where no file is uploaded
             file_url = "/default.png"  # or set a default image
