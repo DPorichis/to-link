@@ -1,3 +1,9 @@
+#connections.py
+# This module contains API views for connections.
+# Through these APIs, users can send,fetch,receive and response friend requests.
+#Also users can search for other users 
+##################################################################################
+
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes

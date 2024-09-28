@@ -1,3 +1,7 @@
+#listing.py
+#This module contains serializers used in APIs for listings
+##############################################################
+
 from rest_framework import serializers
 from api.models import Profile, Listing, Applied, Link, Request
 

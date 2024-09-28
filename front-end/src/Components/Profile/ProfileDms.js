@@ -1,3 +1,7 @@
+// ProfileDms.js
+// This component displays the name, and the title in the messages interface
+// ==============================================================================
+
 import React, { useState } from 'react';
 import MessagesPGU from '../../Pages/User/MessagesPGU';
 

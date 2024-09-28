@@ -1,3 +1,9 @@
+//HomePGU.js
+//This is the home page in the user interface
+//This page displays user profile info, the users links, posts and the user is able 
+// to upload a post
+// ==============================================================================
+
 import React, {useState, useEffect} from "react";
 
 import Header from "../../Components/Header";
@@ -61,11 +67,10 @@ function HomePGU(props) {
         }
     };
 
-
+    // Fetches posts based on post IDs
     const fetchPosts = async () => {
         const token = localStorage.getItem('access_token');
         try {
-            // const postIds = await fetchPostList();
             if (PostIDList && PostIDList.length > 0) {
                 const response = await fetch("http://127.0.0.1:8000/posts/view/byid", {
                     method: "POST",
@@ -310,7 +315,7 @@ function HomePGU(props) {
                                 <input
                                     type="file"
                                     accept="image/*"
-                                    style={{ display:'none'}}  // Hide the input
+                                    style={{ display:'none'}}  
                                     onChange={handleMediaChange}
                                 />
                                 <img src="/upload.svg" style={{}} />
@@ -353,6 +358,7 @@ function HomePGU(props) {
                 </div>
                 <hr style={{ border: "1px solid black", margin: "5px 0px" }} />
                 <div>
+                {/* Display posts in a feed */}
                     {!LoadingPosts ? 
                     (posts.length > 0 ? (
                         posts.map(post => (
@@ -374,6 +380,7 @@ function HomePGU(props) {
                     }
                     
                 </div>
+                {/* Load more posts button */}
                 {PostIDList.length > postsToShow && (
                     <button 
                         style={{ marginTop: "10px" }}

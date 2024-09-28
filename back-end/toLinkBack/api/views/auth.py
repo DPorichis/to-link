@@ -1,3 +1,7 @@
+# auth.py
+# This module contains API views for authentication.
+# Through these APIs, users can log in, log out, sign up, and update their passwords.
+##################################################################################
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.decorators import api_view
 from django.contrib.auth import authenticate
@@ -31,10 +35,9 @@ def login(request):
         return Response({
             'refresh': str(refresh),
             'access': str(refresh.access_token),
-            'user': UserSerializer(user).data  # Include user details if necessary
+            'user': UserSerializer(user).data  
         }, status=status.HTTP_200_OK)
     else:
-        # Invalid credentials
         return Response({"error": "Invalid credentials."}, status=status.HTTP_401_UNAUTHORIZED)    
 
 
@@ -55,7 +58,6 @@ def signup(request):
         refresh = RefreshToken.for_user(user)
         refresh['is_admin'] = user.is_staff
 
-        # Return tokens and user data
         return Response({
             'refresh': str(refresh),
             'access': str(refresh.access_token),
@@ -67,10 +69,8 @@ def signup(request):
 @api_view(['POST'])
 def logout(request):
     try:
-        # Get the refresh token from the request
-        refresh_token = request.data.get('refresh')
 
-        # Blacklist the refresh token
+        refresh_token = request.data.get('refresh')
         token = RefreshToken(refresh_token)
         token.blacklist()
 

@@ -1,3 +1,9 @@
+//MessagesPGU.js
+//This page is the users interface for messaging
+//This page allows users to messaging with their Links.
+//User are able to send and receive text and images as messages
+//===============================================================
+
 import React from "react";
 import Header from "../../Components/Header";
 import ProfileDms from "../../Components/Profile/ProfileDms";

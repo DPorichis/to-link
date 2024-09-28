@@ -1,3 +1,6 @@
+//MessageCONT
+// This components is responsible for rendering the conversation messages with pagination
+// =======================================
 import React, { useRef, useLayoutEffect, useState, useEffect } from "react";
 import Message from "./Message";
 

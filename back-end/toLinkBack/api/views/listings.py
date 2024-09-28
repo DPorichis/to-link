@@ -1,3 +1,9 @@
+# dms.py
+# This module contains API views for listings.
+# Through these APIs, users can update, apply for, fetch, and create listings.
+# Additionally, users can see who has applied to their listings.
+##################################################################################
+
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 

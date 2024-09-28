@@ -1,3 +1,9 @@
+# admin.py
+# This module contains API views for admins to fetch connections, personal information, listings,
+# comments, likes, and posts.
+# Additionally, there is an API view for admins to export data in XML and JSON formats.
+###########################################################################################################
+
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes

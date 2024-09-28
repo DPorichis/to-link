@@ -1,3 +1,7 @@
+//JobTile.js
+//This component displays the job Title 
+// ======================================
+
 import React from "react";
 import ProfileComments from "../Profile/ProfileComments.js";
 import "./JobTile.css";

@@ -1,3 +1,7 @@
+#connections.py 
+#This module contains serializers used in APIs for connections
+# ################################################################# 
+
 from rest_framework import serializers
 from api.models import Profile, Request,Link
 
@@ -40,7 +44,6 @@ class LinkSerializer(serializers.ModelSerializer):
         read_only_fields= ["user_id_to"]
     
     def get_user_info(self, obj):
-        # Get the authenticated user from the context
         authenticated_user = self.context.get('authenticated_user')
         print(obj)
         # Determine which user is not the authenticated user
@@ -49,14 +52,11 @@ class LinkSerializer(serializers.ModelSerializer):
         else:
             other_user = obj.user_id_from
 
-        # Fetch the profile associated with the other user
         other_user_profile = Profile.objects.get(user_id=other_user)
 
         if other_user_profile.pfp:
-            # Access the file if it exists
             file_url = "http://127.0.0.1:8000" + other_user_profile.pfp.url
         else:
-            # Handle the case where no file is uploaded
             file_url = "/default.png"
 
 
@@ -89,14 +89,11 @@ class ConnectionSerializer(serializers.ModelSerializer):
         else:
             other_user = obj.user_id_from
 
-        # Fetch the profile associated with the other user
         other_user_profile = Profile.objects.get(user_id=other_user)
 
         if other_user_profile.pfp:
-            # Access the file if it exists
             file_url = "http://127.0.0.1:8000" + other_user_profile.pfp.url
         else:
-            # Handle the case where no file is uploaded
             file_url = "/default.png"
 
 
@@ -134,17 +131,11 @@ class ConnectionSerializer(serializers.ModelSerializer):
         # Check if the authenticated user is the same as the object user
         if other_user == authenticated_user.user_id:
             return "Self"
-
-        # Check for an established link (friendship)
         if Link.objects.filter(user_id_to=other_user, user_id_from=authenticated_user).exists() or \
             Link.objects.filter(user_id_to=authenticated_user, user_id_from=other_user).exists():
             return "Friends"
-
-        # Check for a pending friend request from the authenticated user to the obj
         if Request.objects.filter(user_id_from=authenticated_user, user_id_to=other_user).exists():
             return "Pending Request Sent"
-
-        # Check for a pending friend request from the obj to the authenticated user
         if Request.objects.filter(user_id_from=other_user, user_id_to=authenticated_user).exists():
             return "Pending Request Received"
 

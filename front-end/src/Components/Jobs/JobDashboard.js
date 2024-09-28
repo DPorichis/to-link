@@ -1,3 +1,8 @@
+// JobDashboard.js
+// This component is responsible for displaying the job dashboard for a specific job listing.
+// =================================================================================
+
+
 import { useState, useEffect } from "react";
 import ProfileBanner from "../Profile/ProfileBanner";
 

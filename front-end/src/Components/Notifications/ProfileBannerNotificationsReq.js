@@ -1,3 +1,7 @@
+// ProfileBannerNotificationsReq.js
+//This component displays a Banner Notification for friend requests allowing the user to accept or dismiss
+// ==============================================================================
+
 import React from "react";
 import { useState } from "react";
 

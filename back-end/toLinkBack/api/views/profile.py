@@ -1,3 +1,8 @@
+# notifications.py
+# This module contains API views for profiles.
+# Through these APIs, users can update and delete their profile.
+##################################################################################
+
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 

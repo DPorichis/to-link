@@ -1,3 +1,8 @@
+// Message.js
+// Component handle every message individual
+// Displays text or media content, handles message formatting and time stamps
+// ==============================================================================
+
 import React from "react";
 import MessagesPGU from "../../Pages/User/MessagesPGU";
 import MessageCont from "./MessageCONT";

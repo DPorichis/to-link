@@ -1,3 +1,7 @@
+//Postbox.js
+//This component handles the display of a post, including likes,comments,text and media
+// =================================================================================
+
 import React, { useState, useEffect } from "react";
 import "./Postbox.css";
 import ProfileTag from "../Profile/ProfileTag";

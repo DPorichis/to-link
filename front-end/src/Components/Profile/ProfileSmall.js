@@ -1,3 +1,8 @@
+// ProfileSmall.js
+// This component represents a small user profile and with a click redirect you to the user profile
+//We use that component in the HomePGU
+// ==============================================================================
+
 import React from 'react';
 
 import './ProfileSmall.css';

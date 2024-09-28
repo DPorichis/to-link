@@ -1,3 +1,8 @@
+# posts.py
+# This module contains API views for posts.
+# Through these APIs the posts are fetched, and the user can upload,like,comment and delete a post
+##################################################################################
+
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response

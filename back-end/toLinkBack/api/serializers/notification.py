@@ -1,3 +1,8 @@
+#notifications.py
+#this module contains serializer used in APIs for notifications
+#################################################################
+
+
 from rest_framework import serializers
 from api.models import Notification, Profile, Post, Listing
 

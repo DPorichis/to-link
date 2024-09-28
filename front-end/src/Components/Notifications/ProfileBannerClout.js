@@ -1,3 +1,7 @@
+// ProfileBannerClout.js
+//This component displays a Banner Notification that contains pfp, a message and a dismiss button
+// ==============================================================================
+
 import React from "react";
 import { useState } from "react";
 import NetworkPGU from "../../Pages/User/NetworkPGU";

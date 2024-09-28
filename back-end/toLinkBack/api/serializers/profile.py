@@ -1,3 +1,7 @@
+#profile.py
+#this module contains serializer used in APIs for users profile
+##########################################################
+
 from rest_framework import serializers
 from api.models import Profile, User, Link, Request, Convo, Notification
 from django.db.models import Q, F 

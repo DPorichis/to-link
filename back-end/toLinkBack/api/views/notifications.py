@@ -1,3 +1,8 @@
+# notifications.py
+# This module contains API views for notifications.
+# Through these APIs, users can fetch notifications and dismiss them.
+##################################################################################
+
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 

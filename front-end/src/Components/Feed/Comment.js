@@ -1,3 +1,7 @@
+//Comments.js
+//This component fetching comments for a specific post
+// =================================================================================
+
 import React from "react";
 import ProfileComments from "../Profile/ProfileComments.js";
 import { useState, useEffect } from "react";
@@ -46,7 +50,7 @@ function CommentsCONT(props) {
         fetchComments();
     }, []);
 
-    console.log("Props in CommentsCONT:", props); // Log props here
+    console.log("Props in CommentsCONT:", props); 
     if (loading) return <p>Loading comments...</p>;
     if (error) return <p>Error: {error}</p>;
     return (

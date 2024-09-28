@@ -1,3 +1,8 @@
+#posts.py
+#this module contains serializer used in APIs for media
+##########################################################
+
+
 from rest_framework import serializers
 from api.models import Profile, Post, LikedBy, Comment, PostMedia
 

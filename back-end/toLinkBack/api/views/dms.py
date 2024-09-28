@@ -1,3 +1,9 @@
+#dms.py
+# This module contains API views for dms.
+# Through these APIs, users can send and fetch dms
+##################################################################################
+
+
 from rest_framework.pagination import PageNumberPagination 
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -64,24 +70,19 @@ def send_dm(request):
 
     user=request.user
     convo_id = request.data.get("convo")
-    # Attempt to get the profile associated with the authenticated user
     try:
         profile = Profile.objects.get(user_id=user)
     except Profile.DoesNotExist:
         return Response({"error": "Profile does not exist."}, status=status.HTTP_404_NOT_FOUND)
 
-    # Check if the account is authorized to send that message
     conv =  Convo.objects.get(convo_id=convo_id)
     if conv.user_id1 != profile and conv.user_id2 != profile:
         return Response({"message": "You are not authorized to sent this message"}, status=status.HTTP_400_BAD_REQUEST)
     
     serializer = DMSerializer(data=request.data)
 
-    # Validate the serializer data
     if serializer.is_valid():
-        # Save the serializer to create a new post with the uploaded file
         dm = serializer.save(user=profile)
-        # Update the timestamp of the conversation
         conv.timestamp = timezone.now()
         if conv.user_id1 == profile:
             conv.user_id1_last = timezone.now()
@@ -93,20 +94,18 @@ def send_dm(request):
         conv.save()
         return Response(DMSerializer(dm).data, status=status.HTTP_201_CREATED)
     else:
-        # Return an error response if the data is invalid
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])  # Requires authentication
+@permission_classes([IsAuthenticated])  
 def fetch_convo_menu(request):
 
     # Check if the like already exists
     user = request.user.profile
     try:
         convos = Convo.objects.filter(Q(user_id1=user) | Q(user_id2=user)).order_by('-timestamp')
-        # Serialize the comments
         serializer = ConvoSerializer(convos, many=True, context={'authenticated_user': user})
         return Response(serializer.data, status=status.HTTP_200_OK)
     except Convo.DoesNotExist:

@@ -1,3 +1,8 @@
+// ProfileBanner.js
+//That component allows users to send, accept, reject, undo connection requests or view profile
+//Also redirect them to messages page and view profile
+// ==============================================================================
+
 import React, {useState} from "react";
 import { useNavigate } from 'react-router-dom';
 

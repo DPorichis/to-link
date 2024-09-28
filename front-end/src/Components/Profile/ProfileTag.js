@@ -1,3 +1,7 @@
+// ProfileTag.js
+//This component displays the name and the relation between the users
+// ==============================================================================
+
 import React from "react";
 
 import 'bootstrap/dist/css/bootstrap.min.css';

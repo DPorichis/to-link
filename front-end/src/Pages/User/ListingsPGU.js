@@ -1,3 +1,8 @@
+//ListingsPGU.js
+// Users can view all job listings, create new listings, and manage their own listings.
+//Also users are able to aply job listings
+// ===================================================================================
+
 import React from "react";
 import Header from "../../Components/Header";
 import JobTile from "../../Components/Jobs/JobTile";

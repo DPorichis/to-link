@@ -1,8 +1,8 @@
-function JobPreview(props) {
+//JobPreview.js
+//This component displays the preview of a job Listing
+// =================================================================================
 
-    // const handleClick = () => {
-    //     props.handleSelect(props.listing);
-    // };
+function JobPreview(props) {
 
     return (
         <div style={{display:"flex", flexDirection:"column", justifyContent:"left", border: "1px #aaa solid",

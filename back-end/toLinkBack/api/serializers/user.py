@@ -1,3 +1,8 @@
+#users.py
+#this module contains serializer used in APIs for users data
+##########################################################
+
+
 from rest_framework import serializers
 from django.contrib.auth.hashers import make_password
 from api.models import User, Profile
