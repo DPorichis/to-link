@@ -118,5 +118,60 @@ class AppliedSerializer(serializers.ModelSerializer):
 
         # If no link or pending request exists
         return "No Connection"
+    
+
+
+class AdminAppliedSerializer(serializers.ModelSerializer):
+    listing_info = serializers.SerializerMethodField()
+    class Meta:
+        model = Applied
+        fields = ['user', 'listing_info']
+        read_only_fields = ['user', 'listing_info']
+        # Add any other fields you want to be updatable
+
+    def get_listing_info(self, obj):
+        obj.listing.listing_id
+        
+        if obj.user.pfp:
+            # Access the file if it exists
+            file_url = "https://127.0.0.1:8000" + obj.user.pfp.url
+        else:
+            # Handle the case where no file is uploaded
+            file_url = "/default.png"  # or set a default image
+        
+        return{
+            "listing_id": obj.listing.listing_id,
+            "title": obj.listing.title,
+            "user_id": obj.listing.user.user_id
+        }
+    
+    def get_user_id(self, obj):
+        return obj.user.user_id
+    
+    def get_relationship(self, obj):
+        authenticated_user = self.context.get('authenticated_user')
+
+        if authenticated_user is None:
+            return "No Authentication"
+
+        # Check if the authenticated user is the same as the object user
+        if obj.user_id == authenticated_user.user_id:
+            return "Self"
+
+        # Check for an established link (friendship)
+        if Link.objects.filter(user_id_to=obj.user, user_id_from=authenticated_user).exists() or \
+            Link.objects.filter(user_id_to=authenticated_user, user_id_from=obj.user).exists():
+            return "Friends"
+
+        # Check for a pending friend request from the authenticated user to the obj
+        if Request.objects.filter(user_id_from=authenticated_user, user_id_to=obj.user).exists():
+            return "Pending Request Sent"
+
+        # Check for a pending friend request from the obj to the authenticated user
+        if Request.objects.filter(user_id_from=obj.user, user_id_to=authenticated_user).exists():
+            return "Pending Request Received"
+
+        # If no link or pending request exists
+        return "No Connection"
 
     

@@ -32,174 +32,187 @@ function AccountViewPGA(props) {
     const [connections, setConnections] = useState([]);
 
     
+    const fetchProfile = async () => {
+
+        const token = localStorage.getItem('access_token');
+        const response = await fetch("https://127.0.0.1:8000/admin/fetch/profile", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            
+            body: JSON.stringify({"user_id": id})
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            setProfile(data);  
+        } else {
+            throw new Error('Failed to fetch posts');
+        }
+    };
+
+    const fetchPersonal = async () => {
+
+        const token = localStorage.getItem('access_token');
+        const response = await fetch("https://127.0.0.1:8000/admin/fetch/personal", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            
+            body: JSON.stringify({"user_id": id})
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            setPersonal(data);  
+        } else {
+            throw new Error('Failed to fetch posts');
+        }
+    };
+
+    const fetchListings = async (page) => {
+
+        const token = localStorage.getItem('access_token');
+        const response = await fetch(page ? page : "https://127.0.0.1:8000/admin/fetch/listings", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            
+            body: JSON.stringify({"user_id": id})
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            setListings(data);  
+        } else {
+            throw new Error('Failed to fetch posts');
+        }
+    };
+
+    const fetchApplications = async (page) => {
+
+        const token = localStorage.getItem('access_token');
+        const response = await fetch(page ? page : "https://127.0.0.1:8000/admin/fetch/applications", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            
+            body: JSON.stringify({"user_id": id})
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            setApplications(data);  
+        } else {
+            throw new Error('Failed to fetch posts');
+        }
+    };
+
+    const fetchPosts = async (page) => {
+
+        const token = localStorage.getItem('access_token');
+        const response = await fetch(page ? page : "https://127.0.0.1:8000/admin/fetch/posts", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            
+            body: JSON.stringify({"user_id": id})
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            setPosts(data);  
+        } else {
+            throw new Error('Failed to fetch posts');
+        }
+    };
+
+    const fetchComments = async (page) => {
+
+        const token = localStorage.getItem('access_token');
+        const response = await fetch(page ? page : "https://127.0.0.1:8000/admin/fetch/comments", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({"user_id": id})
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            setComments(data);  
+        } else {
+            throw new Error('Failed to fetch posts');
+        }
+    };
+
+    const fetchLikes = async (page) => {
+
+        const token = localStorage.getItem('access_token');
+        const response = await fetch(page ? page : "https://127.0.0.1:8000/admin/fetch/likes", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            
+            body: JSON.stringify({"user_id": id})
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            setLikes(data);  
+        } else {
+            throw new Error('Failed to fetch posts');
+        }
+    };
+
+    const fetchConnections = async (page) => {
+
+        const token = localStorage.getItem('access_token');
+        const response = await fetch(page ? page : "https://127.0.0.1:8000/admin/fetch/connections", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            
+            body: JSON.stringify({"user_id": id})
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            setConnections(data);  
+        } else {
+            throw new Error('Failed to fetch posts');
+        }
+    };
+
+
     useEffect(() => {
 
-        const fetchProfile = async () => {
-
-            const token = localStorage.getItem('access_token');
-            const response = await fetch("https://127.0.0.1:8000/admin/fetch/profile", {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                
-                body: JSON.stringify({"user_id": id})
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                setProfile(data);  
-            } else {
-                throw new Error('Failed to fetch posts');
-            }
-        };
-
-        const fetchPersonal = async () => {
-
-            const token = localStorage.getItem('access_token');
-            const response = await fetch("https://127.0.0.1:8000/admin/fetch/personal", {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                
-                body: JSON.stringify({"user_id": id})
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                setPersonal(data);  
-            } else {
-                throw new Error('Failed to fetch posts');
-            }
-        };
-
-        const fetchListings = async () => {
-
-            const token = localStorage.getItem('access_token');
-            const response = await fetch("https://127.0.0.1:8000/admin/fetch/listings", {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                
-                body: JSON.stringify({"user_id": id})
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                setListings(data);  
-            } else {
-                throw new Error('Failed to fetch posts');
-            }
-        };
-
-        const fetchApplications = async () => {
-
-            const token = localStorage.getItem('access_token');
-            const response = await fetch("https://127.0.0.1:8000/admin/fetch/applications", {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                
-                body: JSON.stringify({"user_id": id})
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                setApplications(data);  
-            } else {
-                throw new Error('Failed to fetch posts');
-            }
-        };
-
-        const fetchPosts = async () => {
-
-            const token = localStorage.getItem('access_token');
-            const response = await fetch("https://127.0.0.1:8000/admin/fetch/posts", {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                
-                body: JSON.stringify({"user_id": id})
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                setPosts(data);  
-            } else {
-                throw new Error('Failed to fetch posts');
-            }
-        };
-
-        const fetchComments = async () => {
-
-            const token = localStorage.getItem('access_token');
-            const response = await fetch("https://127.0.0.1:8000/admin/fetch/comments", {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({"user_id": id})
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                setComments(data);  
-            } else {
-                throw new Error('Failed to fetch posts');
-            }
-        };
-
-        const fetchLikes = async () => {
-
-            const token = localStorage.getItem('access_token');
-            const response = await fetch("https://127.0.0.1:8000/admin/fetch/likes", {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                
-                body: JSON.stringify({"user_id": id})
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                setLikes(data);  
-            } else {
-                throw new Error('Failed to fetch posts');
-            }
-        };
-
-        const fetchConnections = async () => {
-
-            const token = localStorage.getItem('access_token');
-            const response = await fetch("https://127.0.0.1:8000/admin/fetch/connections", {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                
-                body: JSON.stringify({"user_id": id})
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                setConnections(data);  
-            } else {
-                throw new Error('Failed to fetch posts');
-            }
-        };
+        const fetchData = async () =>{
+            await fetchProfile();
+            await fetchPersonal();
+            await fetchPosts();
+            await fetchComments();
+            await fetchLikes();
+            await fetchApplications();
+            await fetchListings();
+            await fetchConnections();
+            setLoading(false);
+        }
 
 
         const token = localStorage.getItem('access_token');        
@@ -213,15 +226,7 @@ function AccountViewPGA(props) {
             setNoAuth(true);
             return
         }
-        fetchProfile();
-        fetchPersonal();
-        fetchPosts();
-        fetchComments();
-        fetchLikes();
-        fetchApplications();
-        fetchListings();
-        fetchConnections();
-        setLoading(false);
+        fetchData()
     }, []);
 
 
@@ -279,7 +284,7 @@ function AccountViewPGA(props) {
         window.URL.revokeObjectURL(url);
         
         setExportSelection({
-            selectedUsers: [],
+            selectedUsers: [id],
             format: "JSON",
             selectedArtifacts: []
         });
@@ -437,7 +442,7 @@ function AccountViewPGA(props) {
                         <div class="col-md-8">
                             <div class="row">
                                 <div class="col-md-4" style={{display:"flex", justifyContent:"center"}}>
-                                    <img src={"https://127.0.0.1:8000" + profile.pfp} width={"125px"} height={"125px"} style={{borderRadius:"25%", marginTop:"10px"}}/>
+                                    <img src={profile.pfp !== null ? "https://127.0.0.1:8000" + profile.pfp : "/default.png"} width={"125px"} height={"125px"} style={{borderRadius:"25%", marginTop:"10px"}}/>
                                 </div>
                                 <div class="col-md-8" style={{marginBottom:"5px"}}>
                                     <div class="row">
@@ -482,7 +487,7 @@ function AccountViewPGA(props) {
                         </div>
                                             
                         <div class="row">
-                            <div class="col-md-6" style={{marginBottom:"3px"}}>
+                            <div class="col-md-4" style={{marginBottom:"3px"}}>
                                 <label class="form-label" style={{marginBottom:"2px"}}>Experience</label>
                                 <ul id="experienceList" class="list-group">
                                     {profile.experience
@@ -501,7 +506,7 @@ function AccountViewPGA(props) {
                                     
                                 </ul>
                             </div>
-                            <div class="col-md-6" style={{marginBottom:"3px"}}>
+                            <div class="col-md-4" style={{marginBottom:"3px"}}>
                                 <label class="form-label" style={{marginBottom:"2px"}}>Education</label>
                                 <ul id="educationList" class="list-group">
                                     {profile.education
@@ -509,6 +514,23 @@ function AccountViewPGA(props) {
                                         (profile.education.map((_, index) =>
                                             <li class="list-group-item">
                                                 {profile.education[index]}
+                                            </li>                                
+                                        ))
+                                        :
+                                        <li class="list-group-item">
+                                            Not filled
+                                        </li>                                    
+                                    }
+                                </ul>
+                            </div>
+                            <div class="col-md-4" style={{marginBottom:"3px"}}>
+                                <label class="form-label" style={{marginBottom:"2px"}}>Skills</label>
+                                <ul id="educationList" class="list-group">
+                                    {profile.skills
+                                        ?
+                                        (profile.skills.map((_, index) =>
+                                            <li class="list-group-item">
+                                                {profile.skills[index]}
                                             </li>                                
                                         ))
                                         :
@@ -582,29 +604,46 @@ function AccountViewPGA(props) {
                         </li>
                     </ul>
                     <div>
-                    <table class="table table-striped table-bordered">
+                    <table class="table table-striped table-bordered" style={{marginBottom:"5px"}}>
                         {activePosts ?
                         <>
                             <thead>
                             <tr>
                                 <th scope="col">PID</th>
                                 <th scope="col">Text</th>
-                                <th scope="col">Images</th>
+                                <th scope="col">Media</th>
                                 <th scope="col">LikeCount</th>
                                 <th scope="col">CommentCount</th>
                             </tr>
                             </thead>
                             <tbody>
-                                {posts.length !== 0 
+                                {posts.count !== 0 
                                 ?
-                                (posts.map((post) =>
+                                (posts.results.map((post) =>
                                 <tr data-id={post.post_id}>
                                     <th scope="row">{post.post_id}</th>
                                     <td>{post.text}</td>
                                     <td>{post.media?
                                         <>
-                                        {post.images.map((image, index) => (
-                                        <a key={index} href={"https://127.0.0.1:8000" + image.image}>image #{index}</a>
+                                        {post.images.map((med, index) => (
+                                            <>
+                                            <a key={index} href={"https://127.0.0.1:8000" + med.image}>image#{index}</a>
+                                            <br/>
+                                            </>
+                                        ))
+                                        }
+                                        {post.videos.map((med, index) => (
+                                            <>
+                                            <a key={index} href={"https://127.0.0.1:8000" + med.video}>video#{index}</a>
+                                            <br/>
+                                            </>
+                                        ))
+                                        }
+                                        {post.audios.map((med, index) => (
+                                            <>
+                                                <a key={index} href={"https://127.0.0.1:8000" + med.audio}>audio#{index}</a>
+                                                <br/>
+                                            </>
                                         ))
                                         }
                                         </>
@@ -641,8 +680,8 @@ function AccountViewPGA(props) {
                             </tr>
                             </thead>
                             <tbody>
-                                {listings.length !== 0 ?
-                                (listings.map((listi) =>
+                                {listings.count !== 0 ?
+                                (listings.results.map((listi) =>
                                     <tr data-id={listi.listing_id}>
                                         <th scope="row">{listi.listing_id}</th>
                                         <td>{listi.visible === 3?
@@ -666,7 +705,32 @@ function AccountViewPGA(props) {
                         </>
 
                         }
+
                     </table>
+                    {activePosts ? 
+                        <div style={{display:"flex", flexDirection:"row", justifyContent:"flex-end", marginTop:"0px", marginBottom:"0px", width:"100%"}}>
+                            <nav aria-label="..." style={{marginBottom:"0px"}}>
+                                <ul class="pagination pagination-sm" style={{marginBottom:"0px"}}>
+                                    <li class={posts.previous ? "page-item" : "page-item disabled"}>
+                                        <button class="page-link" onClick={()=>{fetchPosts(posts.previous)}} disabled={!posts.previous}>{"< Previous Page"}</button>
+                                    </li>
+                                    <li class={posts.next ? "page-item" : "page-item disabled"}><button class="page-link" onClick={()=>{fetchPosts(posts.next)}} disabled={!posts.next}>{"Next Page >"}</button></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    :
+                        <div style={{display:"flex", flexDirection:"row", justifyContent:"flex-end", marginTop:"0px", marginBottom:"0px", width:"100%"}}>
+                            <nav aria-label="..." style={{marginBottom:"0px"}}>
+                                <ul class="pagination pagination-sm" style={{marginBottom:"0px"}}>
+                                    <li class={listings.previous ? "page-item" : "page-item disabled"}>
+                                        <button class="page-link" onClick={()=>{fetchListings(listings.previous)}} disabled={!listings.previous}>{"< Previous Page"}</button>
+                                    </li>
+                                    <li class={listings.next ? "page-item" : "page-item disabled"}><button class="page-link" onClick={()=>{fetchListings(listings.next)}} disabled={!posts.next}>{"Next Page >"}</button></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    }
+                    
                     </div>
                 </div>
                 <div style={{textAlign:"left", marginBottom:"40px"}}>
@@ -686,7 +750,7 @@ function AccountViewPGA(props) {
                         </li>
                     </ul>
                     <div>
-                    <table class="table table-striped table-bordered">
+                    <table class="table table-striped table-bordered" style={{marginBottom:"5px"}}>
                         {selectedActivity === "network" ?
                         <>
                             <thead>
@@ -697,12 +761,12 @@ function AccountViewPGA(props) {
                             </tr>
                             </thead>
                             <tbody>
-                                {connections.length ? 
-                                (connections.map((usr) =>
+                                {connections.count ? 
+                                (connections.results.map((usr) =>
                                 <tr data-id={usr.uid}>
                                     <th scope="row">{usr.user_id}</th>
-                                    <td>{usr.name + " " + usr.surname}</td>
-                                    <td>{usr.title}</td>
+                                    <td>{usr.profile_info.name + " " + usr.profile_info.surname}</td>
+                                    <td>{usr.profile_info.title}</td>
                                 </tr>
                                 ))
                                 :
@@ -722,9 +786,9 @@ function AccountViewPGA(props) {
                             </tr>
                             </thead>
                             <tbody>
-                                {likes.length !== 0
+                                {likes.count !== 0
                                 ?
-                                (likes.map((post) =>
+                                (likes.results.map((post) =>
                                     <tr data-id={post.post}>
                                         <th scope="row">{post.post}</th>
                                     </tr>
@@ -748,9 +812,9 @@ function AccountViewPGA(props) {
                             </tr>
                             </thead>
                             <tbody>
-                                {comments.length !== 0 ?
+                                {comments.count !== 0 ?
 
-                                (comments.map((post) =>
+                                (comments.results.map((post) =>
                                     <tr data-id={post.comment_id}>
                                         <th scope="row">{post.comment_id}</th>
                                         <td>{post.post_id}</td>
@@ -770,13 +834,17 @@ function AccountViewPGA(props) {
                             <thead>
                             <tr>
                                 <th scope="col">Listing ID</th>
+                                <th scope="col">Listing Title</th>
+                                <th scope="col">Listing Owner</th>
                             </tr>
                             </thead>
                             <tbody>
-                                {applications.length !== 0?
-                                (applications.map((post) =>
+                                {applications.count !== 0?
+                                (applications.results.map((post) =>
                                     <tr data-id={post.id}>
-                                        <th scope="row">{post.listing}</th>
+                                        <th scope="row">{post.listing_info.listing_id}</th>
+                                        <td>{post.listing_info.title}</td>
+                                        <td>{post.listing_info.user_id}</td>
                                     </tr>
                                 ))
                                 :
@@ -791,6 +859,51 @@ function AccountViewPGA(props) {
 
                         }
                     </table>
+                    {selectedActivity === "network" ? 
+                        <div style={{display:"flex", flexDirection:"row", justifyContent:"flex-end", marginTop:"0px", marginBottom:"0px", width:"100%"}}>
+                            <nav aria-label="..." style={{marginBottom:"0px"}}>
+                                <ul class="pagination pagination-sm" style={{marginBottom:"0px"}}>
+                                    <li class={connections.previous ? "page-item" : "page-item disabled"}>
+                                        <button class="page-link" onClick={()=>{fetchConnections(connections.previous)}} disabled={!connections.previous}>{"< Previous Page"}</button>
+                                    </li>
+                                    <li class={connections.next ? "page-item" : "page-item disabled"}><button class="page-link" onClick={()=>{fetchConnections(connections.next)}} disabled={!connections.next}>{"Next Page >"}</button></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    :(selectedActivity === "likes"?
+                        <div style={{display:"flex", flexDirection:"row", justifyContent:"flex-end", marginTop:"0px", marginBottom:"0px", width:"100%"}}>
+                            <nav aria-label="..." style={{marginBottom:"0px"}}>
+                                <ul class="pagination pagination-sm" style={{marginBottom:"0px"}}>
+                                    <li class={likes.previous ? "page-item" : "page-item disabled"}>
+                                        <button class="page-link" onClick={()=>{fetchLikes(likes.previous)}} disabled={!likes.previous}>{"< Previous Page"}</button>
+                                    </li>
+                                    <li class={likes.next ? "page-item" : "page-item disabled"}><button class="page-link" onClick={()=>{fetchLikes(likes.next)}} disabled={!likes.next}>{"Next Page >"}</button></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    :(selectedActivity === "comments"?
+                        <div style={{display:"flex", flexDirection:"row", justifyContent:"flex-end", marginTop:"0px", marginBottom:"0px", width:"100%"}}>
+                            <nav aria-label="..." style={{marginBottom:"0px"}}>
+                                <ul class="pagination pagination-sm" style={{marginBottom:"0px"}}>
+                                    <li class={comments.previous ? "page-item" : "page-item disabled"}>
+                                        <button class="page-link" onClick={()=>{fetchComments(comments.previous)}} disabled={!comments.previous}>{"< Previous Page"}</button>
+                                    </li>
+                                    <li class={comments.next ? "page-item" : "page-item disabled"}><button class="page-link" onClick={()=>{fetchComments(comments.next)}} disabled={!comments.next}>{"Next Page >"}</button></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    :
+                    <div style={{display:"flex", flexDirection:"row", justifyContent:"flex-end", marginTop:"0px", marginBottom:"0px", width:"100%"}}>
+                        <nav aria-label="..." style={{marginBottom:"0px"}}>
+                            <ul class="pagination pagination-sm" style={{marginBottom:"0px"}}>
+                                <li class={applications.previous ? "page-item" : "page-item disabled"}>
+                                    <button class="page-link" onClick={()=>{fetchApplications(applications.previous)}} disabled={!applications.previous}>{"< Previous Page"}</button>
+                                </li>
+                                <li class={applications.next ? "page-item" : "page-item disabled"}><button class="page-link" onClick={()=>{fetchApplications(applications.next)}} disabled={!applications.next}>{"Next Page >"}</button></li>
+                            </ul>
+                        </nav>
+                    </div>
+                    ))}
                     </div>
                 </div>
             </div>

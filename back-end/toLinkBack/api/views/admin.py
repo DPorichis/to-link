@@ -9,8 +9,8 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAdminUser
 from api.models import Profile, Link, User, Listing, Applied, Comment, Post, LikedBy
-from api.serializers import ListingSerializer, LinkSerializer, UserSerializer, AppliedSerializer, \
-    AdminProfileSerializer, CommentSerializer, PostSerializer, LikedBySerializer
+from api.serializers import ListingSerializer, LinkSerializer, UserSerializer, AdminAppliedSerializer, \
+    AdminProfileSerializer, CommentSerializer, PostSerializer, LikedBySerializer, ConnectionSerializer
 from django.db.models import Q
 
 import json
@@ -18,6 +18,12 @@ import dicttoxml
 from io import BytesIO
 from django.http import HttpResponse
 
+from rest_framework.pagination import PageNumberPagination
+class UserPagination(PageNumberPagination):
+    page_size = 20
+
+class EntryPagination(PageNumberPagination):
+    page_size = 10
 
 @api_view(['POST'])
 @permission_classes([IsAdminUser])
@@ -33,14 +39,13 @@ def admin_fetch_connections(request):
     except Profile.DoesNotExist:
         return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
 
-    links = Link.objects.filter(Q(user_id_to=user_id) | Q(user_id_from=user_id))
+    links = Link.objects.filter(Q(user_id_to=user_id) | Q(user_id_from=user_id)).order_by("user_id_from")
+    
+    paginator = EntryPagination()
+    paginated_entries = paginator.paginate_queryset(links, request)
+    serializer = ConnectionSerializer(links, many=True, context={'other_user': user_profile})
 
-    # Check if any links are found
-    if links.exists():
-        serializer = LinkSerializer(links, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    else:
-        return Response([], status=status.HTTP_200_OK)
+    return paginator.get_paginated_response(serializer.data)
 
 @api_view(['POST'])
 @permission_classes([IsAdminUser])
@@ -68,13 +73,13 @@ def admin_fetch_listings(request):
     except Profile.DoesNotExist:
         return Response({"error": "Profile does not exist."}, status=status.HTTP_404_NOT_FOUND)
     
-    listings = Listing.objects.filter(user=target_user)
+    listings = Listing.objects.filter(user=target_user).order_by("listing_id")
     
-    if listings.exists():
-        serializer = ListingSerializer(listings, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    else:
-        return Response([], status=status.HTTP_200_OK)
+    paginator = EntryPagination()
+    paginated_entries = paginator.paginate_queryset(listings, request)
+    serializer = ListingSerializer(paginated_entries, many=True)
+
+    return paginator.get_paginated_response(serializer.data)
 
 
 @api_view(['POST'])
@@ -86,13 +91,13 @@ def admin_fetch_applications(request):
     except Profile.DoesNotExist:
         return Response({"error": "Profile does not exist."}, status=status.HTTP_404_NOT_FOUND)
     
-    applications = Applied.objects.filter(user=target_user)
+    applications = Applied.objects.filter(user=target_user).order_by("listing")
     
-    if applications.exists():
-        serializer = AppliedSerializer(applications, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    else:
-        return Response([], status=status.HTTP_200_OK)
+    paginator = EntryPagination()
+    paginated_entries = paginator.paginate_queryset(applications, request)
+    serializer = AdminAppliedSerializer(paginated_entries, many=True)
+
+    return paginator.get_paginated_response(serializer.data)
 
 
 
@@ -128,13 +133,13 @@ def admin_fetch_comments(request):
     except Profile.DoesNotExist:
         return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
     
-    try:
-        # Retrieve all comments for the post
-        comments = Comment.objects.filter(user=user)
-        serializer = CommentSerializer(comments, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    except Comment.DoesNotExist:
-        return Response([], status=status.HTTP_200_OK)
+    comments = Comment.objects.filter(user=user).order_by("comment_id")
+    
+    paginator = EntryPagination()
+    paginated_entries = paginator.paginate_queryset(comments, request)
+    serializer = CommentSerializer(paginated_entries, many=True)
+
+    return paginator.get_paginated_response(serializer.data)
 
 @api_view(['POST'])
 @permission_classes([IsAdminUser])
@@ -151,18 +156,15 @@ def admin_fetch_likes(request):
     except Profile.DoesNotExist:
         return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
     
-    try:
-        # Retrieve all comments for the post
-        likes = LikedBy.objects.filter(user=user)
-        serializer = LikedBySerializer(likes, many = True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    except LikedBy.DoesNotExist:
-        return Response([], status=status.HTTP_200_OK)
-    
-    
-    
 
+    likes = LikedBy.objects.filter(user=user).order_by("post")
+    
+    paginator = EntryPagination()
+    paginated_entries = paginator.paginate_queryset(likes, request)
+    serializer = LikedBySerializer(paginated_entries, many=True)
 
+    return paginator.get_paginated_response(serializer.data)
+    
 @api_view(['POST'])
 @permission_classes([IsAdminUser])
 def admin_fetch_posts(request):
@@ -178,14 +180,13 @@ def admin_fetch_posts(request):
     except Profile.DoesNotExist:
         return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
 
-    try:
-        # Retrieve all comments for the post
-        posts = Post.objects.filter(user=user)
-    except Post.DoesNotExist:
-        return Response([], status=status.HTTP_200_OK)
+    posts = Post.objects.filter(user=user).order_by("post_id")
 
-    serializer = PostSerializer(posts, many = True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
+    paginator = EntryPagination()
+    paginated_entries = paginator.paginate_queryset(posts, request)
+    serializer = PostSerializer(paginated_entries, many=True)
+
+    return paginator.get_paginated_response(serializer.data)
 
 
 @api_view(['POST'])
@@ -196,44 +197,43 @@ def admin_fetch_users(request):
     print(filter_by)
 
     if not search_term:
-        users = Profile.objects.all()
-        serializer = AdminProfileSerializer(users, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-   
-    # Apply filtering based on the 'filter_by' value
-    if filter_by == 'name':
-        filtered_profiles = Profile.objects.filter(
-            Q(name__icontains=search_term) | 
-            Q(surname__icontains=search_term)
-        )
-    elif filter_by == 'email':
-        filtered_profiles = Profile.objects.filter(user__email__icontains=search_term)
-    elif filter_by == 'uid':
-        # Handle numeric search for user_id
-        try:
-            search_number = int(search_term)
-            filtered_profiles = Profile.objects.filter(user_id =search_number)
-        except ValueError:
-            # Handle the case where search_term is not an integer
-            filtered_profiles = Profile.objects.none()
-    else:  # Default case: search across all fields
-        try:
-            search_number = int(search_term)
-            filtered_profiles = Profile.objects.filter(
-            Q(user_id=search_number)
-            )
-        except ValueError:
-            filtered_profiles = Profile.objects.filter(
-                Q(name__icontains=search_term) |
-                Q(surname__icontains=search_term) |
-                Q(user__email__icontains=search_term)
-            )
-
-    if filtered_profiles.exists():
-        serializer = AdminProfileSerializer(filtered_profiles, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        filtered_profiles = Profile.objects.all()
     else:
-        return Response({"message": "No users found."}, status=status.HTTP_200_OK)
+        # Apply filtering based on the 'filter_by' value
+        if filter_by == 'name':
+            filtered_profiles = Profile.objects.filter(
+                Q(name__icontains=search_term) | 
+                Q(surname__icontains=search_term)
+            )
+        elif filter_by == 'email':
+            filtered_profiles = Profile.objects.filter(user__email__icontains=search_term)
+        elif filter_by == 'uid':
+            # Handle numeric search for user_id
+            try:
+                search_number = int(search_term)
+                filtered_profiles = Profile.objects.filter(user_id =search_number)
+            except ValueError:
+                # Handle the case where search_term is not an integer
+                filtered_profiles = Profile.objects.none()
+        else:  # Default case: search across all fields
+            try:
+                search_number = int(search_term)
+                filtered_profiles = Profile.objects.filter(
+                Q(user_id=search_number)
+                )
+            except ValueError:
+                filtered_profiles = Profile.objects.filter(
+                    Q(name__icontains=search_term) |
+                    Q(surname__icontains=search_term) |
+                    Q(user__email__icontains=search_term)
+                )
+
+    paginator = UserPagination()
+    paginated_profiles = paginator.paginate_queryset(filtered_profiles, request)
+    serializer = AdminProfileSerializer(paginated_profiles, many=True)
+
+    # Return the paginated response
+    return paginator.get_paginated_response(serializer.data)
     
 
 @api_view(['POST'])
@@ -315,7 +315,7 @@ def request_export(request):
             elif artif == "Applications":
                 applications = Applied.objects.filter(user=user_profile)    
                 if applications.exists():
-                    serializer = AppliedSerializer(applications, many=True)
+                    serializer = AdminAppliedSerializer(applications, many=True)
                     user_data["applications"] = serializer.data
                 else:
                     user_data["applications"] = {}

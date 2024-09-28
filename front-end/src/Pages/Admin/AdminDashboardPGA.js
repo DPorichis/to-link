@@ -16,7 +16,7 @@ import {jwtDecode} from "jwt-decode";
 
 function AdminDashboardPGA(props) {
 
-    const [users, setUsers] = useState([]);
+    const [users, setUsers] = useState({});
     const [loading, setLoading] = useState(true);
     const [noAuth, setNoAuth] = useState(false)
     const [filterParams, setFilterParams] = useState(
@@ -26,7 +26,7 @@ function AdminDashboardPGA(props) {
         }
         );   
 
-    const [filteredData, setFilterdData] = useState(users);
+    const [filteredData, setFilterdData] = useState({});
     const [exportMode, setExportMode] = useState(false);
     const [exportSelection, setExportSelection] = useState(
     {
@@ -36,42 +36,38 @@ function AdminDashboardPGA(props) {
     });
 
 
-
-    useEffect(() => {
-        const fetchUsers = async () => {
-            const token = localStorage.getItem('access_token');        
-            const response = await fetch("https://127.0.0.1:8000/admin/fetch/allusers", {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                credentials: "include",
-                body: JSON.stringify({ search: filterParams.text, filter_by: filterParams.for })
-            });
-        
-            if (response.ok) {
-                const data = await response.json();
-                if (Array.isArray(data)) {
-                    setUsers(data);
-                    setFilterdData(data);
-                } else {
-                    console.error('API response is not an array:', data);
-                    setFilterdData([]);
-                }
-            } else if (response.status === 401) {
-                localStorage.removeItem('access_token');
-                await refreshAccessToken();
-                if (localStorage.getItem('access_token') !== null) {
-                    await fetchUsers();
-                } else {
-                    setNoAuth(true);
-                    console.log("no user logged in");
-                }
+    const fetchUsers = async (page) => {
+        const token = localStorage.getItem('access_token');        
+        const response = await fetch(page ? page : "https://127.0.0.1:8000/admin/fetch/allusers", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            credentials: "include",
+            body: JSON.stringify({ search: filterParams.text, filter_by: filterParams.for })
+        });
+    
+        if (response.ok) {
+            const data = await response.json();
+            setUsers(data);
+            setFilterdData(data);
+        } else if (response.status === 401) {
+            localStorage.removeItem('access_token');
+            await refreshAccessToken();
+            if (localStorage.getItem('access_token') !== null) {
+                await fetchUsers();
             } else {
                 setNoAuth(true);
+                console.log("no user logged in");
             }
-        };
+        } else {
+            setNoAuth(true);
+        }
+        setLoading(false);
+    };
+
+    useEffect(() => {
         const token = localStorage.getItem('access_token');        
         // If no token, redirect to login
         if (!token) {
@@ -84,7 +80,6 @@ function AdminDashboardPGA(props) {
             return
         }
         fetchUsers();
-        setLoading(false);
     }, [filterParams]);
 
     const navigate = useNavigate();
@@ -201,7 +196,6 @@ function AdminDashboardPGA(props) {
         setExportMode(false);
         
     };
-
     
     if (noAuth) return <NotFoundPG/>
     if (loading) return <>Loading</>
@@ -366,6 +360,17 @@ function AdminDashboardPGA(props) {
                     }
                     
                 </div>
+                <div style={{display:"flex", flexDirection:"row", justifyContent:"space-between", marginTop:"2px", marginBottom:"0px"}}>
+                    <span style={{marginTop:"4px"}}>Total Results: {filteredData.count}</span>
+                    <nav aria-label="..." style={{marginBottom:"0px"}}>
+                        <ul class="pagination pagination-sm" style={{marginBottom:"5px"}}>
+                            <li class={filteredData.previous ? "page-item" : "page-item disabled"}>
+                                <button class="page-link" onClick={()=>{fetchUsers(filteredData.previous)}} disabled={!filteredData.previous}>{"< Previous Page"}</button>
+                            </li>
+                            <li class={filteredData.next ? "page-item" : "page-item disabled"}><button class="page-link" onClick={()=>{fetchUsers(filteredData.next)}} disabled={!filteredData.next}>{"Next Page >"}</button></li>
+                        </ul>
+                    </nav>
+                </div>
                 {exportMode?
                 <table class="table table-striped table-bordered">
                     <thead>
@@ -379,7 +384,7 @@ function AdminDashboardPGA(props) {
                         </tr>
                     </thead>
                     <tbody className="admin-table-element">
-                        {filteredData.map((usr) =>
+                        {filteredData.results ? filteredData.results.map((usr) =>
                         <tr data-id={usr.user_id}>
                             <th scope="row">{usr.user_id}</th>
                             <td>{usr.user_info.name + " " + usr.user_info.surname + " (AKA:"+ usr.name + " " + usr.surname + ")"}</td>
@@ -389,10 +394,12 @@ function AdminDashboardPGA(props) {
                             <td><input type="checkbox" id={usr.user_id} onChange={handleSelectionChange} 
                             checked={exportSelection.selectedUsers.includes(String(usr.user_id))}/></td>
                         </tr>
-                        )}
+                        )
+                        :
+                        <></>
+                        }
                     </tbody>
                 </table>
-
                 :
                 <table class="table table-striped table-bordered">
                     <thead>
@@ -405,7 +412,7 @@ function AdminDashboardPGA(props) {
                         </tr>
                     </thead>
                     <tbody className="admin-table-element">
-                        {filteredData.map((usr) =>
+                        {filteredData.results ? filteredData.results.map((usr) =>
                         <tr data-id={usr.user_id} onClick={handleRowClick} style={{cursor:"pointer"}}>
                             <th scope="row">{usr.user_id}</th>
                             <td>{usr.user_info.name + " " + usr.user_info.surname + " (AKA:"+ usr.name + " " + usr.surname + ")"}</td>
@@ -413,10 +420,22 @@ function AdminDashboardPGA(props) {
                             <td>{usr.post_cnt}</td>
                             <td>{usr.listings_cnt}</td>
                         </tr>
-                        )}
+                        ):
+                        <></>}
                     </tbody>
                 </table>
                 }
+
+            <div style={{display:"flex", flexDirection:"row", justifyContent:"space-around", marginTop:"2px", marginBottom:"20px"}}>
+                    <nav aria-label="..." style={{marginBottom:"0px"}}>
+                        <ul class="pagination pagination-sm" style={{marginBottom:"5px"}}>
+                            <li class={filteredData.previous ? "page-item" : "page-item disabled"}>
+                                <button class="page-link" onClick={()=>{fetchUsers(filteredData.previous)}} disabled={!filteredData.previous}>{"< Previous Page"}</button>
+                            </li>
+                            <li class={filteredData.next ? "page-item" : "page-item disabled"}><button class="page-link" onClick={()=>{fetchUsers(filteredData.next)}} disabled={!filteredData.next}>{"Next Page >"}</button></li>
+                        </ul>
+                    </nav>
+                </div>
             </div>
 
 
