@@ -40,22 +40,22 @@ function JobTile(props) {
             </div>
             <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
                 <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <img width={"20px"} height={"20px"} src="/logo192.png" />
+                    <img width={"20px"} height={"20px"} src="/clock.svg" style={{marginRight:"1px"}}/>
                     <p style={{marginBottom: "2px"}}>{props.listing.time}</p>
                 </span>
                 <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <img width={"20px"} height={"20px"} src="/logo192.png" />
+                    <img width={"20px"} height={"20px"} src="/map-pin.svg" />
                     <p style={{marginBottom: "2px"}}>{props.listing.spot}</p>
                 </span>
                 <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <img width={"20px"} height={"20px"} src="/logo192.png" />
+                    <img width={"20px"} height={"20px"} src="/compass.svg"  style={{marginRight:"1px"}}/>
                     <p style={{marginBottom: "2px"}}>{props.listing.level}</p>
                 </span>
                 
             </div>
             
             <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'left' }}>
-                <img width={"20px"} height={"20px"} src="/logo192.png" />
+                <img width={"20px"} height={"20px"} src="/map.svg"  style={{marginRight:"1px"}}/>
                 <p style={{marginBottom: "2px"}}>{props.listing.location}</p>
             </span>
         </div>

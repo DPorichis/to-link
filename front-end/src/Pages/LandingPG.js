@@ -268,8 +268,8 @@ function LandingPG(props) {
                         </div>
                         <div class="card-body">
                             <blockquote class="blockquote mb-0">
-                            <p>Η καλύτερη εργασία που έχω δει στην ζωή μου</p>
-                            <footer class="blockquote-footer">Dr Χαμόδρακας <cite title="Source Title">(Hopefully)</cite></footer>
+                            <p>ΔΕΝ ΑΝΤΕΧΩ ΑΛΛΟ</p>
+                            <footer class="blockquote-footer">Δ. Πορίχης</footer>
                             </blockquote>
                         </div>
                     </div>

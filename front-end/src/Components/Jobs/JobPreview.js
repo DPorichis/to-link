@@ -32,19 +32,19 @@ function JobPreview(props) {
             
             <div style={{display: "flex", flexDirection: "row", justifyContent: "left"}}>
                 <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: "10px"}}>
-                    <img width={"20px"} height={"20px"} src="/logo192.png" />
+                    <img width={"20px"} height={"20px"} src="/clock.svg" style={{marginRight:"1px"}}/>
                     <p style={{marginBottom: "2px"}}>{props.listing.time}</p>
                 </span>
                 <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: "10px" }}>
-                    <img width={"20px"} height={"20px"} src="/logo192.png" />
+                    <img width={"20px"} height={"20px"} src="/map-pin.svg" />
                     <p style={{marginBottom: "2px"}}>{props.listing.spot}</p>
                 </span>
                 <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: "10px" }}>
-                    <img width={"20px"} height={"20px"} src="/logo192.png" />
-                    <p style={{marginBottom: "2px"}}>{props.listing.level}</p>
+                    <img width={"20px"} height={"20px"} src="/compass.svg"  style={{marginRight:"1px"}}/>
+                    <p style={{marginBottom: "2px"}}>{props.listing.level} </p>
                 </span>
                 <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: "10px" }}>
-                    <img width={"20px"} height={"20px"} src="/logo192.png" />
+                    <img width={"20px"} height={"20px"} src="/map.svg" style={{marginRight:"2px"}}/>
                     <p style={{marginBottom: "2px"}}>{props.listing.location}</p>
                 </span>
             </div>

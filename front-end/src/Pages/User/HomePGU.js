@@ -362,8 +362,8 @@ function HomePGU(props) {
                         padding:"8px 5px"
                     }} placeholder="Brag to your Colleges about something..." type="text" onChange={handleTextChange} value={postText}/> 
                     <div style={{display:"flex", justifyContent:"space-between", marginTop:"8px", marginRight:"4px", marginLeft:"4px"}}>
-                        <div>
-
+                        <div style={{display:"flex", justifyContent:"flex-start"}}>
+                        <div style={{marginRight:"4px"}}>
                         <label type="button" class="btn btn-light">
                                 <input
                                     type="file"
@@ -371,12 +371,12 @@ function HomePGU(props) {
                                     style={{ display:'none'}}  
                                     onChange={handleImageChange}
                                 />
-                                <img src="/upload.svg" style={{}} />
-                                Upload Images
+                                <img src="/image.svg" style={{}} />
+                                <p style={{marginBottom:"0px"}}>Upload Images</p>
                             </label>
                         </div>
 
-                        <div>
+                        <div style={{marginRight:"4px"}}>
                             <label type="button" class="btn btn-light">
                                 <input
                                     type="file"
@@ -384,11 +384,10 @@ function HomePGU(props) {
                                     style={{ display:'none'}}  
                                     onChange={handleVideoChange}
                                 />
-                                <img src="/upload.svg" style={{}} />
-                                Upload Videos
+                                <img src="/film.svg" style={{}} />
+                                <p style={{marginBottom:"0px"}}>Upload Video</p>
                             </label>
                         </div>
-
                         <div>
                             <label type="button" class="btn btn-light">
                                 <input
@@ -397,10 +396,13 @@ function HomePGU(props) {
                                     style={{ display:'none'}}  
                                     onChange={handleAudioChange}
                                 />
-                                <img src="/upload.svg" style={{}} />
-                                Upload Audio
+                                <img src="/headphones.svg" style={{marginRight:"4px", top:"px"}} />
+                                <p style={{marginBottom:"0px"}}>Upload Audio</p>
                             </label>
                         </div>
+                        </div>
+                        
+                        
                         <button type="button" class="btn btn-primary" onClick={handleUploadClick}>
                             Upload
                         </button>
@@ -450,12 +452,8 @@ function HomePGU(props) {
                 </div>
                 
                 </div>
-                <div style={{display:"flex", flexDirection:"row",justifyContent:"space-between",marginTop:"10px"}}>
+                <div style={{display:"flex", flexDirection:"row",justifyContent:"flex-start",marginTop:"10px"}}>
                     <h5 style={{textAlign:"left",marginBottom:"0px"}}>Your Feed</h5>
-                    <select name="Short by" style={{ backgroundColor: "#fff", border: "1px solid #ccc", borderRadius:"3px", outline: "none"}}>
-                        <option value="Date">Sort by: Date</option>
-                        <option value="Recomended">Sort by: Recommended</option>
-                    </select>
                 </div>
                 <hr style={{ border: "1px solid black", margin: "5px 0px" }} />
                 <div>
