@@ -74,7 +74,7 @@ function MessageCont(props) {
             :
             <></>
             }
-            // if there is no messages renders a text otherwise renders the messages
+            {/* if there is no messages renders a text otherwise renders the messages */}
                 {dms.count === 0 ? (
                     <div style={{ textAlign: "center" }}>
                         <h5>It's a little quiet in here...</h5>

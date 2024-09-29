@@ -1,10 +1,11 @@
-#connections.py 
-#This module contains serializers used in APIs for connections
+# connections.py 
+# This module contains serializers used in APIs for connections
 # ################################################################# 
 
 from rest_framework import serializers
 from api.models import Profile, Request,Link
 
+# Adds User_info to requests for easier rendering
 class RequestSerializer(serializers.ModelSerializer):
     user_info = serializers.SerializerMethodField()
     class Meta:
@@ -35,7 +36,7 @@ class RequestSerializer(serializers.ModelSerializer):
 
 
 
-
+# Adds user_info to links for easier rendering
 class LinkSerializer(serializers.ModelSerializer):
     user_info = serializers.SerializerMethodField()
     class Meta:
@@ -67,7 +68,9 @@ class LinkSerializer(serializers.ModelSerializer):
             'pfp': file_url,
             'user_id': other_user_profile.user.user_id
         }
-        
+# Used for network tab of the user profile,
+# Adds profile_info to links for easier rendering, while also adding the relation of the authenticated
+# user to the third-party, and also returns the user_id of the third-party
 class ConnectionSerializer(serializers.ModelSerializer):
     profile_info = serializers.SerializerMethodField()
     relationship = serializers.SerializerMethodField()
@@ -122,6 +125,7 @@ class ConnectionSerializer(serializers.ModelSerializer):
         if authenticated_user is None:
             return "No Authentication"
 
+        # find the third-party
         if obj.user_id_from == target_user:
             other_user = obj.user_id_to
         else:

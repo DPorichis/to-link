@@ -1,32 +1,30 @@
-#profile.py
-#this module contains serializer used in APIs for users profile
+# profile.py
+# this module contains serializer used in APIs for users profile
 ##########################################################
 
 from rest_framework import serializers
 from api.models import Profile, User, Link, Request, Convo, Notification
 from django.db.models import Q, F 
 
-
+# Used for profile information updating
 class ProfileUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = ['pfp', 'name', 'surname', 'title', 'bio', 'phone', 'website', 'email', 'experience', 'education', "skills","vis_cont", "vis_edu", "vis_exp", "vis_act"]
-        # Add any other fields you want to be updatable
-
+        
     def update(self, instance, validated_data):
-        # Check if a new profile picture (pfp) is provided
+        # Check if a new profile picture
         if 'pfp' in validated_data:
             instance.pfp = validated_data['pfp']  # Save the new profile picture
 
-        # Loop through the other validated data fields and update the instance
         for attr, value in validated_data.items():
-            if attr != 'pfp':  # pfp is already handled, skip it here
+            if attr != 'pfp':  # pfp is already handled
                 setattr(instance, attr, value)
         instance.save()
         return instance
     
-class ProfileSerializer(serializers.ModelSerializer):
-    
+# Used for profile viewing
+class ProfileSerializer(serializers.ModelSerializer):  
     profile_info = serializers.SerializerMethodField()
     relationship = serializers.SerializerMethodField()
 
@@ -34,21 +32,16 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = Profile
         fields = ["user_id", 'profile_info','relationship']
         read_only_fields = ['profile_info']
-        # Add any other fields you want to be updatable
 
 
     def get_profile_info(self, obj):
-        # Get the authenticated user from the context
         authenticated_user = self.context.get('authenticated_user')
 
         # Determine which user is not the authenticated user
-
         if obj.pfp:
-            # Access the file if it exists
             file_url = "https://127.0.0.1:8000" + obj.pfp.url
         else:
-            # Handle the case where no file is uploaded
-            file_url = "/default.png"  # or set a default image
+            file_url = "/default.png"
         if obj.user_id == authenticated_user.user_id:
             return{
             "pfp": file_url,
@@ -123,36 +116,29 @@ class ProfileSerializer(serializers.ModelSerializer):
         if authenticated_user is None:
             return "No Authentication"
 
-        # Check if the authenticated user is the same as the object user
         if obj.user_id == authenticated_user.user_id:
             return "Self"
 
-        # Check for an established link (friendship)
         if Link.objects.filter(user_id_to=obj, user_id_from=authenticated_user.profile).exists() or \
             Link.objects.filter(user_id_to=authenticated_user.profile, user_id_from=obj).exists():
             return "Friends"
 
-        # Check for a pending friend request from the authenticated user to the obj
         if Request.objects.filter(user_id_from=authenticated_user.profile, user_id_to=obj).exists():
             return "Pending Request Sent"
 
-        # Check for a pending friend request from the obj to the authenticated user
         if Request.objects.filter(user_id_from=obj, user_id_to=authenticated_user.profile).exists():
             return "Pending Request Received"
 
-        # If no link or pending request exists
         return "No Connection"
 
 
-
+# Used for fetching profile information as an admin user, regadless of permission
 class AdminProfileSerializer(serializers.ModelSerializer):
         user_info = serializers.SerializerMethodField()
         class Meta:
             model = Profile
             fields = ['user_id', 'pfp', 'name', 'surname', 'title', 'bio', 'phone', 'website', 'experience', 'education', 'skills','listings_cnt', "post_cnt", "user_info"]
-            # Add any other fields you want to be updatable
-
-
+            
         def get_user_info(self, obj):
 
             user = User.objects.get(user_id=obj.user_id)
@@ -162,7 +148,8 @@ class AdminProfileSerializer(serializers.ModelSerializer):
                 "surname": user.surname,
                 "email": user.email,
             }
-
+        
+# Used for fetching data required for the header
 class ProfileHeaderSerializer(serializers.ModelSerializer):
     
     profile_info = serializers.SerializerMethodField()
@@ -174,18 +161,18 @@ class ProfileHeaderSerializer(serializers.ModelSerializer):
         
     def get_profile_info(self, obj):
         if obj.pfp:
-            # Access the file if it exists
             file_url = "https://127.0.0.1:8000" + obj.pfp.url
         else:
-            # Handle the case where no file is uploaded
-            file_url = "/default.png"  # or set a default image
+            file_url = "/default.png"
         
+        # Message Badge
         if Convo.objects.filter( ~Q(last_dm=1), Q(user_id1=obj), user_id1_last__lt=F('timestamp')).exists() \
             or Convo.objects.filter( ~Q(last_dm=2), Q(user_id2=obj), user_id2_last__lt=F('timestamp')).exists():
             message = True
         else:
             message = False
 
+        # Notification Badge
         if Request.objects.filter(user_id_to=obj).exists() \
             or Notification.objects.filter(user_to=obj).exists():
             notification = True
@@ -199,6 +186,7 @@ class ProfileHeaderSerializer(serializers.ModelSerializer):
         }
 
 
+# Used for fetching profile banner information
 class ProfileBannerSerializer(serializers.ModelSerializer):
     
     profile_info = serializers.SerializerMethodField()
@@ -212,11 +200,9 @@ class ProfileBannerSerializer(serializers.ModelSerializer):
         authenticated_user = self.context.get('authenticated_user')
         
         if obj.pfp:
-            # Access the file if it exists
             file_url = "https://127.0.0.1:8000" + obj.pfp.url
         else:
-            # Handle the case where no file is uploaded
-            file_url = "/default.png"  # or set a default image
+            file_url = "/default.png"
         
         return{
         "pfp": file_url,
@@ -231,23 +217,18 @@ class ProfileBannerSerializer(serializers.ModelSerializer):
         if authenticated_user is None:
             return "No Authentication"
 
-        # Check if the authenticated user is the same as the object user
         if obj.user_id == authenticated_user.user_id:
             return "Self"
 
-        # Check for an established link (friendship)
         if Link.objects.filter(user_id_to=obj, user_id_from=authenticated_user).exists() or \
             Link.objects.filter(user_id_to=authenticated_user, user_id_from=obj).exists():
             return "Friends"
 
-        # Check for a pending friend request from the authenticated user to the obj
         if Request.objects.filter(user_id_from=authenticated_user, user_id_to=obj).exists():
             return "Pending Request Sent"
 
-        # Check for a pending friend request from the obj to the authenticated user
         if Request.objects.filter(user_id_from=obj, user_id_to=authenticated_user).exists():
             return "Pending Request Received"
 
-        # If no link or pending request exists
         return "No Connection"
     

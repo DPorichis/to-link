@@ -5,6 +5,7 @@
 from rest_framework import serializers
 from api.models import Profile, Convo, Dm
 
+# Used for fetching and creating dms
 class DMSerializer(serializers.ModelSerializer):
     class Meta:
         model = Dm
@@ -16,7 +17,7 @@ class DMSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Either text or media must be provided.")
         return data
 
-
+# Produces the data used in convo tiles in DMs
 class ConvoSerializer(serializers.ModelSerializer):
     user_info = serializers.SerializerMethodField()
     notification = serializers.SerializerMethodField()
@@ -66,7 +67,7 @@ class ConvoSerializer(serializers.ModelSerializer):
                 return True
         return False
         
-    
+# Used to create a new convo
 class ConvoCreatSerializer(serializers.ModelSerializer):
     class Meta:
         model = Convo

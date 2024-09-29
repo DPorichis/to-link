@@ -1,11 +1,12 @@
-#notifications.py
-#this module contains serializer used in APIs for notifications
+# notifications.py
+# this module contains serializer used in APIs for notifications
 #################################################################
 
 
 from rest_framework import serializers
 from api.models import Notification, Profile, Post, Listing
 
+# Used to create the notification info present in banners
 class NotificationSerializer(serializers.ModelSerializer):
 
     notification_content = serializers.SerializerMethodField()
@@ -15,14 +16,11 @@ class NotificationSerializer(serializers.ModelSerializer):
         read_only_fields = ["user_to"]
 
     def get_notification_content(self, obj):
-        # Fetch the profile associated with the other user
         other_user_profile = Profile.objects.get(user=obj.user_from)
 
         if other_user_profile.pfp:
-            # Access the file if it exists
             file_url = "https://127.0.0.1:8000" + other_user_profile.pfp.url
         else:
-            # Handle the case where no file is uploaded
             file_url = "/default.png"
 
         if(obj.type == "like"):

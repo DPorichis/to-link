@@ -1,10 +1,11 @@
-#listing.py
-#This module contains serializers used in APIs for listings
+# listing.py
+# This module contains serializers used in APIs for listings
 ##############################################################
 
 from rest_framework import serializers
 from api.models import Profile, Listing, Applied, Link, Request
 
+# Used for creating and fetching listings
 class ListingSerializer(serializers.ModelSerializer):
     user_info = serializers.SerializerMethodField()
     
@@ -12,19 +13,15 @@ class ListingSerializer(serializers.ModelSerializer):
         model = Listing
         fields = ['listing_id', 'user', 'title', 'visible', 'spot', 'time', 'level', 'desc', 'skills', 'location', 'timestamp', 'user_info', 'apl_cnt']
         read_only_fields = ['listing_id', 'user', 'timestamp', 'user_info', 'apl_cnt']
-        # Add any other fields you want to be updatable
             
     def create(self, validated_data):
-        # This method will be used in the view to create a new post with the user set manually
-        user = validated_data.pop('user', None)  # Extract the user from validated_data if present
+        user = validated_data.pop('user', None)
         post = Listing.objects.create(**validated_data, user=user)
         return post
 
     def get_user_info(self, obj):
-        # Get the authenticated user from the context
         other_user = obj.user
 
-        # Fetch the profile associated with the other user
         profile = Profile.objects.get(user_id=other_user)
 
         return {
@@ -34,7 +31,7 @@ class ListingSerializer(serializers.ModelSerializer):
         }
 
 
-
+# Used for updating listings
 class ListingUpdateSerializer(serializers.ModelSerializer):
     
     user_info = serializers.SerializerMethodField()
@@ -43,20 +40,16 @@ class ListingUpdateSerializer(serializers.ModelSerializer):
         model = Listing
         fields = ['listing_id', 'user', 'title', 'visible', 'spot', 'time', 'level', 'desc', 'skills', 'location', 'timestamp', 'user_info', 'apl_cnt']
         read_only_fields = ['listing_id', 'user', 'timestamp', 'user_info', 'apl_cnt']
-        # Add any other fields you want to be updatable
 
     def update(self, instance, validated_data):
-        # Loop through the validated data and set it to the instance
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()
         return instance
     
     def get_user_info(self, obj):
-        # Get the authenticated user from the context
         other_user = obj.user
 
-        # Fetch the profile associated with the other user
         profile = Profile.objects.get(user_id=other_user)
 
         return {
@@ -64,24 +57,22 @@ class ListingUpdateSerializer(serializers.ModelSerializer):
             'surname': profile.surname,
             'title': profile.title
         }
-    
+
+# Used for applying to jobs (Creation and fetching)
 class AppliedSerializer(serializers.ModelSerializer):
     profile_info = serializers.SerializerMethodField()
     relationship = serializers.SerializerMethodField()
-    user_id = serializers.SerializerMethodField() # Not optimal at ALL
+    user_id = serializers.SerializerMethodField()
     class Meta:
         model = Applied
         fields = ['user', 'profile_info', 'relationship', 'user_id']
         read_only_fields = ['user', 'profile_info', 'relationship', 'user_id']
-        # Add any other fields you want to be updatable
 
     def get_profile_info(self, obj):
         if obj.user.pfp:
-            # Access the file if it exists
             file_url = "https://127.0.0.1:8000" + obj.user.pfp.url
         else:
-            # Handle the case where no file is uploaded
-            file_url = "/default.png"  # or set a default image
+            file_url = "/default.png"  # default image in front-end
         
         return{
         "pfp": file_url,
@@ -103,16 +94,16 @@ class AppliedSerializer(serializers.ModelSerializer):
         if obj.user_id == authenticated_user.user_id:
             return "Self"
 
-        # Check for an established link (friendship)
+        # Check for a link (friendship)
         if Link.objects.filter(user_id_to=obj.user, user_id_from=authenticated_user).exists() or \
             Link.objects.filter(user_id_to=authenticated_user, user_id_from=obj.user).exists():
             return "Friends"
 
-        # Check for a pending friend request from the authenticated user to the obj
+        # Check for request authenticated user to the obj
         if Request.objects.filter(user_id_from=authenticated_user, user_id_to=obj.user).exists():
             return "Pending Request Sent"
 
-        # Check for a pending friend request from the obj to the authenticated user
+        # Check for request obj to the authenticated user
         if Request.objects.filter(user_id_from=obj.user, user_id_to=authenticated_user).exists():
             return "Pending Request Received"
 
@@ -120,24 +111,21 @@ class AppliedSerializer(serializers.ModelSerializer):
         return "No Connection"
     
 
-
+# Used for Admin view of a users applications, returns listing relevant information too.
 class AdminAppliedSerializer(serializers.ModelSerializer):
     listing_info = serializers.SerializerMethodField()
     class Meta:
         model = Applied
         fields = ['user', 'listing_info']
         read_only_fields = ['user', 'listing_info']
-        # Add any other fields you want to be updatable
 
     def get_listing_info(self, obj):
         obj.listing.listing_id
         
         if obj.user.pfp:
-            # Access the file if it exists
             file_url = "https://127.0.0.1:8000" + obj.user.pfp.url
         else:
-            # Handle the case where no file is uploaded
-            file_url = "/default.png"  # or set a default image
+            file_url = "/default.png" # default image in front-end
         
         return{
             "listing_id": obj.listing.listing_id,
@@ -154,20 +142,16 @@ class AdminAppliedSerializer(serializers.ModelSerializer):
         if authenticated_user is None:
             return "No Authentication"
 
-        # Check if the authenticated user is the same as the object user
         if obj.user_id == authenticated_user.user_id:
             return "Self"
 
-        # Check for an established link (friendship)
         if Link.objects.filter(user_id_to=obj.user, user_id_from=authenticated_user).exists() or \
             Link.objects.filter(user_id_to=authenticated_user, user_id_from=obj.user).exists():
             return "Friends"
 
-        # Check for a pending friend request from the authenticated user to the obj
         if Request.objects.filter(user_id_from=authenticated_user, user_id_to=obj.user).exists():
             return "Pending Request Sent"
 
-        # Check for a pending friend request from the obj to the authenticated user
         if Request.objects.filter(user_id_from=obj.user, user_id_to=authenticated_user).exists():
             return "Pending Request Received"
 

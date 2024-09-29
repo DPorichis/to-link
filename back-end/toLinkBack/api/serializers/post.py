@@ -1,11 +1,12 @@
-#posts.py
-#this module contains serializer used in APIs for media
+# posts.py
+# this module contains serializer used in APIs for media
 ##########################################################
 
 
 from rest_framework import serializers
 from api.models import Profile, Post, LikedBy, Comment, PostMedia
 
+# Serializers for each type of Post Media
 
 class PostImageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -22,6 +23,7 @@ class PostAudioSerializer(serializers.ModelSerializer):
         model = PostMedia
         fields = ['audio', 'media_type']
 
+# Used for creating the data used in postbox
 class PostSerializer(serializers.ModelSerializer):
     user_info = serializers.SerializerMethodField()
     images = serializers.SerializerMethodField()
@@ -31,26 +33,20 @@ class PostSerializer(serializers.ModelSerializer):
         model = Post
         fields = ['post_id', 'text', 'media', 'links', 'like_cnt', 'comment_cnt', 'user', 'images', 'videos', 'audios', 'user_info']
         read_only_fields = ['post_id', 'like_cnt', 'comment_cnt', 'user', 'images', 'videos', 'audios', 'user_info']
-        # Add any other fields you want to be updatable
     
     def create(self, validated_data):
-        # This method will be used in the view to create a new post with the user set manually
-        user = validated_data.pop('user', None)  # Extract the user from validated_data if present
+        user = validated_data.pop('user', None)
         post = Post.objects.create(**validated_data, user=user)
         return post
     
     def get_user_info(self, obj):
-        # Get the authenticated user from the context
         other_user = obj.user
 
-        # Fetch the profile associated with the other user
         profile = Profile.objects.get(user_id=other_user)
 
         if profile.pfp:
-            # Access the file if it exists
             file_url = "https://127.0.0.1:8000" + profile.pfp.url
         else:
-            # Handle the case where no file is uploaded
             file_url = "/default.png"
 
         return {
@@ -88,7 +84,7 @@ class PostSerializer(serializers.ModelSerializer):
             return []
 
 
-
+# Used in LikedByFetching
 class LikedBySerializer(serializers.ModelSerializer):
     class Meta:
         model = LikedBy

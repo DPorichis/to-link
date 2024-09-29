@@ -1,17 +1,18 @@
-#media.py
-#this module contains serializer used in APIs for media
+# media.py
+# this module contains serializer used in APIs for media
 ##########################################################
 
 from rest_framework import serializers
 from api.models import PostMedia
 
+# Used for managing PostMedia (Not in use currently)
 class MediaSerializer(serializers.ModelSerializer):
     class Meta:
         model = PostMedia
         fields = ['media_id', 'user', 'post', 'media_type', 'image', 'video', 'audio', 'uploaded_at']
 
     def validate(self, data):
-        # Ensure that only one media type is uploaded
+        #only one media type is uploaded
         media_fields = ['image', 'video', 'audio']
         media_count = sum(1 for field in media_fields if data.get(field))
 
