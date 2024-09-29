@@ -13,6 +13,7 @@ from django.db.models import F, Q
 from django.db.models import Max
 from itertools import chain
 
+# Fetching a post by the id
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def get_post_by_id(request):
@@ -41,11 +42,10 @@ def get_post_by_id(request):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     except Exception as e:
-        # Return a generic error if something goes wrong
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-
+# Upload a post
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def upload_post(request):
@@ -94,7 +94,7 @@ def upload_post(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
-
+# Like and unlike a post
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])  # Requires authentication
 def like_post(request):
@@ -128,7 +128,7 @@ def like_post(request):
         post.save(update_fields=['like_cnt'])
         return Response({"message": "Post liked successfully."}, status=status.HTTP_200_OK)
     
-
+# Comment on a post
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])  # Requires authentication
 def comment_post(request):
@@ -164,6 +164,7 @@ def comment_post(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
+# Fetching the comments of a post
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])  # Requires authentication
 def get_comments_by_post(request):
@@ -186,6 +187,7 @@ def get_comments_by_post(request):
     except Post.DoesNotExist:
         return Response({"error": "Post not found."}, status=status.HTTP_404_NOT_FOUND)
     
+# fetching all the posts
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def get_all_posts(request):
@@ -194,6 +196,7 @@ def get_all_posts(request):
     serializer = PostSerializer(posts, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
+# Getting  posts id
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def get_posts_id(request):
@@ -237,6 +240,7 @@ def get_posts_id(request):
 #    serializer = PostIdSerializer(posts, many=True) 
 #    return Response(serializer.data, status=status.HTTP_200_OK)
 
+# Checking if the user has liked a post
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def check_if_like_exist(request):
@@ -254,6 +258,7 @@ def check_if_like_exist(request):
     else:
         return Response({"liked": False}, status=status.HTTP_200_OK)
     
+# Fetching a user's posts
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def get_post_by_user_id(request):
@@ -276,7 +281,7 @@ def get_post_by_user_id(request):
         # Return an error if the post does not exist
         return Response([], status=status.HTTP_200_OK)
 
-
+# Post deletion
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def delete_post(request):

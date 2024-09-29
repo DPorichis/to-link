@@ -25,6 +25,7 @@ class UserPagination(PageNumberPagination):
 class EntryPagination(PageNumberPagination):
     page_size = 10
 
+# fetching a user's connections
 @api_view(['POST'])
 @permission_classes([IsAdminUser])
 def admin_fetch_connections(request):
@@ -47,6 +48,7 @@ def admin_fetch_connections(request):
 
     return paginator.get_paginated_response(serializer.data)
 
+# fetching user's personal data
 @api_view(['POST'])
 @permission_classes([IsAdminUser])
 def admin_fetch_personal(request):
@@ -64,6 +66,7 @@ def admin_fetch_personal(request):
     except User.DoesNotExist:
         return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
 
+# fetching user listings
 @api_view(['POST'])
 @permission_classes([IsAdminUser])
 def admin_fetch_listings(request):
@@ -81,7 +84,7 @@ def admin_fetch_listings(request):
 
     return paginator.get_paginated_response(serializer.data)
 
-
+# Fetching the people who applied for a listing
 @api_view(['POST'])
 @permission_classes([IsAdminUser])
 def admin_fetch_applications(request):
@@ -100,7 +103,7 @@ def admin_fetch_applications(request):
     return paginator.get_paginated_response(serializer.data)
 
 
-
+# Fetching a user's profile
 @api_view(['POST'])
 @permission_classes([IsAdminUser])
 def admin_fetch_profile(request):
@@ -117,7 +120,7 @@ def admin_fetch_profile(request):
     serializer = AdminProfileSerializer(profile,  context={'authenticated_user': user})
     return Response(serializer.data, status=status.HTTP_200_OK)
 
-
+# Fetching a user's comments
 @api_view(['POST'])
 @permission_classes([IsAdminUser])
 def admin_fetch_comments(request):
@@ -141,6 +144,7 @@ def admin_fetch_comments(request):
 
     return paginator.get_paginated_response(serializer.data)
 
+# Fetching the posts that are liked by the user
 @api_view(['POST'])
 @permission_classes([IsAdminUser])
 def admin_fetch_likes(request):
@@ -164,7 +168,8 @@ def admin_fetch_likes(request):
     serializer = LikedBySerializer(paginated_entries, many=True)
 
     return paginator.get_paginated_response(serializer.data)
-    
+
+# Fetching the posts of a user   
 @api_view(['POST'])
 @permission_classes([IsAdminUser])
 def admin_fetch_posts(request):
@@ -188,7 +193,7 @@ def admin_fetch_posts(request):
 
     return paginator.get_paginated_response(serializer.data)
 
-
+# Fetching the users that were searched
 @api_view(['POST'])
 @permission_classes([IsAdminUser])
 def admin_fetch_users(request):
@@ -235,7 +240,7 @@ def admin_fetch_users(request):
     # Return the paginated response
     return paginator.get_paginated_response(serializer.data)
     
-
+# Handling the export request
 @api_view(['POST'])
 @permission_classes([IsAdminUser])
 def request_export(request):
@@ -327,7 +332,6 @@ def request_export(request):
         xml_data = dicttoxml.dicttoxml(response)
         xml_file = BytesIO(xml_data)
 
-        # File sent out
         answer = HttpResponse(xml_file, content_type='application/xml')
         answer['Content-Disposition'] = 'attachment; filename="user_data.xml"'
     else:
@@ -335,7 +339,6 @@ def request_export(request):
         json_data = json.dumps(response, indent=4)
         json_file = BytesIO(json_data.encode('utf-8'))
 
-        # File sent out
         answer = HttpResponse(json_file, content_type='application/json')
         answer['Content-Disposition'] = 'attachment; filename="user_data.json"'
     return answer

@@ -15,6 +15,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import authenticate
 from rest_framework.decorators import api_view, permission_classes
 
+# User login
 @api_view(['POST'])
 def login(request):
     email = request.data.get('email')
@@ -40,7 +41,7 @@ def login(request):
     else:
         return Response({"error": "Invalid credentials."}, status=status.HTTP_401_UNAUTHORIZED)    
 
-
+# User signup
 @api_view(['POST'])
 def signup(request):
     user_serializer = UserSerializer(data=request.data)
@@ -66,6 +67,7 @@ def signup(request):
     else:
         return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
 
+# User logout
 @api_view(['POST'])
 def logout(request):
     try:
@@ -78,7 +80,7 @@ def logout(request):
     except Exception as e:
         return Response({"error": "Invalid token."}, status=status.HTTP_400_BAD_REQUEST)
 
-
+# update user's password
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def update_user_password(request):

@@ -10,6 +10,7 @@ from rest_framework import status
 from api.models import Media, Convo
 from api.serializers import MediaSerializer
 
+# Upload a picture
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def upload_picture(request):
@@ -28,7 +29,7 @@ def upload_picture(request):
     serializer = MediaSerializer(picture)
     return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-
+# Fetching pictures
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def fetch_pictures(request):

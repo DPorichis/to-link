@@ -23,6 +23,7 @@ from rest_framework.pagination import PageNumberPagination
 class ListingPagination(PageNumberPagination):
     page_size = 15
 
+# Updates a listing
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def update_listing(request):
@@ -48,7 +49,7 @@ def update_listing(request):
         # Return validation errors
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
+# Getting all the users who applied for the job
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def get_applied_by_listing_id(request):
@@ -69,6 +70,7 @@ def get_applied_by_listing_id(request):
     except Applied.DoesNotExist:
         return Response({}, status=status.HTTP_200_OK)
 
+# User applies for a job
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def apply_by_id(request):
@@ -102,7 +104,7 @@ def apply_by_id(request):
         Notification.objects.create(application=application, user_from=user, user_to=profile, type="application")
         return Response({"applied": True}, status=status.HTTP_200_OK)
     
-
+# Checking if a user applied for a job
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def check_if_applied(request):
@@ -132,7 +134,7 @@ def check_if_applied(request):
 
 
 
-
+# Upload a listing
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def upload_listing(request):
@@ -158,6 +160,7 @@ def upload_listing(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+# fetching the listings
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def show_listings(request):
@@ -248,6 +251,7 @@ def show_listings(request):
     # Return the paginated response
     return paginator.get_paginated_response(serializer.data)
 
+# Fetching a listing by the id
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def get_listing_by_id(request):

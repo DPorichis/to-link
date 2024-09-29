@@ -17,6 +17,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from django.db.models import F, Q
 
+# Fetcing notifications
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def fetch_notifications(request):
@@ -34,6 +35,7 @@ def fetch_notifications(request):
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+# Dismiss a notification
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def dismiss_notification_by_id(request):

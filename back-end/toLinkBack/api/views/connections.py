@@ -18,6 +18,7 @@ from rest_framework.pagination import PageNumberPagination
 class CustomPagination(PageNumberPagination):
     page_size = 4
 
+# Make a friend request
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def make_request(request):
@@ -50,7 +51,7 @@ def make_request(request):
         Request.objects.create(user_id_from=user_id_from,user_id_to=user_id_to)
         return Response({"message": "Request made successfully."}, status=status.HTTP_200_OK)
     
-
+# Response a friend request
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def response_request(request):
@@ -91,6 +92,7 @@ def response_request(request):
         request.delete()
         return Response({"message": "Request declined successfully."})
     
+# Fetching user's friend requests    
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def fetch_request(request):
@@ -104,7 +106,7 @@ def fetch_request(request):
     except Request.DoesNotExist:
         return Response({"error": "Request not found."}, status=status.HTTP_404_NOT_FOUND)
 
-
+# Fetching user's connections
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])    
 def fetch_connections(request):
@@ -123,7 +125,7 @@ def fetch_connections(request):
     else:
         return Response([], status=status.HTTP_200_OK)
     
-
+# Fetching other user's connections
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])    
 def fetch_others_connections(request):
@@ -157,6 +159,7 @@ def fetch_others_connections(request):
         return Response({"error": "You are not connected with that user bro"}, status=status.HTTP_404_NOT_FOUND)
 
 
+# Fetching links that were searched.
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def fetch_searching_links(request):
@@ -175,7 +178,6 @@ def fetch_searching_links(request):
     if not search_term:
         filtered_profiles = all_profiles
     else:
-        # Split the search term into possible first name and surname parts
         search_terms = search_term.split()
 
         # Apply the search filter based on the number of search terms
@@ -183,26 +185,24 @@ def fetch_searching_links(request):
             first_name, last_name = search_terms
             filtered_profiles = all_profiles.filter(
                 Q(name__icontains=first_name) & Q(surname__icontains=last_name)
-            ).order_by('name', 'surname')  # Add sorting here
+            ).order_by('name', 'surname') 
         else:
             # If only one term is provided, search by either name or surname
             filtered_profiles = all_profiles.filter(
                 Q(name__icontains=search_term) | 
                 Q(surname__icontains=search_term)
-            ).order_by('name', 'surname')  # Add sorting here
+            ).order_by('name', 'surname')  
 
-    # Custom pagination - use your custom pagination class
     paginator = CustomPagination()
     paginated_profiles = paginator.paginate_queryset(filtered_profiles, request)
 
     # Serialize the paginated profiles
     serializer = ProfileBannerSerializer(paginated_profiles, many=True, context={'authenticated_user': user_profile})
 
-    # Return paginated response
     return paginator.get_paginated_response(serializer.data)
     
 
-
+# Fetching searched users that are not links
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def fetch_searching_non_links(request):
@@ -229,20 +229,15 @@ def fetch_searching_non_links(request):
             first_name, last_name = search_terms
             filtered_profiles = all_profiles.filter(
                 Q(name__icontains=first_name) & Q(surname__icontains=last_name)
-            ).order_by('name', 'surname')  # Add sorting here
+            ).order_by('name', 'surname')  
         else:
             # If only one term is provided, search by either name or surname
             filtered_profiles = all_profiles.filter(
                 Q(name__icontains=search_term) | 
                 Q(surname__icontains=search_term)
-            ).order_by('name', 'surname')  # Add sorting here
+            ).order_by('name', 'surname')  
 
-    # Custom pagination - use your custom pagination class
     paginator = CustomPagination()
     paginated_profiles = paginator.paginate_queryset(filtered_profiles, request)
-
-    # Serialize the paginated profiles
     serializer = ProfileBannerSerializer(paginated_profiles, many=True, context={'authenticated_user': user_profile})
-
-    # Return paginated response
     return paginator.get_paginated_response(serializer.data)

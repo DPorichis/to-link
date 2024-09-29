@@ -19,6 +19,7 @@ class CustomPagination(PageNumberPagination):
     page_size = 20  
 
 
+# Fetching the messages of a conversation
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def get_dms_of_convo(request):
@@ -26,7 +27,6 @@ def get_dms_of_convo(request):
     convo_id = request.data.get('convo')
     user = request.user
 
-    # Validate input data
     if not convo_id:
         return Response({"error": "Convo_id is required."}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -64,6 +64,7 @@ def get_dms_of_convo(request):
     except Dm.DoesNotExist:
         return Response({"error": "Dms not found."}, status=status.HTTP_404_NOT_FOUND)
 
+# Sending a message
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def send_dm(request):
@@ -97,12 +98,11 @@ def send_dm(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
-
+# MessagePGU side bar
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])  
 def fetch_convo_menu(request):
 
-    # Check if the like already exists
     user = request.user.profile
     try:
         convos = Convo.objects.filter(Q(user_id1=user) | Q(user_id2=user)).order_by('-timestamp')
@@ -111,7 +111,7 @@ def fetch_convo_menu(request):
     except Convo.DoesNotExist:
         return Response({}, status=status.HTTP_200_OK)
     
-
+# Getting the first message of the conversation to display it in the sidebar
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def retrive_convo(request):
