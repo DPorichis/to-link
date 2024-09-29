@@ -17,24 +17,18 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
 
-@api_view(['POST'])
-def updateuser(request):
-    return Response({})
-
+# Updating profile information
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def update_profile(request):
-    # Get the authenticated user
     user = request.user
     
-    # Attempt to get the profile associated with the authenticated user
     try:
         profile = Profile.objects.get(user_id=user)
     except Profile.DoesNotExist:
         return Response({"error": "Profile does not exist."}, status=status.HTTP_404_NOT_FOUND)
     
-    # Create the serializer with the current profile and the request data
-    serializer = ProfileUpdateSerializer(profile, data=request.data, partial=True)  # `partial=True` to allow for partial updates
+    serializer = ProfileUpdateSerializer(profile, data=request.data, partial=True)
     print(request.data)
     if serializer.is_valid():
         # Save the updated profile information
@@ -44,14 +38,12 @@ def update_profile(request):
         # Return validation errors
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
+# Retrive profile of authenticated User
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def retrive_own_profile(request):
-    # Get the authenticated user
     user = request.user
     
-    # Attempt to get the profile associated with the authenticated user
     try:
         profile = Profile.objects.get(user_id=user)
     except Profile.DoesNotExist:
@@ -60,14 +52,13 @@ def retrive_own_profile(request):
     serializer = ProfileSerializer(profile, context={'authenticated_user': user})
     return Response(serializer.data, status=status.HTTP_200_OK)
 
+# Retrive profile of user specified in user_id
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def retrive_profile(request):
-    # Get the authenticated user
     user = request.user
     user_target = request.data.get('user_id')
     
-    # Attempt to get the profile associated with the authenticated user
     try:
         profile = Profile.objects.get(user_id=user_target)
     except Profile.DoesNotExist:
@@ -76,14 +67,12 @@ def retrive_profile(request):
     serializer = ProfileSerializer(profile,  context={'authenticated_user': user})
     return Response(serializer.data, status=status.HTTP_200_OK)
 
-
+# Retrive information for header, (notification badges)
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def retrive_header_info(request):
-    # Get the authenticated user
     user = request.user
 
-    # Attempt to get the profile associated with the authenticated user
     try:
         profile = Profile.objects.get(user_id=user)
     except Profile.DoesNotExist:
@@ -92,18 +81,3 @@ def retrive_header_info(request):
     serializer = ProfileHeaderSerializer(profile)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def delete_profile(request):
-    user = request.user
-    print(f"Attempting to delete profile for user: {user}")
-
-    try:
-        profile = Profile.objects.get(user=user)
-        user.delete()
-        return Response({"message": "User deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
-
-    except Profile.DoesNotExist:
-        return Response({"error": "Profile does not exist."}, status=status.HTTP_404_NOT_FOUND)
-    except Exception as e:
-        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

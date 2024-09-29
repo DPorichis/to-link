@@ -7,9 +7,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from api.recommendations import listing_recom, post_recom
 
-
+# Used for initializing recommendation process
 @api_view(['POST'])
 def get_interactions(request):
-    # listing_recom()
+    listing_recom()
     post_recom()
     return Response({}, status=status.HTTP_200_OK)
