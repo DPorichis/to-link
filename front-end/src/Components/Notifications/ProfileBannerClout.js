@@ -25,7 +25,7 @@ function ProfileBannerClout(props){
                 </div>
             </div>
             <div style={{display: "flex",flexDirection: "row",alignItems: "center",justifyContent: "center"}}>
-            // removes the notification when the button is pressed
+            {/*removes the notification when the button is pressed */}
             <button type="button" class="btn btn-outline-danger" style={{marginRight:"4px"}} onClick={() =>{props.dismiss(props.item)}}>
                 Dismiss
             </button>

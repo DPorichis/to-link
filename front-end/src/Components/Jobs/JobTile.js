@@ -23,7 +23,7 @@ function JobTile(props) {
                 </p>
             </div>
             <div>
-                // 1 is public, 2 is Network 3 is Private
+                {/* 1 is public, 2 is Network 3 is Private */}
                 {
                     props.listing.visible === 1
                     ?

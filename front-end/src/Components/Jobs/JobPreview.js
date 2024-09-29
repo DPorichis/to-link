@@ -1,5 +1,5 @@
-//JobPreview.js
-//This component displays the preview of a job Listing
+// JobPreview.js
+// This component displays the preview of a job Listing
 // =================================================================================
 
 function JobPreview(props) {

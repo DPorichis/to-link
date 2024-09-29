@@ -6,39 +6,28 @@
 import { useState, useEffect } from "react";
 import ProfileBanner from "../Profile/ProfileBanner";
 
-
-const getCookie = (name) => {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-      const cookies = document.cookie.split(';');
-      for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i].trim();
-        if (cookie.substring(0, name.length + 1) === `${name}=`) {
-          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-          break;
-        }
-      }
-    }
-    return cookieValue;
-};
-
-
 function JobDashboard(props) {
+
 
     var startval = "preview";
     if(props.listing.state === "Draft")
     {
         startval = "edit";
     }
-
+    // Selected Listing
     const [editedListing, setEditedListing] = useState(props.listing);
+    // Active Section
     const [mode, setMode] = useState(startval);
+    // List of Applicants
     const [applications, setApplications] = useState([]);
     
     const handleEdit = () => {
         setMode("edit");
         setEditedListing(props.listing);
     };
+
+
+    // Section Management //
 
     const handlePreview = () => {
         setMode("preview");
@@ -47,6 +36,8 @@ function JobDashboard(props) {
     const handleResponse = () => {
         setMode("responses");
     };
+
+    // Editing Management //
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
@@ -63,6 +54,8 @@ function JobDashboard(props) {
     const handleDiscard = () => {
         setEditedListing(props.listing);
     };
+
+    // Skill List management //
 
     const remSkill = (event) => {
         const {name} = event.target;
@@ -92,7 +85,7 @@ function JobDashboard(props) {
       }));
     };
 
-
+    // Fetchin data
     useEffect(() => {
         const fetchapplic = async () => {
             const token = localStorage.getItem('access_token');

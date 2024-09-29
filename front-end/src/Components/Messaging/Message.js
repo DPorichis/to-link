@@ -59,7 +59,7 @@ function Message(props){
         <div style={{marginBottom:"0px"}} >
            {props.your_message ? (
                <div style={{display:"flex", flexDirection:"row"}}  >
-            //    if it is the same user the photo is not rendering again, it renders just the text
+            {/* if it is the same user the photo is not rendering again, it renders just the text */}
                {props.same ? 
                 <> 
                     <div style={{display:"flex", flexDirection:"column",textAlign:"left", marginTop:"0px",marginBottom:"2px", marginLeft:"4px"}}>
@@ -75,7 +75,7 @@ function Message(props){
                     <img src={props.your_pfp} alt="Avatar" style={{width :"50px",height:"50px", borderRadius:"25%"}} className="link-image" />
                     <div style={{display:"flex", flexDirection:"column", textAlign:"left", marginBottom:"2px", marginLeft:"4px"}}>
                     <p style={{marginBottom: "2px"}}>You · {formattedDate}</p>
-                    // This if case handles media and text
+                    {/* This if case handles media and text */}
                     {props.message.media? (
                         <img src={"https://127.0.0.1:8000" + props.message.media} alt="Message content" style={{maxWidth:"500px", marginLeft:"50px"}} />
                     ) : (
@@ -87,10 +87,10 @@ function Message(props){
            </div>
             ) : (
                 <div style={{display:"flex", flexDirection:"row"}}  >
-                //    if it is the same user the photo is not rendering again, it renders just the text
+                {/* if it is the same user the photo is not rendering again, it renders just the text */}
                     {props.same ? 
                     <div style={{display:"flex", flexDirection:"column",textAlign:"left",marginTop:"0px",marginBottom:"5px", marginLeft:"4px"}}>
-                    // This if case handles media and text
+                    {/* This if case handles media and text */}
                         {props.message.media ? (
                             <img src={"https://127.0.0.1:8000" + props.message.media} alt="Message content" style={{maxWidth:"500px", marginLeft:"50px"}} />
                         ) : (
@@ -102,7 +102,7 @@ function Message(props){
                     <img src={props.other_pfp} alt="Avatar" style={{width :"50px",height:"50px", borderRadius:"25%"}} className="link-image" />
                     <div style={{display:"flex", flexDirection:"column",textAlign:"left",marginBottom:"0px", marginLeft:"4px", marginBottom:"2px"}}>
                     <p style={{marginBottom: "2px"}}>{props.other_name} · {formattedDate}</p>
-                    // This if case handles media and text
+                    {/* This if case handles media and text */}
                     {props.message.media ? (
                     <img src={"https://127.0.0.1:8000" + props.message.media} alt="Message content" style={{maxWidth:"500px", marginLeft:"50px"}} />
                 ) : (

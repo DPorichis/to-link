@@ -8,10 +8,12 @@ import ProfileTag from "../Profile/ProfileTag";
 import CommentsCONT from "./Comment";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import {jwtDecode} from "jwt-decode";
 
 function Postbox(props) {
     //Likes and comments
-    const [liked, setLiked] = useState(false); 
+    const [liked, setLiked] = useState(false);
+    const [own, setOwn] = useState(false);
     const [commentsVisible, setCommentsVisible] = useState(false);
     const [commentText, setCommentText] = useState("");
     const [error, setError] = useState(null);
@@ -46,6 +48,11 @@ function Postbox(props) {
             setLoading(false);
         };
         console.log(media)
+        const token = localStorage.getItem('access_token');
+        const decodedToken = jwtDecode(token);
+        if (props.post.user === decodedToken.user_id) {
+            setOwn(true)
+        }
         fetchLikes();
     }, [props.post.post_id]); 
     //When a user likes a post updates the database
@@ -124,12 +131,13 @@ function Postbox(props) {
     return (
         <div className="postboxout">
             <div className="postboxin">
-                <div style={{display:"flex",justifyContent:"space-between"}}>
+                {own ? <div style={{display:"flex",justifyContent:"space-between"}}>
                     <ProfileTag 
                         name={props.post.user_info.name + " " + props.post.user_info.surname} 
                         relation={props.post.user_info.title} 
                         pfp={props.post.user_info.pfp} 
                     />
+                                     
                     <div className="dropdown">
                         <img 
                             src="/more-horizontal (1).svg"
@@ -145,6 +153,15 @@ function Postbox(props) {
                         </ul>
                     </div>
                 </div>
+                :
+                <div style={{display:"flex",justifyContent:"flex-start"}}>
+                    <ProfileTag 
+                        name={props.post.user_info.name + " " + props.post.user_info.surname} 
+                        relation={props.post.user_info.title} 
+                        pfp={props.post.user_info.pfp} 
+                    />
+                </div>
+                }
                 <p style={{marginBottom:"0px"}}>{props.post.text} </p>
                 {media.length === 1 ? (
                     (media[0].media_type === "image" ?

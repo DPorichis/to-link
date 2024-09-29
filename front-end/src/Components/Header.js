@@ -1,8 +1,8 @@
 // Header.js
 // This component implements a dynamic navigation bar that adapts based on the user's authentication status and role (admin or user).
-//This bar navigates the user to home,listings,notifications,messages,settings, log out.
-//Also this component is used to redirect you to sign in and signup
-// ==============================================================================
+// This bar navigates the user to home,listings,notifications,messages,settings, log out.
+// Also this component is used to redirect you to sign in and signup
+//==============================================================================
 
 import React, { useState, useEffect } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';

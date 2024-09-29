@@ -7,21 +7,6 @@ import { useState } from "react";
 
 import NetworkPGU from "../../Pages/User/NetworkPGU";
 
-const getCookie = (name) => {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === `${name}=`) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-};
-
 function ProfileBannerNotificationsReq(props){
     //Render Control
     const [isVisible, setIsVisible] = useState(true);
@@ -89,7 +74,7 @@ function ProfileBannerNotificationsReq(props){
                 </div>
             </div>
             <div style={{display: "flex",flexDirection: "row",alignItems: "center",justifyContent: "center"}}>
-            // accept and dismiss the request 
+            {/* accept and dismiss the request  */}
             <button
                     type="button"
                     className="btn btn-outline-danger"
