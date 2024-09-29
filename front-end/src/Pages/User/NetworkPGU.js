@@ -10,16 +10,20 @@ import { refreshAccessToken } from "../../functoolbox";
 import NotFoundPG from "../NotFoundPG";
 
 function NetworkPGU(props) {
+  // Searching State
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState("all");
   const [searching, setSearching] = useState(false);
+
+  // Render Control
   const [noAuth, setNoAuth] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [friendsLoading, setFriendsLoading] = useState(true); // Not used
+  const [outLoading, setOutLoading] = useState(true); // Not used
+
+  // Search Results
   const [friendsResults, setFriendsResults] = useState({});
   const [outResults, setOutResults] = useState({});
-  const [loading, setLoading] = useState(true);
-  const [friendsLoading, setFriendsLoading] = useState(true);
-  const [outLoading, setOutLoading] = useState(true);
-
   const [friendCache, setFriendCache] = useState([])
   const [outCache, setOutCache] = useState([])
 
@@ -68,7 +72,7 @@ function NetworkPGU(props) {
     setLoading(false);
   };
 
-  // Fetch links according to search term
+  // Fetch out of network according to search term
   const fetchSearchedOut = async (searchTerm, page, append) => {
     const token = localStorage.getItem('access_token');
     setOutLoading(true);
@@ -139,10 +143,10 @@ function NetworkPGU(props) {
     setOutResults({});
     setFriendsResults({});
     fetchSearchedLinks(); // Clear search results when changing filter
-    fetchSearchedOut();
+    fetchSearchedOut(); // Clear search results when changing filter
   };
 
-
+  // Pagination Control
   const handleMovement = (direction, target) => {
     if (direction === "prev" && target === "out")
     {
@@ -162,6 +166,7 @@ function NetworkPGU(props) {
     }
   }
 
+  // Pagination Control for searchterm data
   const handleLoadMore = (target) => {
     if (target === "out")
     {
@@ -172,9 +177,6 @@ function NetworkPGU(props) {
       fetchSearchedLinks(searchTerm, friendsResults.next, true)
     }
   }
-
-  // Group by if they are friends or not
-
 
   // Prevent not Authenticated Users
   if(noAuth)

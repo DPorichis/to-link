@@ -1,6 +1,6 @@
-//ListingsPGU.js
+// ListingsPGU.js
 // Users can view all job listings, create new listings, and manage their own listings.
-//Also users are able to aply job listings
+// Also users are able to apply to job listings
 // ===================================================================================
 
 import React from "react";
@@ -13,41 +13,32 @@ import JobPreview from "../../Components/Jobs/JobPreview";
 import NotFoundPG from '../NotFoundPG';
 import JobDashboard from "../../Components/Jobs/JobDashboard";
 
-
-const getCookie = (name) => {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i].trim();
-        if (cookie.substring(0, name.length + 1) === `${name}=`) {
-            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-            break;
-        }
-        }
-    }
-    return cookieValue;
-};
-
-
 function ListingsPGU(props) {
 
+    // Selected Listing Info
     const [selectedListing, setSelectedListing] = useState({listing_id: "empty"});
-    const [yourListingsView, setYourListingsView] = useState(false);
-    const [responseListing, setResponseListings] = useState({});
-    const [responseOwn, setResponseOwn] = useState({});
-    const [listings, setListings] = useState([]);
-    const [yourlistings, setYourListings] = useState([]);
     const [youApplied, setYouApplied] = useState("forbiden");
-    const [noAuth, setNoAuth] = useState(false);
 
+    // Listings by others
+    const [responseListing, setResponseListings] = useState({});
+    const [listings, setListings] = useState([]);
+
+    // Listings by you
+    const [responseOwn, setResponseOwn] = useState({});
+    const [yourlistings, setYourListings] = useState([]);
+    
+    // Render Control
+    const [noAuth, setNoAuth] = useState(false);
+    const [loading, setLoading] = useState(true);
+
+    // Section Control
+    const [yourListingsView, setYourListingsView] = useState(false);
+
+    // Fetching specific listing from URL
     const [searchParams] = useSearchParams();
     const id = searchParams.get('listing_id');
 
-    const [mode, setMode] = useState("info");
-    const [edit, setEdit] = useState(false);
-    const [loading, setLoading] = useState(true);
-
+    // Listing selection from list
     const changeSelection = (listing) => {
         let list = listing
         if (list.skills === null) 
@@ -58,6 +49,7 @@ function ListingsPGU(props) {
         setSelectedListing(list);
     };
 
+    // Fetching Listings Created by you
     const fetchOwnListings = async (page) => {
         const token = localStorage.getItem('access_token');
         const response0 = await fetch(page ? page :"https://127.0.0.1:8000/listings/list", {
@@ -105,6 +97,7 @@ function ListingsPGU(props) {
     };
 
 
+    // Fetching Listings Created by Others
     const fetchListings = async (page) => {
         const token = localStorage.getItem('access_token');
         const response1 = await fetch(page ? page :"https://127.0.0.1:8000/listings/list", {
@@ -147,6 +140,7 @@ function ListingsPGU(props) {
         setLoading(false);
     };
 
+    // Fetch specific listing
     const restoreListing = async () => {
         const token = localStorage.getItem('access_token');
         const response = await fetch("https://127.0.0.1:8000/listing/fetch", {
@@ -184,6 +178,7 @@ function ListingsPGU(props) {
     };
 
 
+    // Fetch the data according to uper functions
     useEffect(() => {
         fetchListings();
         fetchOwnListings();
@@ -194,7 +189,7 @@ function ListingsPGU(props) {
 
     }, []);
 
-
+    // Pagination managment
     const handleLoadMore = async (target) =>
     {
         if(target === "own")
@@ -207,6 +202,7 @@ function ListingsPGU(props) {
         }
     }
 
+    // Fetch applied information upon selection change
     useEffect(() => {
         const checkApplied = async () => {
             const token = localStorage.getItem('access_token');
@@ -244,6 +240,7 @@ function ListingsPGU(props) {
             checkApplied();
     }, [selectedListing]);
     
+    // Application Handling
     const toggleApply = () => {
         const apply = async () => {
             const token = localStorage.getItem('access_token');
@@ -287,9 +284,7 @@ function ListingsPGU(props) {
         apply()
     };
 
-
-
-
+    // Listing Creation Handling
     const createNewListing = async () =>
     {
         const token = localStorage.getItem('access_token');
@@ -313,6 +308,7 @@ function ListingsPGU(props) {
         fetchOwnListings();
     }
 
+    // Listing Update Handling
     const updateListing = async (id, updatedListingData) => {
         const token = localStorage.getItem('access_token');
         const response = await fetch("https://127.0.0.1:8000/listings/update", {
@@ -355,12 +351,14 @@ function ListingsPGU(props) {
         }
     };
 
+    // Own Listing Selection
     const viewOwn = () => 
     {
         setSelectedListing({listing_id: "empty"});
         setYourListingsView(true);
     }
 
+    // Other's Listing Selection
     const viewBrowse = async () => 
     {
         setSelectedListing({listing_id: "empty"});
@@ -370,6 +368,11 @@ function ListingsPGU(props) {
         setYourListingsView(false);
     }
 
+    // No render when loading
+    if (loading) return <>Loadins</>
+
+    
+    // Prevent not Authenticated Users
     if(noAuth)
     {
         return (<NotFoundPG />)
@@ -392,7 +395,8 @@ function ListingsPGU(props) {
                 </div>
             </div>
             {yourListingsView 
-            ? 
+            ?
+            // Your Listings List //
             <div style={{display:"flex", flexDirection: "row", width: "90%", marginLeft: "5%", justifyContent:"space-between"}}>
                 <div style={{display: "flex", flexDirection:"column", width: "25%", justifyContent: "left", textAlign: "left"}}>
                     <div style={{padding: "5px 10px", borderRadius: "10px", border: "#ccc solid 1px", backgroundColor: "#ddd",
@@ -428,6 +432,7 @@ function ListingsPGU(props) {
                 </div>
                 <div style={{width: "70%"}}>
                     {selectedListing.listing_id === "empty" ?
+                    // Your Listings Selection //
                         <div style={{width:"100%", border: "1px #aaa solid",
                             padding: "20px 10px", borderRadius: "10px", textAlign:"left", textAlign:"center"}}>
                                 <h4>Select a job from the left side bar</h4>
@@ -440,6 +445,7 @@ function ListingsPGU(props) {
                 </div>
             </div>
             :
+            // Other's Listings List //
             <div style={{display:"flex", flexDirection: "row", width: "90%", marginLeft: "5%", justifyContent:"space-between"}}>
                 <div style={{display: "flex", flexDirection:"column", width: "25%", justifyContent: "left", textAlign: "left"}}>
                     <div style={{padding: "5px 10px", borderRadius: "10px", border: "#ccc solid 1px", backgroundColor: "#ddd", maxHeight:"80vh", overflow: "auto"}}>
@@ -474,6 +480,7 @@ function ListingsPGU(props) {
                 </div>
                 <div style={{width: "70%"}}>
                     {selectedListing.listing_id === "empty" ?
+                        // Other's Listings Selection //
                         <div style={{width:"100%", border: "1px #aaa solid",
                         padding: "20px 10px", borderRadius: "10px", textAlign:"left", textAlign:"center"}}>
                             <h4>Select a job from the left side bar</h4>

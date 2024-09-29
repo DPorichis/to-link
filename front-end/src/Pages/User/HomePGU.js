@@ -1,6 +1,6 @@
-//HomePGU.js
-//This is the home page in the user interface
-//This page displays user profile info, the users links, posts and the user is able 
+// HomePGU.js
+// This is the home page in the user interface
+// This page displays user profile info, the users links, posts and the user is able 
 // to upload a post
 // ==============================================================================
 
@@ -14,29 +14,39 @@ import NotFoundPG from '../NotFoundPG';
 import Postbox from "../../Components/Feed/Postbox";
 
 function HomePGU(props) {
-    const [loading, setLoading] = useState(true);
-    const [LoadingPosts, setLoadingPosts] = useState(true);
-    const [posts, setPosts] = useState([]);
+
+    // Side Bar Content
     const [links, setLinks] = useState([]);
-    const [error, setError] = useState(null);
-    const [noAuth, setNoAuth] = useState(false);
     const [profile, setProfile] = useState({});
-    const [PostIDList, setPostIdList] = useState([]);
     const [PostCount, setPostCount] = useState();   
+
+    // Feed Content
     const [postsToShow, setPostsToShow] = useState(5);
+    const [PostIDList, setPostIdList] = useState([]); // Custom Pagination Implementation
+    const [posts, setPosts] = useState([]);
 
-
+    // Upload Box Content
     const [postText, setpostText] = useState("");
     const [postImageMedia, setpostImageMedia] = useState([]);
     const [postVideoMedia, setpostVideoMedia] = useState([]);
     const [postAudioMedia, setpostAudioMedia] = useState([]);
 
+    // Render Control
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [noAuth, setNoAuth] = useState(false);
+    const [LoadingPosts, setLoadingPosts] = useState(true);
 
+
+
+    // Upload Box Multimedia handling //
+
+    // Text Input changing
     const handleTextChange = (e) => {
         const {value} = e.target
         setpostText(value)
     }
-
+ 
     // Handle selection
     const handleImageChange = (event) => {
         const files = event.target.files;
@@ -80,6 +90,7 @@ function HomePGU(props) {
         setpostAudioMedia(prevMedia => prevMedia.filter((img, imgIndex) => imgIndex !== index));
     };
 
+    // Retrives the post list tailored for the user
     const fetchPostList = async () => {
         setLoadingPosts(true);
         const token = localStorage.getItem('access_token');
@@ -140,6 +151,7 @@ function HomePGU(props) {
         setLoadingPosts(false);
     };
 
+    // Uploads the post described by upload box
     const handleUploadClick = async () => {
         const token = localStorage.getItem('access_token');
         const postData = new FormData();
@@ -196,6 +208,7 @@ function HomePGU(props) {
         
     };
 
+    // Side bar content retrival and feed retrival using upper functions
     useEffect(() => {
         const fetchLinks = async () => {
             const token = localStorage.getItem('access_token');
@@ -281,23 +294,26 @@ function HomePGU(props) {
         setLoading(false);
     }, []);
 
+    // Fetch new posts when a new list is available
     useEffect(() => {
         fetchPosts();
     }, [PostIDList]);
 
+    // Fetch new posts when the count has changed
     useEffect(() => {
         fetchPosts();
     }, [postsToShow]);
 
+    // Pagination Handling
     const loadMorePosts = () => {
         setPostsToShow(prev => prev + 5);  // Load 5 more posts
     };
 
 
-    
+    // No render when loading
     if (loading) return <>Loading</>
     
-    
+    // Prevent not Authenticated Users
     if(noAuth)
     {
         return (<NotFoundPG />)
@@ -333,7 +349,7 @@ function HomePGU(props) {
                             </div>
                         </div>
                     </div>
-                    <h5>MY Links</h5>
+                    <h5>My Links</h5>
                     <div className = "Links" style={{}}>
                         {links.length > 0? 
                         (links.map((link) =>
@@ -355,6 +371,7 @@ function HomePGU(props) {
                 <div className="UploadBox" style={{display:"flex",flexDirection:"column",backgroundColor: "#96b9e42c",justifyContent:"flex-start",borderRadius:"9px",
                     width:"95%", marginLeft:"2.5%", border: "solid #A1AECE 1px"}}>
                 <div style={{display:"flex",flexDirection:"row",padding:"10px 10px"}}>
+                    {/* Upload Box */}
                     <img src={profile.pfp} alt="Avatar" style={{width :"50px",height:"50px", borderRadius:"25%"}} className="link-image" />
                     <div style={{display:"flex", flexDirection:"column", flex: "1"}}>
                         

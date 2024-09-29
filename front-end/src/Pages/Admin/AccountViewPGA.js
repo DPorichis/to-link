@@ -1,3 +1,9 @@
+// AccountViewPGA.js
+// This page allows admin to see detailed views of users
+// Export user data in different formats (JSON or XML).
+//==================================================
+
+
 import React, {useState, useEffect} from "react";
 import Header from "../../Components/Header";
 import { useSearchParams } from 'react-router-dom';
@@ -6,13 +12,19 @@ import {jwtDecode} from "jwt-decode";
 
 function AccountViewPGA(props) {
 
+    // Active Section Control
     const [activePosts, setActivePosts] = useState(false);
     const [selectedActivity, setActivity] = useState("network");
-    const [noAuth, setNoAuth] = useState(false)
     
+    // Rendering Control
+    const [noAuth, setNoAuth] = useState(false);
+    const [loading, setLoading] = useState(true);
+    
+    // Fetching Specific Profile from URL
     const [searchParams] = useSearchParams();
-
     const id = searchParams.get('user_id');
+
+    // Export Managment
     const [exportSelection, setExportSelection] = useState(
     {
         selectedUsers: [id],
@@ -20,10 +32,9 @@ function AccountViewPGA(props) {
         selectedArtifacts: []
     });
 
-
+    // Selected User Data
     const [profile, setProfile] = useState({});
     const [personal, setPersonal] = useState({});
-    const [loading, setLoading] = useState(true);
     const [posts, setPosts] = useState([]);
     const [listings, setListings] = useState([]);
     const [likes, setLikes] = useState([]);
@@ -31,7 +42,8 @@ function AccountViewPGA(props) {
     const [applications, setApplications] = useState([]);
     const [connections, setConnections] = useState([]);
 
-    
+    // User information fetching functions //
+
     const fetchProfile = async () => {
 
         const token = localStorage.getItem('access_token');
@@ -199,7 +211,7 @@ function AccountViewPGA(props) {
         }
     };
 
-
+    // Fetch the information using the upper function
     useEffect(() => {
 
         const fetchData = async () =>{
@@ -229,6 +241,7 @@ function AccountViewPGA(props) {
         fetchData()
     }, []);
 
+    // Export Managment //
 
     const handleArtifactsChange = (e) => {
         const {id} = e.target;
@@ -298,6 +311,7 @@ function AccountViewPGA(props) {
         console.log(exportSelection)
     }
 
+    // Rendering Control //
 
     if (noAuth) return <NotFoundPG/>
     if (loading) return <>Loading...</>

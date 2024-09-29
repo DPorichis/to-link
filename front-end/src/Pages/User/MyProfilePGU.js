@@ -15,22 +15,30 @@ import ProfileBanner from "../../Components/Profile/ProfileBanner";
 function MyProfilePGU(props) {
     const navigate = useNavigate();
 
+    // Active sections
     const [mode, setMode] = useState("info");
     const [edit, setEdit] = useState(false);
-    const [loading, setLoading] = useState(true);
 
+    // Changes Detection, and undo
     const [savedProfile, setSavedProfile] = useState({});
     const [editedProfile, setEditedProfile] = useState({});
+
+    // Profile Data
     const [listings, setListings] = useState([]);
     const [posts, setPosts] = useState([]);
     const [network, setNetwork] = useState([]);
     const [image, setImages] = useState(null);
+    
+    // Rendering Control
     const [noAuth, setNoAuth] = useState(false);
+    const [loading, setLoading] = useState(true);
 
+    // Image Upload
     const handleImageChange = (e) => {
         setImages(e.target.files[0]);
     };
 
+    // Fetching User Data
     useEffect(() => {
         const fetchUser = async () => {
             const token = localStorage.getItem('access_token');
@@ -177,6 +185,8 @@ function MyProfilePGU(props) {
         fetchUser();
     }, []);
     
+    // Active section control //
+
     const handleInfo = () => {
         setMode("info");
     };
@@ -193,9 +203,12 @@ function MyProfilePGU(props) {
         setMode("network");
     };
 
+    // Listing Redirection
     const goToJobListing = (listi) => {
         navigate(`/user/listings?listing_id=${listi.listing_id}`)
     };
+
+    // Editing Control //
 
     const toggleEdit = () => {
         setEdit(true);
@@ -209,6 +222,7 @@ function MyProfilePGU(props) {
         setEditedProfile(savedProfile);
     };
 
+    // Update information to the back-end
     const saveChanges = async() => {
         const token = localStorage.getItem('access_token');
         // Create a FormData object
@@ -272,6 +286,8 @@ function MyProfilePGU(props) {
         }
     }
 
+    // Education List Control //
+
     const addEdu = () => {
         setEditedProfile((prevProfile) => ({
           ...prevProfile,
@@ -302,6 +318,8 @@ function MyProfilePGU(props) {
         }));
     };
 
+    // Experience List Control //
+
     const remExp = (event) => {
         const {name} = event.target;
         setEditedProfile((prevProfile) => ({
@@ -330,6 +348,7 @@ function MyProfilePGU(props) {
         }));
     };
 
+    // Skill List Control //
 
     const remSkill = (event) => {
         const {name} = event.target;
@@ -359,6 +378,7 @@ function MyProfilePGU(props) {
       }));
     };
 
+    // Field value Change
     const handleInputChange = (event) => {
         const { name, value } = event.target;
         setEditedProfile((prevProfile) => ({
@@ -368,6 +388,7 @@ function MyProfilePGU(props) {
         
     };
 
+    // No render when loading
     if (loading) return <>Loading...</>
 
     // Prevent not Authenticated Users
@@ -398,6 +419,7 @@ function MyProfilePGU(props) {
                 </div>
                 {edit
                 ?
+                // Editing Screen //
                 <div style={{ textAlign:"left", marginBottom:"5px",  borderTop: "solid #ddd 1px", padding: "5px 5px"}}>
                 <div style={{display:"flex", flexDirection:"row", justifyContent:"space-between", marginBottom:"4px"}}>
                     <div>
@@ -569,6 +591,7 @@ function MyProfilePGU(props) {
                 </form>
                 </div>
                 :
+                // Preview Screen
                 <>
                 <div style={{display:"flex", flexDirection:"row", justifyContent:"space-between", alignContent:"center", height:"100%",
                     marginBottom:"5px",  borderTop: "solid #ddd 1px", padding: "5px 5px"

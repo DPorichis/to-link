@@ -249,7 +249,7 @@ function LandingPG(props) {
                 </div>
                 <div style={{marginTop:"2%", marginBottom: "2%"}}>
                 <h3>Industry leaders and flourishing professionals use TO Link. Every. Single. Day.</h3>
-                <p>Some honorable mentions</p>
+                <p>Credible people talking about ToLink</p>
                 <div style={{display:"flex", justifyContent:"space-around", marginTop:"2%"}}>
                     <div class="card">
                         <div class="card-header">

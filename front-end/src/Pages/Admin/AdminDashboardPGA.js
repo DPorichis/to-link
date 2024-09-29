@@ -1,7 +1,7 @@
-//AdminDashboardPGA.js
-//This page allows admin to fetch users
-//Export user data in different formats (JSON or XML).
-//##########################################################
+// AdminDashboardPGA.js
+// This page allows admin to fetch users
+// Export user data in different formats (JSON or XML).
+//==================================================
 
 import React, { useEffect, useState } from "react";
 import Header from "../../Components/Header";
@@ -16,9 +16,11 @@ import {jwtDecode} from "jwt-decode";
 
 function AdminDashboardPGA(props) {
 
+    // User List
     const [users, setUsers] = useState({});
-    const [loading, setLoading] = useState(true);
-    const [noAuth, setNoAuth] = useState(false)
+    const [filteredData, setFilterdData] = useState({});
+
+    // Search parameters
     const [filterParams, setFilterParams] = useState(
         {
             for: 'all',
@@ -26,7 +28,7 @@ function AdminDashboardPGA(props) {
         }
         );   
 
-    const [filteredData, setFilterdData] = useState({});
+    // Export Managment
     const [exportMode, setExportMode] = useState(false);
     const [exportSelection, setExportSelection] = useState(
     {
@@ -35,7 +37,12 @@ function AdminDashboardPGA(props) {
         selectedArtifacts: []
     });
 
+    // Render Control
+    const [loading, setLoading] = useState(true);
+    const [noAuth, setNoAuth] = useState(false);
 
+
+    // Fetch User List
     const fetchUsers = async (page) => {
         const token = localStorage.getItem('access_token');        
         const response = await fetch(page ? page : "https://127.0.0.1:8000/admin/fetch/allusers", {
@@ -67,6 +74,7 @@ function AdminDashboardPGA(props) {
         setLoading(false);
     };
 
+    // Re-fetch upon filter Params change
     useEffect(() => {
         const token = localStorage.getItem('access_token');        
         // If no token, redirect to login
@@ -82,13 +90,18 @@ function AdminDashboardPGA(props) {
         fetchUsers();
     }, [filterParams]);
 
+
+    // Redirect to detailed view //
+
     const navigate = useNavigate();
 
     const handleRowClick = (event) => {
         const { id } = event.currentTarget.dataset;
         navigate(`/admin/view?user_id=${id}`);
     };
+
     
+
     const handleChange = (e) => {
         const { name, value} = e.target;
         setFilterParams({
@@ -96,6 +109,8 @@ function AdminDashboardPGA(props) {
         [name]: value,
         });
     };
+
+    // Export Managment //
 
     const handleSelectionChange = (e) => {
         const {id} = e.target;
@@ -197,6 +212,8 @@ function AdminDashboardPGA(props) {
         
     };
     
+    // Rendering Control
+
     if (noAuth) return <NotFoundPG/>
     if (loading) return <>Loading</>
 
@@ -229,6 +246,7 @@ function AdminDashboardPGA(props) {
                 
                 <div style={{display:"flex", flexDirection:"row", justifyContent:"space-between", marginBottom: "3px"}}>
                     {exportMode?
+                    // Export View
                     <>
                         <p style={{marginBottom: "0"}}>You have selected {exportSelection.selectedUsers.length} users for export.</p>
                         <div style={{display:"flex", flexDirection:"row"}}>

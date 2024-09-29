@@ -1,7 +1,7 @@
-//MessagesPGU.js
-//This page is the users interface for messaging
-//This page allows users to messaging with their Links.
-//User are able to send and receive text and images as messages
+// MessagesPGU.js
+// This page is the users interface for messaging
+// This page allows users to messaging with their Links.
+// User are able to send and receive text and images as messages
 //===============================================================
 
 import React from "react";
@@ -18,34 +18,27 @@ import NotFoundPG from "../NotFoundPG";
 
 
 function MessagesPGU(props) {
+    // Convos and selected Convo
     const [storedLinks, setStoredLinks] = useState([]);
     const [selected_dm, setSelected_dm] = useState({});
-    const [loading, setLoading] = useState(true);
-    const [textboxContent, setTextBoxContent] = useState("");
-    const [rerend, setRerend] = useState(true);
     const [userPFP, setUserPFP] = useState("")
+    
+    // Text Box Content Management
+    const [textboxContent, setTextBoxContent] = useState("");
+    const [image, setImage] = useState(null);
+    
+    // Render Control
     const [noAuth, setNoAuth] = useState(false);
+    const [loading, setLoading] = useState(true);
+    
+    // Re-render Hook for 
     const [messageSent, setMessageSent] = useState(false);
 
+    // Fetch specific chat from url
     const [searchParams] = useSearchParams();
     const id = searchParams.get('user_id');
 
-    const getCookie = (name) => {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-          const cookies = document.cookie.split(';');
-          for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === `${name}=`) {
-              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-              break;
-            }
-          }
-        }
-        return cookieValue;
-    };
-
-
+    // Convo List Retrival
     useEffect(() => {
         const fetchconvos = async () => {
             const token = localStorage.getItem('access_token');
@@ -117,6 +110,7 @@ function MessagesPGU(props) {
             }
         };
 
+        // Convo Retrival from URL
         const restoreDM = async () => {
             const token = localStorage.getItem('access_token');
             const response = await fetch("https://127.0.0.1:8000/convo/find/", {
@@ -163,27 +157,29 @@ function MessagesPGU(props) {
         setLoading(false);
     }, [id]);
 
-    const [image, setImage] = useState(null);
+    // Input changes //
 
     const handleTextChange = (event) => {
         const {value} = event.target
         setTextBoxContent(value)
     }
 
+    const handleMediaSelection = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            setImage(file);
+        }
+        
+        // Reset the file input so it can detect the same file selection
+        event.target.value = '';
+    }
+
+    // Dm selection from list
     const handleDmClick = (cnv) => {
         setSelected_dm(cnv);
     };
 
-    const handleMediaSelection = (event) => {
-        const file = event.target.files[0];
-    if (file) {
-        setImage(file);
-    }
-    
-    // Reset the file input so it can detect the same file selection
-    event.target.value = '';
-    }
-
+    // Sending dm to back-end
     const handleUploadClick = async () => {
         if(selected_dm.convo_id !== undefined)
         {
@@ -234,12 +230,14 @@ function MessagesPGU(props) {
         }
     };
 
+    // No render when loading
     if (loading) return <>Loadins</>
 
+    // Prevent not Authenticated Users
     if(noAuth)
-        {
-            return (<NotFoundPG />)
-        }
+    {
+        return (<NotFoundPG />)
+    }
     
     return (
         <div >
@@ -248,6 +246,7 @@ function MessagesPGU(props) {
                 <div className="sidebar" style={{maxHeight:"90vh",overflow:"auto",width:"25%", padding:"5px 10px", borderRadius:"10px",
                     border:"1px solid #A1AECE"
                 }}>
+                    {/* DM List */}
                     <h5 style={{ textAlign: "left" }}>
                         Your DMs
                     </h5>
@@ -273,6 +272,7 @@ function MessagesPGU(props) {
                     border: "#ccc 1px solid", borderRadius:"10px",  height:"90vh"
                 }}>
                 {selected_dm.convo_id !== undefined ?
+                    // Convo Render //
                     <>
                         <div>
                             <div style={{ display: "flex", flexDirection: "row", textAlign: "left" }}>
@@ -290,6 +290,7 @@ function MessagesPGU(props) {
                         </div>
                     }
                     <div>
+                        {/* ChatBox */}
                         <div className="ChatBox" style={{display:"flex",flexDirection:"row",width:"100%",height:"45px",borderRadius:"18px",backgroundColor: "#fff", 
                             borderRadius:"10px", border: "#ccc 1px solid", marginTop:"15px"
                         }}>

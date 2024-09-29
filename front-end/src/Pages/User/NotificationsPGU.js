@@ -50,7 +50,6 @@ function NotificationsPGU(props) {
                 }
                 
             }else {
-                throw new Error('Failed to fetch posts');
                 setNoAuth(true);
             }
             setLoading(false);
@@ -85,7 +84,6 @@ function NotificationsPGU(props) {
                 }
                 
             }else {
-                throw new Error('Failed to fetch requests');
                 setNoAuth(true);
             }
             setLoading(false);

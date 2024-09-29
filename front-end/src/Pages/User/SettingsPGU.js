@@ -6,6 +6,7 @@ import React, { useState, useEffect } from "react";
 import Header from "../../Components/Header";
 import { refreshAccessToken } from "../../functoolbox";
 import NotFoundPG from "../NotFoundPG";
+import { useNavigate } from "react-router-dom";
 
 function SettingsPGU(props) {
     // Before and after to track changes and discard
@@ -18,6 +19,7 @@ function SettingsPGU(props) {
     // Rendering Control
     const [loading, setLoading] = useState(true);
     const [noAuth, setNoAuth] = useState(false);
+    const navigate = useNavigate();
 
     // Bring the users data
     useEffect(() => {
@@ -74,6 +76,7 @@ function SettingsPGU(props) {
       alertPlaceholder.append(wrapper)
     }
 
+    // Handle Delete Request
     const handleDeleteProfile = async () => {
         const token = localStorage.getItem('access_token');
         const response = await fetch("https://127.0.0.1:8000/profile/delete", {
@@ -87,10 +90,8 @@ function SettingsPGU(props) {
         if (response.ok) {
             // Profile deleted successfully
             appendAlert("Profile deleted successfully.", 'success');
-            // Optionally, redirect the user or log them out
             localStorage.removeItem('access_token');
-            // You might want to redirect to a login page or home page
-            window.location.href = '/login'; // Change this to your desired route
+            navigate('/');
         } else if (response.status === 401) {
             localStorage.removeItem('access_token');
             await refreshAccessToken();
