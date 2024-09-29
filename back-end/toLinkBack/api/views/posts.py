@@ -14,24 +14,25 @@ from django.db.models import Max
 from itertools import chain
 
 # Fetching a post by the id
+# Used for custom pagination of the feed
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def get_post_by_id(request):
     # Retrieve post IDs from the request data
     post_ids = request.data.get('post_id')
 
-    # Validate input data - post_ids should be a list
+    # A List is passed
     if not post_ids or not isinstance(post_ids, list):
         return Response({"error": "Post IDs should be provided as a list."}, status=status.HTTP_400_BAD_REQUEST)
 
-    # Ensure the post_ids list contains only numbers (in case dictionaries are passed)
+    # Only contains post_ids
     try:
         post_ids = [item['post_id'] if isinstance(item, dict) else item for item in post_ids]
     except KeyError:
         return Response({"error": "Each dictionary must contain 'post_id' key."}, status=status.HTTP_400_BAD_REQUEST)
 
     try:
-        # Get posts where the post_id is in the list of post_ids
+        # Get posts with ids inside list
         posts = Post.objects.filter(post_id__in=post_ids).order_by("-timestamp")
         
         if not posts.exists():
@@ -51,8 +52,6 @@ def get_post_by_id(request):
 def upload_post(request):
 
     user = request.user
-    
-    # Attempt to get the profile associated with the authenticated user
     try:
         profile = Profile.objects.get(user_id=user)
     except Profile.DoesNotExist:
@@ -60,28 +59,21 @@ def upload_post(request):
 
     serializer = PostSerializer(data=request.data)
 
-    # Validate the serializer data
     if serializer.is_valid():
-        # Save the serializer to create a new post with the uploaded file
         post = serializer.save(user=profile)
 
         # Handle the images
-        images = request.FILES.getlist('image_uploads')  # 'image_uploads' is the field name for multiple images
-
-        # Create a PostImage instance for each uploaded image
+        images = request.FILES.getlist('image_uploads')
         for image in images:
             PostMedia.objects.create(post=post, image=image, user=profile, media_type="image")
-        # Handle the images
-        videos = request.FILES.getlist('video_uploads')  # 'video_uploads' is the field name for multiple images
-
-        # Create a PostImage instance for each uploaded image
+        
+        # Handle the videos
+        videos = request.FILES.getlist('video_uploads')
         for video in videos:
             PostMedia.objects.create(post=post, video=video, user=profile, media_type="video")
         
-        # Handle the images
+        # Handle the audios
         audios = request.FILES.getlist('audio_uploads')  # 'audio_uploads' is the field name for multiple images
-
-        # Create a PostImage instance for each uploaded image
         for audio in audios:
             PostMedia.objects.create(post=post, audio=audio, user=profile, media_type="audio")
 
@@ -96,7 +88,7 @@ def upload_post(request):
 
 # Like and unlike a post
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])  # Requires authentication
+@permission_classes([IsAuthenticated])
 def like_post(request):
     post_id = request.data.get('post_id')
 
@@ -144,7 +136,6 @@ def comment_post(request):
     except Post.DoesNotExist:
         return Response({"error": "Post not found."}, status=status.HTTP_404_NOT_FOUND)
 
-    # Attempt to get the profile associated with the authenticated user
     user = request.user
 
     try:
@@ -166,9 +157,9 @@ def comment_post(request):
 
 # Fetching the comments of a post
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])  # Requires authentication
+@permission_classes([IsAuthenticated])
 def get_comments_by_post(request):
-    post_id = request.data.get('post')  # Extract post_id from request data
+    post_id = request.data.get('post')
 
     if not post_id:
         return Response({"error": "Post ID is required."}, status=status.HTTP_400_BAD_REQUEST)
@@ -196,7 +187,7 @@ def get_all_posts(request):
     serializer = PostSerializer(posts, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
-# Getting  posts id
+# Retrives the personalised list of posts for the feed of the authenticated user
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def get_posts_id(request):
@@ -207,12 +198,8 @@ def get_posts_id(request):
     links = list(Link.objects.filter(user_id_to=user_profile).values_list('user_id_from', flat=True)) + \
     list(Link.objects.filter(user_id_from=user_profile).values_list('user_id_to', flat=True)) + [request.user.user_id]
     
-    print(links)
-
     network_posts = list(Post.objects.filter(user__in=links).values('post_id').annotate(timestamp=Max('timestamp')).distinct())
-
     network_posts = [{'post_id': post['post_id'], 'timestamp': post['timestamp'], 'priority': 3} for post in network_posts]
-
 
     # User's Recommendation Posts
     recom_posts_no_tmstp = list(PostRecom.objects.filter(user=user_profile).values_list('post_id', flat=True))
@@ -220,7 +207,6 @@ def get_posts_id(request):
 
     recom_posts = [{'post_id': post['post_id'], 'timestamp': post['timestamp'], 'priority': 2} for post in recom_posts]
     
-
     # Network reacts posts
     network_like_posts = list(LikedBy.objects.filter(user__in=links).values_list('post', flat=True).distinct())
     network_comment_posts = list(Comment.objects.exclude(post__in=network_like_posts).values_list('post', flat=True).distinct())
@@ -237,8 +223,6 @@ def get_posts_id(request):
     sorted_post_ids = [post['post_id'] for post in sorted_posts]
 
     return Response(sorted_post_ids, status=status.HTTP_200_OK)
-#    serializer = PostIdSerializer(posts, many=True) 
-#    return Response(serializer.data, status=status.HTTP_200_OK)
 
 # Checking if the user has liked a post
 @api_view(['POST'])

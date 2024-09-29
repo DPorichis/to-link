@@ -55,7 +55,7 @@ def signup(request):
             surname=user.surname,
             email=user.email
         )
-        
+        # Create JWT tokens
         refresh = RefreshToken.for_user(user)
         refresh['is_admin'] = user.is_staff
 
@@ -71,7 +71,7 @@ def signup(request):
 @api_view(['POST'])
 def logout(request):
     try:
-
+        # Blacklist the Refresh Token
         refresh_token = request.data.get('refresh')
         token = RefreshToken(refresh_token)
         token.blacklist()
@@ -84,7 +84,7 @@ def logout(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def update_user_password(request):
-    user = request.user  # Authenticated user
+    user = request.user
     current_password = request.data.get("current_password")
     new_password = request.data.get("new_password")
 

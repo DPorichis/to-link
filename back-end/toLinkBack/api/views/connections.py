@@ -36,6 +36,7 @@ def make_request(request):
     print(user_id_from)
     print(user_id_to)
     
+    # Check corner cases where action is not allowed
     if Link.objects.filter(Q(user_id_to=user_id_from, user_id_from=user_id_to) | Q(user_id_to=user_id_to, user_id_from=user_id_from)).exists():
         return Response({"error": "You are already friends with this user."}, status=status.HTTP_400_BAD_REQUEST)
     
@@ -69,8 +70,6 @@ def response_request(request):
     except Profile.DoesNotExist:
         return Response({"error": "User id not found."}, status=status.HTTP_404_NOT_FOUND)
     
-    print(user_req)
-    print(user_id_to)
     try:
         request = Request.objects.get(user_id_from=user_req, user_id_to=user_id_to)
     except Request.DoesNotExist:
@@ -115,12 +114,8 @@ def fetch_connections(request):
     
     links = Link.objects.filter(Q(user_id_to=user_profile) | Q(user_id_from=user_profile))
 
-    print(links)
-
-    # Check if any links are found
     if links.exists():
         serializer = LinkSerializer(links, many=True, context={'authenticated_user': user_profile})
-        print(serializer.data)
         return Response(serializer.data, status=status.HTTP_200_OK)
     else:
         return Response([], status=status.HTTP_200_OK)
@@ -146,11 +141,8 @@ def fetch_others_connections(request):
 
         links = Link.objects.filter(Q(user_id_to=user_req) | Q(user_id_from=user_req))
 
-        print(links)
-        # Check if any links are found
         if links.exists():
             serializer = ConnectionSerializer(links, many=True, context={'authenticated_user': user_profile, 'other_user': user_req})
-            print(serializer.data)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response([], status=status.HTTP_200_OK)
@@ -164,17 +156,15 @@ def fetch_others_connections(request):
 @permission_classes([IsAuthenticated])
 def fetch_searching_links(request):
     search_term = request.data.get('search', '').strip()
-
-    # Get the user's profile
     user_profile = request.user.profile
 
     links = list(Link.objects.filter(user_id_to=user_profile).values_list('user_id_from', flat=True)) + \
     list(Link.objects.filter(user_id_from=user_profile).values_list('user_id_to', flat=True))
 
-    # Fetch all profiles, excluding the current user, and order alphabetically by name and surname
+    # Fetch all, excluding the current user
     all_profiles = Profile.objects.filter(Q(user_id__in=links)).order_by('name', 'surname')
 
-    # If no search term is provided, return all profiles sorted alphabetically
+    # no search term, return all profiles sorted
     if not search_term:
         filtered_profiles = all_profiles
     else:
@@ -195,8 +185,6 @@ def fetch_searching_links(request):
 
     paginator = CustomPagination()
     paginated_profiles = paginator.paginate_queryset(filtered_profiles, request)
-
-    # Serialize the paginated profiles
     serializer = ProfileBannerSerializer(paginated_profiles, many=True, context={'authenticated_user': user_profile})
 
     return paginator.get_paginated_response(serializer.data)
@@ -207,31 +195,24 @@ def fetch_searching_links(request):
 @permission_classes([IsAuthenticated])
 def fetch_searching_non_links(request):
     search_term = request.data.get('search', '').strip()
-
-    # Get the user's profile
     user_profile = request.user.profile
 
     links = list(Link.objects.filter(user_id_to=user_profile).values_list('user_id_from', flat=True)) + \
     list(Link.objects.filter(user_id_from=user_profile).values_list('user_id_to', flat=True)) + [request.user.user_id]
-    
-    # Fetch all profiles, excluding the current user, and order alphabetically by name and surname
+
     all_profiles = Profile.objects.filter(~Q(user_id__in=links)).order_by('name', 'surname')
 
-    # If no search term is provided, return all profiles sorted alphabetically
     if not search_term:
         filtered_profiles = all_profiles
     else:
-        # Split the search term into possible first name and surname parts
         search_terms = search_term.split()
 
-        # Apply the search filter based on the number of search terms
         if len(search_terms) == 2:
             first_name, last_name = search_terms
             filtered_profiles = all_profiles.filter(
                 Q(name__icontains=first_name) & Q(surname__icontains=last_name)
             ).order_by('name', 'surname')  
         else:
-            # If only one term is provided, search by either name or surname
             filtered_profiles = all_profiles.filter(
                 Q(name__icontains=search_term) | 
                 Q(surname__icontains=search_term)

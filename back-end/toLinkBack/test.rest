@@ -1,3 +1,5 @@
+### THIS FILE IS TOO OLD, THE AYTHENTICATION HAS CHANGED
+### DON'T EXPECT IT TO WORK
 # This is a test bench for the API functionality
 
 ### Login API 

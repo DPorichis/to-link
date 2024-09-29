@@ -1,4 +1,4 @@
-# dms.py
+# listings.py
 # This module contains API views for listings.
 # Through these APIs, users can update, apply for, fetch, and create listings.
 # Additionally, users can see who has applied to their listings.
@@ -27,22 +27,18 @@ class ListingPagination(PageNumberPagination):
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def update_listing(request):
-    # Get the authenticated user
     user = request.user.profile
     target_listing = request.data.get('listing_id') 
 
-    
-    # Attempt to get the profile associated with the authenticated user
     try:
+        # the owner must be the authenticated user
         listing = Listing.objects.get(user_id=user, listing_id=target_listing)
     except Listing.DoesNotExist:
         return Response({"error": "Listing does not exist."}, status=status.HTTP_404_NOT_FOUND)
     
-    # Create the serializer with the current profile and the request data
-    serializer = ListingUpdateSerializer(listing, data=request.data, partial=True)  # `partial=True` to allow for partial updates
-
+    serializer = ListingUpdateSerializer(listing, data=request.data, partial=True)
     if serializer.is_valid():
-        # Save the updated profile information
+        # Save the updated listing information
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
     else:
@@ -53,12 +49,11 @@ def update_listing(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def get_applied_by_listing_id(request):
-    # Get the authenticated user
     user = request.user.profile
     target_listing = request.data.get('listing_id') 
 
-    # Attempt to get the profile associated with the authenticated user
     try:
+        # the owner must be the authenticated user
         listing = Listing.objects.get(listing_id=target_listing, user=user)
     except Listing.DoesNotExist:
         return Response({"error": "Listing does not exist."}, status=status.HTTP_404_NOT_FOUND)
@@ -74,29 +69,28 @@ def get_applied_by_listing_id(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def apply_by_id(request):
-    # Get the authenticated user
     user = request.user.profile
     target_listing = request.data.get('listing_id') 
 
-    # Attempt to get the profile associated with the authenticated user
     try:
         listing = Listing.objects.get(listing_id=target_listing)
     except Listing.DoesNotExist:
         return Response({"error": "Listing does not exist."}, status=status.HTTP_404_NOT_FOUND)
     
+    # owner cannot apply to listing
     if listing.user == user:
         return Response({"error": "You can't apply to your own job"}, status=status.HTTP_404_NOT_FOUND)
-    # Check if the like already exists
+    
     user = request.user.profile
     try:
         applied_by = Applied.objects.get(listing=listing, user=user)
-        # If exists, unlike the post
+        # If exists, revoke application
         applied_by.delete()
         listing.apl_cnt = F('apl_cnt') - 1
         listing.save(update_fields=['apl_cnt'])
         return Response({"applied": False}, status=status.HTTP_200_OK)
     except Applied.DoesNotExist:
-        # If not exists, like the post
+        # If not exists, create application
         application = Applied.objects.create(listing=listing, user=user)
         listing.apl_cnt = F('apl_cnt') + 1
         listing.save(update_fields=['apl_cnt'])
@@ -108,11 +102,10 @@ def apply_by_id(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def check_if_applied(request):
-    # Get the authenticated user
+    
     user = request.user.profile
     target_listing = request.data.get('listing_id') 
 
-    # Attempt to get the profile associated with the authenticated user
     try:
         listing = Listing.objects.get(listing_id=target_listing)
     except Listing.DoesNotExist:
@@ -120,11 +113,10 @@ def check_if_applied(request):
     
     if listing.user == user:
         return Response({"applied": "You can't apply to your own job"}, status=status.HTTP_200_OK)
-    # Check if the like already exists
-    user = request.user.profile
-
+    
     ### Check if applied is only called upon viewing, track user activity
     ListingViews.objects.create(user=user, listing=listing)
+    
     try:
         applied_by = Applied.objects.get(listing=listing, user=user)
         # If exists, unlike the post
@@ -160,7 +152,7 @@ def upload_listing(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# fetching the listings
+# Fetches the personalized list of listings for each user
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def show_listings(request):
@@ -184,7 +176,7 @@ def show_listings(request):
         listings = publiclistings | allowedlistings  # Combine QuerySets
     
     
-                # Listings now contains ONLY LISTINGS THAT ARE ALLOWED TO BE SEEN
+        # Listings now contains ONLY LISTINGS THAT ARE ALLOWED TO BE SEEN
 
         # Priority based on three factors
         # For same network: + 1
@@ -200,7 +192,7 @@ def show_listings(request):
         recommendedListings = listings.filter(listing_id__in=recommended)
 
         if user.skills:
-            # Query listings where the skills match any of the profile's skills
+            # listings where the skills match any of the profile's skills
             skillListings = Listing.objects.filter(
                 Q(skills__overlap=user.skills)
             ).distinct()            
@@ -208,7 +200,8 @@ def show_listings(request):
             skillListings = []
 
         prioritized_listings = []
-        # 5. Iterate over all the listings and assign priority based on the three factors
+        
+        # Assign priority based on the three factors
         for listing in listings:
             priority = 0
 
@@ -229,9 +222,11 @@ def show_listings(request):
 
     
     elif target_user == "own":
+        # For own user, only return his own listings
         listings = Listing.objects.filter(user=user).order_by('-timestamp')
     
     else:
+        # For specific user, only return his listings
         try:
             target_user = Profile.objects.get(user_id=target_user)
         except Profile.DoesNotExist:

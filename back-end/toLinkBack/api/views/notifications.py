@@ -17,33 +17,27 @@ from rest_framework.permissions import IsAuthenticated
 
 from django.db.models import F, Q
 
-# Fetcing notifications
+# Fetcing all notifications of the authenticated user
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def fetch_notifications(request):
-    # Get the authenticated user
     user = request.user.profile
-    
-    # Attempt to get the profile associated with the authenticated user
     try:
         notifications = Notification.objects.filter(user_to=user)
     except Notification.DoesNotExist:
         return Response([], status=status.HTTP_200_OK)
     
-    # Create the serializer with the current profile and the request data
-    serializer = NotificationSerializer(notifications, many=True)  # `partial=True` to allow for partial updates
+    serializer = NotificationSerializer(notifications, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-# Dismiss a notification
+# Dismiss a notification specified by notification_id
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def dismiss_notification_by_id(request):
-    # Get the authenticated user
     user = request.user.profile
     target_notification = request.data.get('notification_id')
 
-    # Attempt to get the profile associated with the authenticated user
     try:
         notification = Notification.objects.get(notification_id=target_notification, user_to=user)
         notification.delete()

@@ -84,7 +84,7 @@ def admin_fetch_listings(request):
 
     return paginator.get_paginated_response(serializer.data)
 
-# Fetching the people who applied for a listing
+# Fetching listings a user has applied to 
 @api_view(['POST'])
 @permission_classes([IsAdminUser])
 def admin_fetch_applications(request):
@@ -193,7 +193,7 @@ def admin_fetch_posts(request):
 
     return paginator.get_paginated_response(serializer.data)
 
-# Fetching the users that were searched
+# Fetching the users that fulfill the searchterms
 @api_view(['POST'])
 @permission_classes([IsAdminUser])
 def admin_fetch_users(request):
@@ -237,14 +237,12 @@ def admin_fetch_users(request):
     paginated_profiles = paginator.paginate_queryset(filtered_profiles, request)
     serializer = AdminProfileSerializer(paginated_profiles, many=True)
 
-    # Return the paginated response
     return paginator.get_paginated_response(serializer.data)
     
 # Handling the export request
 @api_view(['POST'])
 @permission_classes([IsAdminUser])
 def request_export(request):
-    # Get the user ID from the request data
     user_ids = request.data.get('selectedUsers')
     artifacts = request.data.get('selectedArtifacts')
     export_type = request.data.get('format')
@@ -278,7 +276,6 @@ def request_export(request):
                 user_data["profile"] = serializer.data
             elif artif == "Posts":
                 try:
-                    # Retrieve all comments for the post
                     posts = Post.objects.filter(user=user_profile)
                     serializer = PostSerializer(posts, many = True)
                     user_data["posts"] = serializer.data

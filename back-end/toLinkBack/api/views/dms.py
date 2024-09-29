@@ -1,4 +1,4 @@
-#dms.py
+# dms.py
 # This module contains API views for dms.
 # Through these APIs, users can send and fetch dms
 ##################################################################################
@@ -23,7 +23,6 @@ class CustomPagination(PageNumberPagination):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def get_dms_of_convo(request):
-    # Retrieve post ID from the request data
     convo_id = request.data.get('convo')
     user = request.user
 
@@ -48,11 +47,11 @@ def get_dms_of_convo(request):
         # Fetch and order the DMs (direct messages) by timestamp
         dms = Dm.objects.filter(convo_id=convo_id).order_by('-timestamp')
 
-        # Use the paginator to paginate the DMs
         paginator = CustomPagination()
         paginated_dms = paginator.paginate_queryset(dms, request)
         serializer = DMSerializer(paginated_dms, many=True)
 
+        # Update last seen
         if conv.user_id1 == profile:
             conv.user_id1_last = timezone.now()
         else:
@@ -84,6 +83,8 @@ def send_dm(request):
 
     if serializer.is_valid():
         dm = serializer.save(user=profile)
+
+        # Update last message
         conv.timestamp = timezone.now()
         if conv.user_id1 == profile:
             conv.user_id1_last = timezone.now()
@@ -98,7 +99,7 @@ def send_dm(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
-# MessagePGU side bar
+# MessagePGU side bar fetching
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])  
 def fetch_convo_menu(request):
@@ -111,7 +112,8 @@ def fetch_convo_menu(request):
     except Convo.DoesNotExist:
         return Response({}, status=status.HTTP_200_OK)
     
-# Getting the first message of the conversation to display it in the sidebar
+# Retriving convo based on the user_id provided and the authenticated user
+# Used in URL specific search
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def retrive_convo(request):
