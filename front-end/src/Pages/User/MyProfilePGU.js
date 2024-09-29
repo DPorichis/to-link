@@ -63,6 +63,10 @@ function MyProfilePGU(props) {
                 {
                     userData.profile_info.experience = []
                 }
+                if (userData.profile_info.skills === null) 
+                {
+                    userData.profile_info.skills = []
+                }
                 setSavedProfile(userData.profile_info);
                 setEditedProfile(userData.profile_info);
             } else if (response.status === 401) {
@@ -498,7 +502,7 @@ function MyProfilePGU(props) {
                             <div class="mb-3">
                                 <label for="experience" class="form-label">Experience</label>
                                 <ul id="experienceList" class="list-group">
-                                {editedProfile.experience.map((exp, index) =>
+                                {editedProfile.experience && editedProfile.experience.map((exp, index) =>
                                     <li class="list-group-item" style={{display:"flex", justifyContent:"space-between"}}>
                                         <input type="text" class="form-control" name={index} 
                                         placeholder="Add experience here" value={exp} onChange={handleExpChange}/>
@@ -518,7 +522,7 @@ function MyProfilePGU(props) {
                             <div class="mb-3">
                                 <label for="education" class="form-label">Education</label>
                                 <ul id="educationList" class="list-group">
-                                    {editedProfile.education.map((_, index) =>
+                                    {editedProfile.education && editedProfile.education.map((_, index) =>
                                         <li class="list-group-item" style={{display:"flex", justifyContent:"space-between"}}>
                                             <input type="text" class="form-control" name={index} 
                                             placeholder="Add education here" value={editedProfile.education[index]} onChange={handleEduChange}/>
@@ -535,10 +539,10 @@ function MyProfilePGU(props) {
                                     >Add Education</button>
                                 </div>
                             </div>
-                            <div class="mb-12" style={{marginBottom:"3px"}}>
+                            <div class="mb-3" style={{marginBottom:"3px"}}>
                                 <label for="pfSkills" class="form-label" style={{marginBottom:"2px"}}>Skills</label>
                                 <ul id="skillList" class="list-group">
-                                    {editedProfile.skills.map((_, index) =>
+                                    {editedProfile.skills && editedProfile.skills.map((_, index) =>
                                         <li class="list-group-item" style={{display:"flex", justifyContent:"space-between"}}>
                                             <input type="text" class="form-control" name={index} 
                                             placeholder="Add skill here" value={editedProfile.skills[index]} onChange={handleSkillChange}/>
@@ -558,13 +562,7 @@ function MyProfilePGU(props) {
                         </div>
                         <div class="col-md-4">
                             <h5>Category Visibility</h5>
-                            <label for="state" class="form-label">Activity Visibility</label>
-                            <select class="form-select" name="vis_act" value={editedProfile.vis_act}
-                            onChange={handleInputChange}>
-                                <option value='1'>Public</option>
-                                <option value='2'>Network Only</option>
-                                <option value='3'>Private</option>
-                            </select>
+                            
                             <label for="state" class="form-label">Education Visibility</label>
                             <select class="form-select" name="vis_edu" value={editedProfile.vis_edu}
                             onChange={handleInputChange}>
@@ -574,6 +572,13 @@ function MyProfilePGU(props) {
                             </select>
                             <label for="state" class="form-label">Experience Visibility</label>
                             <select class="form-select" name="vis_exp" value={editedProfile.vis_exp}
+                            onChange={handleInputChange}>
+                                <option value='1'>Public</option>
+                                <option value='2'>Network Only</option>
+                                <option value='3'>Private</option>
+                            </select>
+                            <label for="state" class="form-label">Skills Visibility</label>
+                            <select class="form-select" name="vis_act" value={editedProfile.vis_act}
                             onChange={handleInputChange}>
                                 <option value='1'>Public</option>
                                 <option value='2'>Network Only</option>
@@ -714,7 +719,7 @@ function MyProfilePGU(props) {
                     (mode === "listings"
                     ?
                     <>
-                        {listings.length !== 0  ? 
+                        {listings.count !== 0  ? 
                         <>
                         {listings.results.map((listi) =>
                             <JobTile listing={listi} handleSelect={goToJobListing} active={false} />

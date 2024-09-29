@@ -1,3 +1,7 @@
+# recommendations.py
+# This file contains all the functions for creating recommendations
+#############################################
+
 from api.models import Applied, ListingViews, Link, Profile, Listing, \
       PostViews, LikedBy, Post, Comment, PostRecom, ListingRecom
 import numpy as np
@@ -72,6 +76,7 @@ def listing_recom():
     
     for user in range(n_users):
         prf = Profile.objects.get(user=index_user[user])
+        ListingRecom.objects.filter(user=prf).delete()
         for idx in range(n_recommendations):
             lst = Listing.objects.get(listing_id=index_listing[top_recom[user, idx]])
             ListingRecom.objects.create(user=prf, listing=lst)
@@ -183,6 +188,7 @@ def post_recom():
 
     for user in range(n_users):
         prf = Profile.objects.get(user=index_user[user])
+        PostRecom.objects.filter(user=prf).delete()
         for idx in range(n_recommendations):
             pst = Post.objects.get(post_id=index_post[top_recom[user, idx]])
             PostRecom.objects.create(user=prf, post=pst)

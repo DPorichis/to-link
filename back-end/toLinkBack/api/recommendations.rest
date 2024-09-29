@@ -1,0 +1,7 @@
+# This is a test bench for recommendations functionality,
+# Send the request bellow to generate recommendations for the users
+# (REST Client Extension for VS code is nice for that)
+POST https://127.0.0.1:8000/reco/init
+Content-Type: application/json
+
+{}

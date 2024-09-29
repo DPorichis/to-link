@@ -79,6 +79,7 @@ class Command(BaseCommand):
             data = json.load(file)
 
             for entry in data:
+                print("post")
                 # Create the posts
                 profile = Profile.objects.get(user_id=entry["user"])
                 post = Post.objects.create(
@@ -103,7 +104,7 @@ class Command(BaseCommand):
                         post.save(update_fields=['like_cnt'])
                     except IntegrityError:
                         # Handle the case where the like already exists
-                        print("Like could not be created. Integrity error encountered. (Most likely bad luck)")
+                        print("Like already exists. (Most likely bad luck)")
                 
                 # Create some random comments
                 random_comments = random.randint(0, 23)
@@ -120,7 +121,7 @@ class Command(BaseCommand):
                     
                 # Create some random views
                 random_views = random.randint(0, 90)
-                for i in range(random_likes):
+                for i in range(random_views):
                     user = random.randint(2, 101)
                     profile = Profile.objects.get(user_id=user)
                     try:
@@ -130,7 +131,7 @@ class Command(BaseCommand):
                         )
                     except IntegrityError:
                         # Handle the case where the like already exists
-                        print("View could not be created. Integrity error encountered. (Most likely bad luck)")
+                        print("View already exists. (Most likely bad luck)")
 
         self.stdout.write(f'Data from Post_MOCK.json loaded successfully.')
 
@@ -174,11 +175,11 @@ class Command(BaseCommand):
                             )
                         except IntegrityError:
                             # Handle the case where the like already exists or other integrity issues occur
-                            print("Application could not be created. Integrity error encountered. (Most likely bad luck)")
+                            print("Application already exists.")
 
                 # Create some random views
                 random_views = random.randint(0, 90)
-                for i in range(random_likes):
+                for i in range(random_views):
                     user = random.randint(2, 101)
                     profile = Profile.objects.get(user_id=user)
                     try:
@@ -188,6 +189,6 @@ class Command(BaseCommand):
                         )
                     except IntegrityError:
                         # Handle the case where the like already exists
-                        print("Like could not be created. Integrity error encountered. (Most likely bad luck)")
+                        print("View creation error")
       
         self.stdout.write(f'Data from Listing_MOCK.json loaded successfully.')

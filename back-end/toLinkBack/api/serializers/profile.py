@@ -83,6 +83,11 @@ class ProfileSerializer(serializers.ModelSerializer):
             edu = obj.education
         else:
             edu = []
+
+        if obj.vis_act <= vis:
+            skil = obj.skills
+        else:
+            skil = []
         
         if obj.vis_cont <= vis:
             email = obj.email
@@ -104,7 +109,7 @@ class ProfileSerializer(serializers.ModelSerializer):
             "website": website,
             "experience": exp, 
             "education": edu,
-            "skills": obj.skills,
+            "skills": skil,
             "link_cnt": obj.link_cnt,
             "post_cnt": obj.post_cnt,
             "listings_cnt": obj.listings_cnt,

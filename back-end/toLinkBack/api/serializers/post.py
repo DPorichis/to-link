@@ -31,7 +31,7 @@ class PostSerializer(serializers.ModelSerializer):
     audios = serializers.SerializerMethodField()
     class Meta:
         model = Post
-        fields = ['post_id', 'text', 'media', 'links', 'like_cnt', 'comment_cnt', 'user', 'images', 'videos', 'audios', 'user_info']
+        fields = ['post_id', 'text', 'media', 'like_cnt', 'comment_cnt', 'user', 'images', 'videos', 'audios', 'user_info']
         read_only_fields = ['post_id', 'like_cnt', 'comment_cnt', 'user', 'images', 'videos', 'audios', 'user_info']
     
     def create(self, validated_data):
