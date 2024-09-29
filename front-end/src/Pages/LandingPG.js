@@ -172,7 +172,7 @@ function LandingPG(props) {
                             <h5>
                                 Welcome back {userLoggedIn.profile_info.name}!
                             </h5>
-                            <img src={userLoggedIn.profile_info.pfp} style={{width:"100px", height:"100px", borderRadius:"50%"}} />
+                            <img src={userLoggedIn.profile_info.pfp} style={{width:"100px", height:"100px", borderRadius:"25%"}} />
                             <div style={{display:"flex", width:"100%", marginTop:"10px", flexDirection:"column"}}>
                                 <a class="btn btn-primary" style={{width:"100%", marginTop:"10px"}} href={jwtDecode(localStorage.getItem('access_token')).is_admin ? "/admin" : "/user"}>Continue as {userLoggedIn.profile_info.name}</a>
                                 <button class="btn btn-outline-danger" style={{width:"100%", marginTop:"10px"}} onClick={handleLogout}>Logout</button>

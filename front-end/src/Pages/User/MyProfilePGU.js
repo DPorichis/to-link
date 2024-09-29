@@ -602,7 +602,7 @@ function MyProfilePGU(props) {
                     marginBottom:"5px",  borderTop: "solid #ddd 1px", padding: "5px 5px"
                 }}>
                     <div style={{display:"flex", flexDirection:"row", justifyContent:"flex-start"}}>
-                        <img src={savedProfile.pfp} alt="Avatar" style={{width:"110px", height:"110px"}} className="link-image" />
+                        <img src={savedProfile.pfp} alt="Avatar" style={{width:"110px", height:"110px", borderRadius:"25%"}} className="link-image" />
                         <div style={{textAlign:"left", marginLeft:"15px", alignContent:"center", height:"100%"}}>
                         <h3 style={{marginBottom: "0px", fontSize:"32px"}}>
                             {savedProfile.name + " " + savedProfile.surname}

@@ -97,7 +97,7 @@ function ProfileBanner(props){
         { relationship === "Friends" ? 
         <div className="Box" style={{backgroundColor: "#96b9e459", border:"1px solid #ccc",width:"100%",flexDirection:"row",padding:"5px 10px", display:"flex", justifyContent:"space-between", marginTop:"1px",marginBottom:"1px",borderRadius:"10px"}}>
         <div style={{flexDirection:"row",display:"flex",justifyContent:"flex-start"}}>
-            <img src={props.link.profile_info.pfp} alt="Avatar" style={{width :"64px",height:"64px"}} className="link-image" />
+            <img src={props.link.profile_info.pfp} alt="Avatar" style={{width :"64px",height:"64px", borderRadius:"25%"}} className="link-image" />
             <div style={{display: 'flex',flexDirection: 'column',justifyContent: 'center',}}>
                 <div className="Name" style={{position:"center", textAlign: "left",justifyContent: "left",marginLeft: "20px",aligncontent:"center"}}>
                     {props.link.profile_info.name} {props.link.profile_info.surname}
@@ -122,7 +122,7 @@ function ProfileBanner(props){
         (relationship === "Pending Request Sent"?
             <div className="Box" style={{backgroundColor: "#96b9e459", border:"1px solid #ccc",width:"100%",flexDirection:"row",padding:"5px 10px", display:"flex", justifyContent:"space-between", marginTop:"1px",marginBottom:"1px",borderRadius:"10px"}}>
             <div style={{flexDirection:"row",display:"flex",justifyContent:"flex-start"}}>
-                <img src={props.link.profile_info.pfp} alt="Avatar" style={{width :"64px",height:"64px"}} className="link-image" />
+                <img src={props.link.profile_info.pfp} alt="Avatar" style={{width :"64px",height:"64px", borderRadius:"25%"}} className="link-image" />
                 <div style={{display: 'flex',flexDirection: 'column',justifyContent: 'center',}}>
                     <div className="Name" style={{position:"center", textAlign: "left",justifyContent: "left",marginLeft: "20px",aligncontent:"center"}}>
                         {props.link.profile_info.name} {props.link.profile_info.surname}
@@ -147,7 +147,7 @@ function ProfileBanner(props){
         (relationship === "Pending Request Received"?
             <div className="Box" style={{backgroundColor: "#96b9e459", border:"1px solid #ccc",width:"100%",flexDirection:"row",padding:"5px 10px", display:"flex", justifyContent:"space-between", marginTop:"1px",marginBottom:"1px",borderRadius:"10px"}}>
             <div style={{flexDirection:"row",display:"flex",justifyContent:"flex-start"}}>
-                <img src={props.link.profile_info.pfp} alt="Avatar" style={{width :"64px",height:"64px"}} className="link-image" />
+                <img src={props.link.profile_info.pfp} alt="Avatar" style={{width :"64px",height:"64px", borderRadius:"25%"}} className="link-image" />
                 <div style={{display: 'flex',flexDirection: 'column',justifyContent: 'center',}}>
                     <div className="Name" style={{position:"center", textAlign: "left",justifyContent: "left",marginLeft: "20px",aligncontent:"center"}}>
                         {props.link.profile_info.name} {props.link.profile_info.surname}
@@ -174,7 +174,7 @@ function ProfileBanner(props){
         :
         <div className="Box" style={{backgroundColor: "#96b9e459", border:"1px solid #ccc",width:"100%",flexDirection:"row",padding:"5px 10px", display:"flex", justifyContent:"space-between", marginTop:"1px",marginBottom:"1px",borderRadius:"10px"}}>
             <div style={{flexDirection:"row",display:"flex",justifyContent:"flex-start"}}>
-                <img src={props.link.profile_info.pfp} alt="Avatar" style={{width :"64px",height:"64px"}} className="link-image" />
+                <img src={props.link.profile_info.pfp} alt="Avatar" style={{width :"64px",height:"64px", borderRadius:"25%"}} className="link-image" />
                 <div style={{display: 'flex',flexDirection: 'column',justifyContent: 'center',}}>
                     <div className="Name" style={{position:"center", textAlign: "left",justifyContent: "left",marginLeft: "20px",aligncontent:"center"}}>
                         {props.link.profile_info.name} {props.link.profile_info.surname}

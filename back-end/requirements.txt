@@ -10,3 +10,4 @@ dicttoxml
 django-extensions
 Werkzeug
 pyOpenSSL
+numpy

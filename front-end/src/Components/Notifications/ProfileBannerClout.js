@@ -19,7 +19,7 @@ function ProfileBannerClout(props){
         
         <div className="Box" style={{border:"1px solid #ccc", backgroundColor: "#96b9e459",width:"100%",flexDirection:"row",padding:"5px 10px", display:"flex", justifyContent:"space-between", marginTop:"9px",marginBottom:"9px",borderRadius:"10px",textAlign: "center"}}>
             <div style={{flexDirection:"row",display:"flex",justifyContent:"flex-start",textAlign: "center"}}>
-                <img src={props.clout.pfp} alt="Avatar" style={{width :"64px",height:"64px"}} className="link-image" />
+                <img src={props.clout.pfp} alt="Avatar" style={{width :"64px",height:"64px", borderRadius:"25%"}} className="link-image" />
                 <div style={{display: 'flex',flexDirection: 'row',justifyContent: 'center',alignItems:"center",marginLeft:"15px"}}>
                     {props.clout.text}
                 </div>
