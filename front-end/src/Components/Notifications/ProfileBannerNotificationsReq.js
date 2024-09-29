@@ -23,17 +23,19 @@ const getCookie = (name) => {
 };
 
 function ProfileBannerNotificationsReq(props){
+    //Render Control
     const [isVisible, setIsVisible] = useState(true);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     
+    //Response the Link Requests
     const handleResponse = async (responseType) => {
         setLoading(true);
         setError(null);
 
         const token = localStorage.getItem('access_token');
         const data = {
-            "request_id": props.user_id_from, // The request_id should come from props
+            "request_id": props.user_id_from, 
             "request_response": responseType
         };
 
@@ -87,6 +89,7 @@ function ProfileBannerNotificationsReq(props){
                 </div>
             </div>
             <div style={{display: "flex",flexDirection: "row",alignItems: "center",justifyContent: "center"}}>
+            // accept and dismiss the request 
             <button
                     type="button"
                     className="btn btn-outline-danger"

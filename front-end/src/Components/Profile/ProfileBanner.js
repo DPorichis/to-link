@@ -25,8 +25,9 @@ const getCookie = (name) => {
   };
 
 function ProfileBanner(props){
-
+    //Relationship state
     const [relationship, setRelationship] = useState(props.link.relationship)
+    //Sending or revert a friend Request 
     const handleRequestClick = async (userId) => {
         const token = localStorage.getItem('access_token');
         try {
@@ -56,7 +57,7 @@ function ProfileBanner(props){
             alert("An error occurred while sending the request");
         }
     };
-
+    //Responding a friend request
     const handleResponseClick = async (answer) => {
         const token = localStorage.getItem('access_token');
         try {

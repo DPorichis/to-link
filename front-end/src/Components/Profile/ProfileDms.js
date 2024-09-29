@@ -54,6 +54,7 @@ function ProfileDms(props){
 
     }
 
+    //Notification state
     const [notif, setNotif] = useState(props.link.notification)
 
 

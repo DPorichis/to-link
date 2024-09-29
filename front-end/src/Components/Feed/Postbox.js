@@ -10,16 +10,21 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 function Postbox(props) {
-    const [liked, setLiked] = useState(false);
+    //Likes and comments
+    const [liked, setLiked] = useState(false); 
     const [commentsVisible, setCommentsVisible] = useState(false);
-    const [loading, setLoading] = useState(false);
     const [commentText, setCommentText] = useState("");
     const [error, setError] = useState(null);
     const [likeCount, setLikeCount] = useState(props.post.like_cnt); 
     const [commentCount, setCommentCount] = useState(props.post.comment_cnt);
+    //Tracking a request on progress
+    const [loading, setLoading] = useState(false); 
+    //Options dropdown
     const [showOptions, setShowOptions] = useState(false);
+     //media handling
     const [media, setMedia] = useState([...props.post.images, ...props.post.videos, ...props.post.audios])
 
+    //Checking if user has liked the picture
     useEffect(() => {
         const fetchLikes = async () => {
             const token = localStorage.getItem('access_token');
@@ -43,7 +48,7 @@ function Postbox(props) {
         console.log(media)
         fetchLikes();
     }, [props.post.post_id]); 
-
+    //When a user likes a post updates the database
     const toggleLiked = async () => {
         setLoading(true);
         const token = localStorage.getItem('access_token');
@@ -65,7 +70,7 @@ function Postbox(props) {
         }
         setLoading(false);
     };
-
+    //Post deletion
     const handleDeletePost = async () => {
         const confirmDelete = window.confirm("Are you sure you want to delete this post?");
         if (!confirmDelete) return;
@@ -90,6 +95,7 @@ function Postbox(props) {
         setCommentText(e.target.value);
     };
 
+    //When the user comments on a post updates the database
     const handleCommentUpload = async () => {
         const token = localStorage.getItem('access_token');
         const response = await fetch("https://127.0.0.1:8000/posts/comment/new", {

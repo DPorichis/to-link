@@ -21,11 +21,15 @@ const getCookie = (name) => {
     return cookieValue;
 };
 function CommentsCONT(props) {
-
-    const [loading, setLoading] = useState(true);
-    const [comments, setComments] = useState([]);
+    //Render control
     const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(true);
     
+    //Comment list
+    const [comments, setComments] = useState([]);
+    
+    
+    //Fetching the comments 
     useEffect(() => {
         const fetchComments = async () => {
             const token = localStorage.getItem('access_token');

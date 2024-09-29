@@ -23,8 +23,9 @@ const getCookie = (name) => {
   };
 
 function ProfileCard(props){
-
+    //Relationship state
     const [relationship, setRelationship] = useState(props.link.relationship)
+    //Sending or revert a friend Request 
     const handleRequestClick = async (userId) => {
         const token = localStorage.getItem('access_token');
         try {
@@ -56,6 +57,7 @@ function ProfileCard(props){
         }
     };
 
+    //Responding a friend request
     const handleResponseClick = async (answer) => {
         const token = localStorage.getItem('access_token');
         try {

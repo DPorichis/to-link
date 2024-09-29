@@ -5,10 +5,13 @@ import React, { useRef, useLayoutEffect, useState, useEffect } from "react";
 import Message from "./Message";
 
 function MessageCont(props) {
+    //States for the Dms
     const messagesEndRef = useRef(null);
+    //Message Data
     const [dms, setDms] = useState({});
     const [messageCache, setMessageCache] = useState([])
 
+    //Fetching the user Dms
     const fetchDms = async (page) => {
         const token = localStorage.getItem('access_token');
         const response = await fetch(page ? page : "https://127.0.0.1:8000/convo/dm/fetch", {
@@ -40,11 +43,12 @@ function MessageCont(props) {
         }
     };
 
-
+    // fetches new messages when the conversation changes or is refreshed
     useEffect(() => {
         fetchDms();
     },[props.rer, props.convo.convo_id]);
 
+    // Load more messages
     const handleLoadMore = () => {
         fetchDms(dms.next)
     }
@@ -70,6 +74,7 @@ function MessageCont(props) {
             :
             <></>
             }
+            // if there is no messages renders a text otherwise renders the messages
                 {dms.count === 0 ? (
                     <div style={{ textAlign: "center" }}>
                         <h5>It's a little quiet in here...</h5>
