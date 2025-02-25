@@ -45,7 +45,7 @@ function AdminDashboardPGA(props) {
     // Fetch User List
     const fetchUsers = async (page) => {
         const token = localStorage.getItem('access_token');        
-        const response = await fetch(page ? page : "https://127.0.0.1:8000/admin/fetch/allusers", {
+        const response = await fetch(page ? page : "http://127.0.0.1:8000/admin/fetch/allusers", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -153,7 +153,7 @@ function AdminDashboardPGA(props) {
     const handleExport = async () => {
         const token = localStorage.getItem('access_token');
         console.log(exportSelection)
-        const response = await fetch("https://127.0.0.1:8000/admin/export", {
+        const response = await fetch("http://127.0.0.1:8000/admin/export", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',

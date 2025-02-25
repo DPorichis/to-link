@@ -94,7 +94,7 @@ function HomePGU(props) {
     const fetchPostList = async () => {
         setLoadingPosts(true);
         const token = localStorage.getItem('access_token');
-        const response = await fetch("https://127.0.0.1:8000/posts/getid", {
+        const response = await fetch("http://127.0.0.1:8000/posts/getid", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -117,7 +117,7 @@ function HomePGU(props) {
         const token = localStorage.getItem('access_token');
         try {
             if (PostIDList && PostIDList.length > 0) {
-                const response = await fetch("https://127.0.0.1:8000/posts/view/byid", {
+                const response = await fetch("http://127.0.0.1:8000/posts/view/byid", {
                     method: "POST",
                     headers: {
                         'Content-Type': 'application/json',
@@ -182,7 +182,7 @@ function HomePGU(props) {
         }
         postData.append('text', postText)
 
-        const response = await fetch("https://127.0.0.1:8000/posts/upload/", {
+        const response = await fetch("http://127.0.0.1:8000/posts/upload/", {
             method: "POST",
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -212,7 +212,7 @@ function HomePGU(props) {
     useEffect(() => {
         const fetchLinks = async () => {
             const token = localStorage.getItem('access_token');
-            const response = await fetch("https://127.0.0.1:8000/links/list", {
+            const response = await fetch("http://127.0.0.1:8000/links/list", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -247,7 +247,7 @@ function HomePGU(props) {
 
         const fetchProfile = async () => {
             const token = localStorage.getItem('access_token');
-            const response = await fetch("https://127.0.0.1:8000/profile/own/fetch", {  
+            const response = await fetch("http://127.0.0.1:8000/profile/own/fetch", {  
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',

@@ -39,7 +39,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
         # Determine which user is not the authenticated user
         if obj.pfp:
-            file_url = "https://127.0.0.1:8000" + obj.pfp.url
+            file_url = "http://127.0.0.1:8000" + obj.pfp.url
         else:
             file_url = "/default.png"
         if obj.user_id == authenticated_user.user_id:
@@ -166,7 +166,7 @@ class ProfileHeaderSerializer(serializers.ModelSerializer):
         
     def get_profile_info(self, obj):
         if obj.pfp:
-            file_url = "https://127.0.0.1:8000" + obj.pfp.url
+            file_url = "http://127.0.0.1:8000" + obj.pfp.url
         else:
             file_url = "/default.png"
         
@@ -205,7 +205,7 @@ class ProfileBannerSerializer(serializers.ModelSerializer):
         authenticated_user = self.context.get('authenticated_user')
         
         if obj.pfp:
-            file_url = "https://127.0.0.1:8000" + obj.pfp.url
+            file_url = "http://127.0.0.1:8000" + obj.pfp.url
         else:
             file_url = "/default.png"
         

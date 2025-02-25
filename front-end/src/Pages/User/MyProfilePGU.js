@@ -42,7 +42,7 @@ function MyProfilePGU(props) {
     useEffect(() => {
         const fetchUser = async () => {
             const token = localStorage.getItem('access_token');
-            const response = await fetch("https://127.0.0.1:8000/profile/own/fetch", {
+            const response = await fetch("http://127.0.0.1:8000/profile/own/fetch", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -90,7 +90,7 @@ function MyProfilePGU(props) {
             }
 
 
-            const response1 = await fetch("https://127.0.0.1:8000/listings/list", {
+            const response1 = await fetch("http://127.0.0.1:8000/listings/list", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -120,7 +120,7 @@ function MyProfilePGU(props) {
                 console.log("Problems with fetching your listings info")
             }
 
-            const response2 = await fetch("https://127.0.0.1:8000/posts/fetch/user", {
+            const response2 = await fetch("http://127.0.0.1:8000/posts/fetch/user", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -151,7 +151,7 @@ function MyProfilePGU(props) {
                 console.log("Problems with fetching your listings info")
             }
 
-            const response3 = await fetch("https://127.0.0.1:8000/links/other", {
+            const response3 = await fetch("http://127.0.0.1:8000/links/other", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -247,7 +247,7 @@ function MyProfilePGU(props) {
             formData.append('pfp', image);
         }
 
-        const response = await fetch("https://127.0.0.1:8000/profile/own/update/", {
+        const response = await fetch("http://127.0.0.1:8000/profile/own/update/", {
             method: "PUT",
             headers: {
                 'Authorization': `Bearer ${token}`

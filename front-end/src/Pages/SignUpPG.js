@@ -130,7 +130,7 @@ function SignUpPG(props) {
         }
 
         if (Object.keys(errors).length===0){
-            const response = await fetch("https://127.0.0.1:8000/signup", {
+            const response = await fetch("http://127.0.0.1:8000/signup", {
                 method: "POST",
                 headers: {
                 "Content-Type": "application/json",
@@ -314,7 +314,7 @@ function SignUpPG(props) {
         
         // Update the profile info
 
-        const response = await fetch("https://127.0.0.1:8000/profile/own/update/", {
+        const response = await fetch("http://127.0.0.1:8000/profile/own/update/", {
             method: "PUT",
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -331,7 +331,7 @@ function SignUpPG(props) {
         
         // Update the personal info
 
-        const response1 = await fetch("https://127.0.0.1:8000/user/update", {
+        const response1 = await fetch("http://127.0.0.1:8000/user/update", {
             method: "PUT",
             headers: {
                 'Content-Type': 'application/json',

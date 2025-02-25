@@ -42,7 +42,7 @@ function MessagesPGU(props) {
     useEffect(() => {
         const fetchconvos = async () => {
             const token = localStorage.getItem('access_token');
-            const response = await fetch("https://127.0.0.1:8000/convo/list/", {
+            const response = await fetch("http://127.0.0.1:8000/convo/list/", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -76,7 +76,7 @@ function MessagesPGU(props) {
         };
         const fetchprofilepic = async () => {
             const token = localStorage.getItem('access_token');
-            const response = await fetch("https://127.0.0.1:8000/profile/own/fetch", {
+            const response = await fetch("http://127.0.0.1:8000/profile/own/fetch", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -113,7 +113,7 @@ function MessagesPGU(props) {
         // Convo Retrival from URL
         const restoreDM = async () => {
             const token = localStorage.getItem('access_token');
-            const response = await fetch("https://127.0.0.1:8000/convo/find/", {
+            const response = await fetch("http://127.0.0.1:8000/convo/find/", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -195,7 +195,7 @@ function MessagesPGU(props) {
             messageData.append('convo', selected_dm.convo_id)
         
             const token = localStorage.getItem('access_token');
-            const response = await fetch("https://127.0.0.1:8000/convo/dm/new/", {
+            const response = await fetch("http://127.0.0.1:8000/convo/dm/new/", {
                 method: "POST",
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -260,7 +260,7 @@ function MessagesPGU(props) {
                         :
                         <div style={{padding:"10px 10px", borderRadius:"5px", backgroundColor:"#fff"}}>
                             <h5>You don't seem to have any connections... </h5>
-                            <p>Let's change that! Go to Network and find your self some new friends.</p>
+                            <p>Let's change that! Go to Network and find yourself some new friends.</p>
                             <a href="/user/network" className="btn btn-primary">Go to Network</a>
                         </div>
                         }

@@ -3,21 +3,21 @@
 # This is a test bench for the API functionality
 
 ### Login API 
-POST https://127.0.0.1:8000/reco/init
+POST http://127.0.0.1:8000/reco/init
 Content-Type: application/json
 
 {}
 
 ### Sign Up API
 
-POST https://127.0.0.1:8000/signup
+POST http://127.0.0.1:8000/signup
 Content-Type: application/json
 
 {"name": "James", "surname": "James", "email": "ah@ah.a", "password":"James", "country": "James", "city": "James", "phone": "123", "birthdate": "2003-12-02"}
 
 ### Profile Update API
 
-PUT https://127.0.0.1:8000/profile/own/update/
+PUT http://127.0.0.1:8000/profile/own/update/
 Cookie: sessionid=mq3j63szyzdr0x6979ujql2ahdmxzcx9; csrftoken=WiokDNU9tbnSQttgOAw9BRQvyaZ6DIDa;
 X-CSRFToken: WiokDNU9tbnSQttgOAw9BRQvyaZ6DIDa
 Content-Type: application/json
@@ -28,7 +28,7 @@ Content-Type: application/json
 
 ### Fetch your profile api
 
-POST https://127.0.0.1:8000/profile/own/fetch
+POST http://127.0.0.1:8000/profile/own/fetch
 Content-Type: application/json
 Cookie: sessionid=fam6r9yw3iitzeribv919thzk18rmcpk; csrftoken=hJX3AKNOVBX9peYtGaelQ4SEP32j21HY;
 X-CSRFToken: hJX3AKNOVBX9peYtGaelQ4SEP32j21HY
@@ -38,7 +38,7 @@ X-CSRFToken: hJX3AKNOVBX9peYtGaelQ4SEP32j21HY
 
 ### Fetch outside profile
 
-POST https://127.0.0.1:8000/profile/view/
+POST http://127.0.0.1:8000/profile/view/
 Content-Type: application/json
 Cookie: sessionid=9b4jnvvzyiem8c8z0yah8g6fxllgetv1; csrftoken=HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9;
 X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
@@ -50,7 +50,7 @@ X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
 
 ### Upload Post API
 
-POST https://127.0.0.1:8000/posts/upload/
+POST http://127.0.0.1:8000/posts/upload/
 Content-Type: application/json
 Cookie: sessionid=roxsoy3o97lvbgnxzc4szubo151b2n35; csrftoken=r1i1WEoStxhR6skaVe6uBOU6yXOZYV03;
 X-CSRFToken: r1i1WEoStxhR6skaVe6uBOU6yXOZYV03
@@ -60,7 +60,7 @@ X-CSRFToken: r1i1WEoStxhR6skaVe6uBOU6yXOZYV03
 }
 ####
 
-POST https://127.0.0.1:8000/posts/fetch
+POST http://127.0.0.1:8000/posts/fetch
 Content-Type: application/json
 Cookie: sessionid=roxsoy3o97lvbgnxzc4szubo151b2n35; csrftoken=r1i1WEoStxhR6skaVe6uBOU6yXOZYV03;
 X-CSRFToken: r1i1WEoStxhR6skaVe6uBOU6yXOZYV03
@@ -71,7 +71,7 @@ X-CSRFToken: r1i1WEoStxhR6skaVe6uBOU6yXOZYV03
 
 ### Fetch Post API
 
-POST https://127.0.0.1:8000/posts/view/
+POST http://127.0.0.1:8000/posts/view/
 Content-Type: application/json
 Cookie: sessionid=9b4jnvvzyiem8c8z0yah8g6fxllgetv1; csrftoken=HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9;
 X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
@@ -82,7 +82,7 @@ X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
 
 ### Like/Unlike Post API
 
-POST https://127.0.0.1:8000/posts/like/
+POST http://127.0.0.1:8000/posts/like/
 Content-Type: application/json
 Cookie: sessionid=9b4jnvvzyiem8c8z0yah8g6fxllgetv1; csrftoken=HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9;
 X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
@@ -93,7 +93,7 @@ X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
 
 ### Comment Post API
 
-POST https://127.0.0.1:8000/posts/comment/new
+POST http://127.0.0.1:8000/posts/comment/new
 Content-Type: application/json
 Cookie: sessionid=9b4jnvvzyiem8c8z0yah8g6fxllgetv1; csrftoken=HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9;
 X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
@@ -105,7 +105,7 @@ X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
 
 ### Fetch Comments API
 
-POST https://127.0.0.1:8000/posts/comment/show
+POST http://127.0.0.1:8000/posts/comment/show
 Content-Type: application/json
 Cookie: sessionid=9b4jnvvzyiem8c8z0yah8g6fxllgetv1; csrftoken=HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9;
 X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
@@ -119,7 +119,7 @@ X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
 
 ###### Testing George ######
 ### Testing Requests
-POST https://127.0.0.1:8000/request/new
+POST http://127.0.0.1:8000/request/new
 Content-Type: application/json
 Cookie: sessionid=7kww7g4ugmt88931v9e5r150bq97rwla; csrftoken=vqh7hynFn3QtW7MY7VKN89NU03yeAvvZ;
 X-CSRFToken: vqh7hynFn3QtW7MY7VKN89NU03yeAvvZ
@@ -130,7 +130,7 @@ X-CSRFToken: vqh7hynFn3QtW7MY7VKN89NU03yeAvvZ
 
 
 ### Testing Requests
-POST https://127.0.0.1:8000/request/respond
+POST http://127.0.0.1:8000/request/respond
 Content-Type: application/json
 Cookie: sessionid=98nqm3g4monogu1m22ud2nu7lppdf5is; csrftoken=0QkRW9Nqv9QBvlvhpliyeXCcUSAxVk0f;
 X-CSRFToken: 0QkRW9Nqv9QBvlvhpliyeXCcUSAxVk0f
@@ -142,7 +142,7 @@ X-CSRFToken: 0QkRW9Nqv9QBvlvhpliyeXCcUSAxVk0f
 
 
 ### Testing Requests
-POST https://127.0.0.1:8000/links/list
+POST http://127.0.0.1:8000/links/list
 Content-Type: application/json
 Cookie: sessionid=9b4jnvvzyiem8c8z0yah8g6fxllgetv1; csrftoken=HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9;
 X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
@@ -151,7 +151,7 @@ X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
 }
 
 ### Testing Requests
-POST https://127.0.0.1:8000/request/list
+POST http://127.0.0.1:8000/request/list
 Content-Type: application/json
 Cookie: sessionid=p8j5gp4sad5cmdnok0mjt2om7oryqrqh; csrftoken=uBQszOcg5agfIwgmmab27b8D5uodjxLE;
 X-CSRFToken: uBQszOcg5agfIwgmmab27b8D5uodjxLE
@@ -162,7 +162,7 @@ X-CSRFToken: uBQszOcg5agfIwgmmab27b8D5uodjxLE
 
 ### Convo and Messenging Testing
 
-POST https://127.0.0.1:8000/convo/list/
+POST http://127.0.0.1:8000/convo/list/
 Content-Type: application/json
 Cookie: sessionid=9b4jnvvzyiem8c8z0yah8g6fxllgetv1; csrftoken=HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9;
 X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
@@ -172,7 +172,7 @@ X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
 
 ###
 
-POST https://127.0.0.1:8000/convo/dm/new
+POST http://127.0.0.1:8000/convo/dm/new
 Content-Type: application/json
 Cookie: sessionid=9b4jnvvzyiem8c8z0yah8g6fxllgetv1; csrftoken=HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9;
 X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
@@ -184,7 +184,7 @@ X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
 
 ###
 
-POST https://127.0.0.1:8000/convo/dm/fetch
+POST http://127.0.0.1:8000/convo/dm/fetch
 Content-Type: application/json
 Cookie: sessionid=9b4jnvvzyiem8c8z0yah8g6fxllgetv1; csrftoken=HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9;
 X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
@@ -195,7 +195,7 @@ X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
 
 ###
 
-POST https://127.0.0.1:8000/convo/find/
+POST http://127.0.0.1:8000/convo/find/
 Content-Type: application/json
 Cookie: sessionid=9b4jnvvzyiem8c8z0yah8g6fxllgetv1; csrftoken=HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9;
 X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
@@ -206,7 +206,7 @@ X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
 
 ###
 
-POST https://127.0.0.1:8000/convo/list/
+POST http://127.0.0.1:8000/convo/list/
 Content-Type: application/json
 Cookie: sessionid=9b4jnvvzyiem8c8z0yah8g6fxllgetv1; csrftoken=HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9;
 X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
@@ -216,7 +216,7 @@ X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
 
 ###
 
-POST https://127.0.0.1:8000/listings/new
+POST http://127.0.0.1:8000/listings/new
 Content-Type: application/json
 Cookie: sessionid=52bj1z1plqj7eqa9ki54853y3rhfupqb; csrftoken=7QUisgwhvX0Cs4vUGkJ4SqmAPNzLZcZD;
 X-CSRFToken: 7QUisgwhvX0Cs4vUGkJ4SqmAPNzLZcZD
@@ -233,7 +233,7 @@ X-CSRFToken: 7QUisgwhvX0Cs4vUGkJ4SqmAPNzLZcZD
 
 ###
 
-POST https://127.0.0.1:8000/listings/list
+POST http://127.0.0.1:8000/listings/list
 Content-Type: application/json
 Cookie: sessionid=52bj1z1plqj7eqa9ki54853y3rhfupqb; csrftoken=7QUisgwhvX0Cs4vUGkJ4SqmAPNzLZcZD;
 X-CSRFToken: 7QUisgwhvX0Cs4vUGkJ4SqmAPNzLZcZD
@@ -244,7 +244,7 @@ X-CSRFToken: 7QUisgwhvX0Cs4vUGkJ4SqmAPNzLZcZD
 
 ###
 
-POST https://127.0.0.1:8000/listings/fetch
+POST http://127.0.0.1:8000/listings/fetch
 Content-Type: application/json
 Cookie: sessionid=9b4jnvvzyiem8c8z0yah8g6fxllgetv1; csrftoken=HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9;
 X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
@@ -254,7 +254,7 @@ X-CSRFToken: HuFATLQXxbgzoERYUsfv4nnOx8xz4JX9
 
 ###
 
-POST https://127.0.0.1:8000/listings/applied/new
+POST http://127.0.0.1:8000/listings/applied/new
 Content-Type: application/json
 Cookie: sessionid=vav82fb16iseje9zbmjszsk8nslmhp06; csrftoken=2Sfj5WPOMgckNUVGGBrRaavJpK7RhnaQ;
 X-CSRFToken: 2Sfj5WPOMgckNUVGGBrRaavJpK7RhnaQ
@@ -265,7 +265,7 @@ X-CSRFToken: 2Sfj5WPOMgckNUVGGBrRaavJpK7RhnaQ
 
 ###
 
-POST https://127.0.0.1:8000/listings/applied/new
+POST http://127.0.0.1:8000/listings/applied/new
 Content-Type: application/json
 Cookie: sessionid=vav82fb16iseje9zbmjszsk8nslmhp06; csrftoken=2Sfj5WPOMgckNUVGGBrRaavJpK7RhnaQ;
 X-CSRFToken: 2Sfj5WPOMgckNUVGGBrRaavJpK7RhnaQ
@@ -275,7 +275,7 @@ X-CSRFToken: 2Sfj5WPOMgckNUVGGBrRaavJpK7RhnaQ
 }
 
 
-POST https://127.0.0.1:8000/listings/applied/check
+POST http://127.0.0.1:8000/listings/applied/check
 Content-Type: application/json
 Cookie: sessionid=voxn1ekrdotdz1ksnuu88vq9zdgcf264; csrftoken=8A8wBzBfuuysMWdW3x4N85WllAXoglvJ;
 X-CSRFToken: 8A8wBzBfuuysMWdW3x4N85WllAXoglvJ
@@ -288,7 +288,7 @@ X-CSRFToken: 8A8wBzBfuuysMWdW3x4N85WllAXoglvJ
 
 ###
 
-POST https://127.0.0.1:8000/admin/fetch/connections
+POST http://127.0.0.1:8000/admin/fetch/connections
 Content-Type: application/json
 Cookie: sessionid=voxn1ekrdotdz1ksnuu88vq9zdgcf264; csrftoken=8A8wBzBfuuysMWdW3x4N85WllAXoglvJ;
 X-CSRFToken: 8A8wBzBfuuysMWdW3x4N85WllAXoglvJ
@@ -299,7 +299,7 @@ X-CSRFToken: 8A8wBzBfuuysMWdW3x4N85WllAXoglvJ
 
 ###
 
-POST https://127.0.0.1:8000/admin/fetch/applications
+POST http://127.0.0.1:8000/admin/fetch/applications
 Content-Type: application/json
 Cookie: sessionid=voxn1ekrdotdz1ksnuu88vq9zdgcf264; csrftoken=8A8wBzBfuuysMWdW3x4N85WllAXoglvJ;
 X-CSRFToken: 8A8wBzBfuuysMWdW3x4N85WllAXoglvJ
@@ -310,7 +310,7 @@ X-CSRFToken: 8A8wBzBfuuysMWdW3x4N85WllAXoglvJ
 
 ###
 
-POST https://127.0.0.1:8000/admin/fetch/profile
+POST http://127.0.0.1:8000/admin/fetch/profile
 Content-Type: application/json
 Cookie: sessionid=voxn1ekrdotdz1ksnuu88vq9zdgcf264; csrftoken=8A8wBzBfuuysMWdW3x4N85WllAXoglvJ;
 X-CSRFToken: 8A8wBzBfuuysMWdW3x4N85WllAXoglvJ
@@ -321,7 +321,7 @@ X-CSRFToken: 8A8wBzBfuuysMWdW3x4N85WllAXoglvJ
 
 ###
 
-POST https://127.0.0.1:8000/admin/fetch/personal
+POST http://127.0.0.1:8000/admin/fetch/personal
 Content-Type: application/json
 Cookie: sessionid=voxn1ekrdotdz1ksnuu88vq9zdgcf264; csrftoken=8A8wBzBfuuysMWdW3x4N85WllAXoglvJ;
 X-CSRFToken: 8A8wBzBfuuysMWdW3x4N85WllAXoglvJ
@@ -333,7 +333,7 @@ X-CSRFToken: 8A8wBzBfuuysMWdW3x4N85WllAXoglvJ
 
 ###
 
-POST https://127.0.0.1:8000/admin/fetch/listings
+POST http://127.0.0.1:8000/admin/fetch/listings
 Content-Type: application/json
 Cookie: sessionid=voxn1ekrdotdz1ksnuu88vq9zdgcf264; csrftoken=8A8wBzBfuuysMWdW3x4N85WllAXoglvJ;
 X-CSRFToken: 8A8wBzBfuuysMWdW3x4N85WllAXoglvJ
@@ -344,7 +344,7 @@ X-CSRFToken: 8A8wBzBfuuysMWdW3x4N85WllAXoglvJ
 
 ###
 
-POST https://127.0.0.1:8000/admin/fetch/posts
+POST http://127.0.0.1:8000/admin/fetch/posts
 Content-Type: application/json
 Cookie: sessionid=voxn1ekrdotdz1ksnuu88vq9zdgcf264; csrftoken=8A8wBzBfuuysMWdW3x4N85WllAXoglvJ;
 X-CSRFToken: 8A8wBzBfuuysMWdW3x4N85WllAXoglvJ
@@ -355,7 +355,7 @@ X-CSRFToken: 8A8wBzBfuuysMWdW3x4N85WllAXoglvJ
 
 ###
 
-POST https://127.0.0.1:8000/admin/fetch/comments
+POST http://127.0.0.1:8000/admin/fetch/comments
 Content-Type: application/json
 Cookie: sessionid=voxn1ekrdotdz1ksnuu88vq9zdgcf264; csrftoken=8A8wBzBfuuysMWdW3x4N85WllAXoglvJ;
 X-CSRFToken: 8A8wBzBfuuysMWdW3x4N85WllAXoglvJ
@@ -366,7 +366,7 @@ X-CSRFToken: 8A8wBzBfuuysMWdW3x4N85WllAXoglvJ
 
 ###
 
-POST https://127.0.0.1:8000/admin/fetch/likes
+POST http://127.0.0.1:8000/admin/fetch/likes
 Content-Type: application/json
 Cookie: sessionid=voxn1ekrdotdz1ksnuu88vq9zdgcf264; csrftoken=8A8wBzBfuuysMWdW3x4N85WllAXoglvJ;
 X-CSRFToken: 8A8wBzBfuuysMWdW3x4N85WllAXoglvJ

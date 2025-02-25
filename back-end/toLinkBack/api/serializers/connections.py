@@ -20,7 +20,7 @@ class RequestSerializer(serializers.ModelSerializer):
 
         if other_user_profile.pfp:
             # Access the file if it exists
-            file_url = "https://127.0.0.1:8000" + obj.pfp.url
+            file_url = "http://127.0.0.1:8000" + obj.pfp.url
         else:
             # Handle the case where no file is uploaded
             file_url = "/default.png"
@@ -56,7 +56,7 @@ class LinkSerializer(serializers.ModelSerializer):
         other_user_profile = Profile.objects.get(user_id=other_user)
 
         if other_user_profile.pfp:
-            file_url = "https://127.0.0.1:8000" + other_user_profile.pfp.url
+            file_url = "http://127.0.0.1:8000" + other_user_profile.pfp.url
         else:
             file_url = "/default.png"
 
@@ -95,7 +95,7 @@ class ConnectionSerializer(serializers.ModelSerializer):
         other_user_profile = Profile.objects.get(user_id=other_user)
 
         if other_user_profile.pfp:
-            file_url = "https://127.0.0.1:8000" + other_user_profile.pfp.url
+            file_url = "http://127.0.0.1:8000" + other_user_profile.pfp.url
         else:
             file_url = "/default.png"
 

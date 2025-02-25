@@ -30,7 +30,7 @@ function LandingPG(props) {
     useEffect(() => {
         const fetchUser = async () => {
             const token = localStorage.getItem('access_token');
-            const response = await fetch("https://127.0.0.1:8000/profile/own/fetch", {
+            const response = await fetch("http://127.0.0.1:8000/profile/own/fetch", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -73,7 +73,7 @@ function LandingPG(props) {
         const token = localStorage.getItem('access_token');
         e.preventDefault();
         setError(false);
-        const response = await fetch("https://127.0.0.1:8000/login", {
+        const response = await fetch("http://127.0.0.1:8000/login", {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',
@@ -115,7 +115,7 @@ function LandingPG(props) {
     const handleLogout = async () => {
         const token = localStorage.getItem('refresh_token');
 
-        const response = await fetch('https://127.0.0.1:8000/logout/', {
+        const response = await fetch('http://127.0.0.1:8000/logout/', {
             method: 'POST',
             credentials: 'include',
             headers: {

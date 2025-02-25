@@ -34,7 +34,7 @@ function Header(props) {
     useEffect(() => {
         const fetchProfile = async () => {
             const token = localStorage.getItem('access_token');
-            const response = await fetch("https://127.0.0.1:8000/profile/own/header", {  
+            const response = await fetch("http://127.0.0.1:8000/profile/own/header", {  
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',

@@ -19,7 +19,7 @@ class NotificationSerializer(serializers.ModelSerializer):
         other_user_profile = Profile.objects.get(user=obj.user_from)
 
         if other_user_profile.pfp:
-            file_url = "https://127.0.0.1:8000" + other_user_profile.pfp.url
+            file_url = "http://127.0.0.1:8000" + other_user_profile.pfp.url
         else:
             file_url = "/default.png"
 

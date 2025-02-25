@@ -39,7 +39,7 @@ function ViewprofilePGU(props) {
     useEffect(() => {
         const fetchUser = async () => {
             const token = localStorage.getItem('access_token');
-            const response = await fetch("https://127.0.0.1:8000/profile/view/", {
+            const response = await fetch("http://127.0.0.1:8000/profile/view/", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -75,7 +75,7 @@ function ViewprofilePGU(props) {
                 setNoAuth(true);
             }
 
-            const response1 = await fetch("https://127.0.0.1:8000/listings/list", {
+            const response1 = await fetch("http://127.0.0.1:8000/listings/list", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -105,7 +105,7 @@ function ViewprofilePGU(props) {
                 console.log("Problems with fetching your listings info")
             }
 
-            const response2 = await fetch("https://127.0.0.1:8000/posts/fetch/user", {
+            const response2 = await fetch("http://127.0.0.1:8000/posts/fetch/user", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -135,7 +135,7 @@ function ViewprofilePGU(props) {
                 console.log("Problems with fetching profile info")
             }
 
-            const response3 = await fetch("https://127.0.0.1:8000/links/other", {
+            const response3 = await fetch("http://127.0.0.1:8000/links/other", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -204,7 +204,7 @@ function ViewprofilePGU(props) {
     const handleRequestClick = async (userId) => {
         try {
             const token = localStorage.getItem('access_token');
-            const response = await fetch("https://127.0.0.1:8000/request/new", {
+            const response = await fetch("http://127.0.0.1:8000/request/new", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -237,7 +237,7 @@ function ViewprofilePGU(props) {
     const handleResponseClick = async (answer) => {
         const token = localStorage.getItem('access_token');
         try {
-            const response = await fetch("https://127.0.0.1:8000/request/respond", {
+            const response = await fetch("http://127.0.0.1:8000/request/respond", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',

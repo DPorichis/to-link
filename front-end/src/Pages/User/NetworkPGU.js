@@ -31,7 +31,7 @@ function NetworkPGU(props) {
   const fetchSearchedLinks = async (searchTerm, page, append) => {
     const token = localStorage.getItem('access_token');
     setFriendsLoading(true);
-    const response = await fetch(page ? page : "https://127.0.0.1:8000/profile/fetch_searching_link", {
+    const response = await fetch(page ? page : "http://127.0.0.1:8000/profile/fetch_searching_link", {
       method: "POST",
       headers: {
         'Content-Type': 'application/json',
@@ -76,7 +76,7 @@ function NetworkPGU(props) {
   const fetchSearchedOut = async (searchTerm, page, append) => {
     const token = localStorage.getItem('access_token');
     setOutLoading(true);
-    const response1 = await fetch(page ? page : "https://127.0.0.1:8000/profile/fetch_searchout", {
+    const response1 = await fetch(page ? page : "http://127.0.0.1:8000/profile/fetch_searchout", {
       method: "POST",
       headers: {
         'Content-Type': 'application/json',
