@@ -49,3 +49,29 @@ npm i
 npm start
 ```
 
+# Design and implementation proccess
+
+`Todo`
+
+
+
+
+# Discover To Link's features
+
+## Signup
+![Signup Footage](./readme-media/sign-up.gif)
+
+## Feed, posts, likes and comments
+![User experience Footage](./readme-media/interact.gif)
+
+## Create and apply to job listings
+![Job listing application and creation](./readme-media/job.gif)
+
+## Build your network and message colleagues
+![Network and messeging](./readme-media/network-messages.gif)
+
+## Profile Customization
+![Profile Customization Footage](./readme-media/profile-editing.gif)
+
+## Admin view and data export
+![Admin View](./readme-media/admin.gif)
