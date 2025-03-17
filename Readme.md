@@ -52,6 +52,8 @@ npm start
 
 # Design and Implementation details
 
+`Note: HTTPS is disabled for the current demo, self-assigned certificates are included`
+
 ### Authentication
 User authentication is enabled by [JWT Tokens](https://jwt.io/), an open, industry-standard RFC 7519 method for representing claims securely between two parties. The expiration times of the tokens have been elongated on purpose for demonstration purposes. ***This is not a production-level authentication configuration***.
 
