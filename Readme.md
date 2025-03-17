@@ -52,39 +52,59 @@ npm i
 npm start
 ```
 
-# Design and implementation process
+# Design and Implementation details
+
+### Authentication
+User authentication is enabled by JWT Tokens, a fast, secure, and reliable solution. The expiration times of the tokens have been elongated on purpose for demonstration purposes. ***This is not a production-level authentication configuration***.
+
+### Recommendation system
+A basic recommendation system using Matrix Factorization is in place. You can test it using the data population mechanism. Recommendations are based on the user's impression of posts and job listings.
 
 ### Figma Board
 Check out our [Figma board](https://www.figma.com/design/W1lw9QQmLjScI4c6Y5NAwr/Wireframes?node-id=0-1&t=LMydUBQjvVj4GcvL-1) containing our low fidelity 
 wireframes as well as our first schema drafts.
 
-### Technical information
-Below we include a sort list containing key implementation details:
-
-`todo`
-
 ### Timeframe
-ToLink was developed during a tight timeframe of 1 month. Find a brief timeline of our implementation below:
-`add`
+ToLink was developed within a tight two-month timeframe. Our primary objective was to build a functional application prototype, which we successfully achieved.
 
+## Discover To Link's features
 
-# Discover To Link's features
-
-## Signup
+### Signup
+New users can create their accounts using the signup workflow.
 
 ![Signup Footage](./readme-media/sign-up.gif)
 
-## Feed, posts, likes and comments
+### Feed, posts, likes and comments
+Each user gets their personalized feed, based on their network and interests empowered by our recommendation system.
+
 ![User experience Footage](./readme-media/interact.gif)
 
-## Create and apply to job listings
+### Create and Apply to Job Listings
+Users can create job listings and choose to publish them either globally or within their network. They also have access to an overview of all applicants.
+
 ![Job listing application and creation](./readme-media/job.gif)
 
-## Build your network and message colleagues
+### Build your network and message colleagues
+Users can create links with other users, expanding their network and communicating through Private Messages.
+
 ![Network and messeging](./readme-media/network-messages.gif)
 
-## Profile Customization
+### Profile Customization
+
+Profiles allow the use of custom profile pictures, as well as privacy settings configurations.
+
 ![Profile Customization Footage](./readme-media/profile-editing.gif)
 
-## Admin view and data export
+### Admin view and data export
+Admin Users can moderate and extract user data through their admin dashboard view.
+
 ![Admin View](./readme-media/admin.gif)
+
+To check the admin user functionalities, you can log in to the app using the following credentials.
+
+```
+email: admin@tolink.com
+password: adminpassword123
+```
+`Note:` For the account to be present, you should perform the data population described in the *Quick Start Guide*`
+
