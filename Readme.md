@@ -104,5 +104,5 @@ You can log in to the app using the following credentials to check the admin use
 email: admin@tolink.com
 password: adminpassword123
 ```
-`Note:` For the account to be present, you should perform the data population described in the *Quick Start Guide*`
+`Note:` For the account to be present, you should perform the data population described in the *Quick Start Guide*
 
