@@ -1,12 +1,10 @@
 # ToLink - A LinkedIn Clone
-**ToLink** is a web-based social networking platform prototype developed as part of the YS14 Internet Application Technologies course at NKUA. Below you can find execution information and design notes of our implementation.
+**ToLink** is a fully functional web-based social networking platform prototype developed as part of the YS14 Internet Application Technologies course at NKUA. Below you can find execution information, design notes of our implementation, and a short feature presentation of our app.
 ## Development Team
 - Dimitrios Stefanos Porichis ([LinkedIn](https://www.linkedin.com/in/dimitrios-stefanos-porichis/))
 - Georgios Ragkos ([LinkedIn](https://www.linkedin.com/in/giorgos-ragkos-631194225/))
 
 ![image](https://github.com/user-attachments/assets/61fc45f9-beaa-44d8-bb55-b43cc03ecc9b)
-
-
 
 # Quick Start Guide
 
@@ -55,7 +53,7 @@ npm start
 # Design and Implementation details
 
 ### Authentication
-User authentication is enabled by JWT Tokens, a fast, secure, and reliable solution. The expiration times of the tokens have been elongated on purpose for demonstration purposes. ***This is not a production-level authentication configuration***.
+User authentication is enabled by [JWT Tokens](https://jwt.io/), an open, industry-standard RFC 7519 method for representing claims securely between two parties. The expiration times of the tokens have been elongated on purpose for demonstration purposes. ***This is not a production-level authentication configuration***.
 
 ### Recommendation system
 A basic recommendation system using Matrix Factorization is in place. You can test it using the data population mechanism. Recommendations are based on the user's impression of posts and job listings.
@@ -67,7 +65,7 @@ wireframes as well as our first schema drafts.
 ### Timeframe
 ToLink was developed within a tight two-month timeframe. Our primary objective was to build a functional application prototype, which we successfully achieved.
 
-## Discover To Link's features
+# Discover To Link's features
 
 ### Signup
 New users can create their accounts using the signup workflow.
@@ -75,12 +73,12 @@ New users can create their accounts using the signup workflow.
 ![Signup Footage](./readme-media/sign-up.gif)
 
 ### Feed, posts, likes and comments
-Each user gets their personalized feed, based on their network and interests empowered by our recommendation system.
+Each user gets their personalized feed based on their network and interests, which are curated by our recommendation system.
 
 ![User experience Footage](./readme-media/interact.gif)
 
 ### Create and Apply to Job Listings
-Users can create job listings and choose to publish them either globally or within their network. They also have access to an overview of all applicants.
+Users can apply to job listings or publish their own either globally or within their network.
 
 ![Job listing application and creation](./readme-media/job.gif)
 
@@ -91,7 +89,7 @@ Users can create links with other users, expanding their network and communicati
 
 ### Profile Customization
 
-Profiles allow the use of custom profile pictures, as well as privacy settings configurations.
+Profiles allow users to upload custom profile pictures, showcase their skills and experience, and configure privacy settings.
 
 ![Profile Customization Footage](./readme-media/profile-editing.gif)
 
@@ -100,7 +98,7 @@ Admin Users can moderate and extract user data through their admin dashboard vie
 
 ![Admin View](./readme-media/admin.gif)
 
-To check the admin user functionalities, you can log in to the app using the following credentials.
+You can log in to the app using the following credentials to check the admin user functionalities.
 
 ```
 email: admin@tolink.com
